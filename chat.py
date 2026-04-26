@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     # Test single question
     result = ask(
-        query="What is the tuition reimbursement limit?",
+        query="What is the maternity leave policy?",
         session_id="test_user_1",
         qdrant=qdrant_client,
         openai_client=openai_client,
