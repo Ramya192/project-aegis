@@ -190,7 +190,7 @@ if st.session_state.last_result:
             st.write(last["query"])
 
     if data.get("category_detected"):
-        st.info(f"📂 Category: {data['category_detected']}")
+        st.info(f"📂 Category detected:: {data['category_detected']}")
 
     with st.chat_message("assistant"):
         st.write(data["answer"])

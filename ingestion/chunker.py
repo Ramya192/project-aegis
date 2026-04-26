@@ -32,6 +32,9 @@ def chunk_markdown_document(markdown_text: str, chunk_size: int = 500, overlap_p
         text = doc.page_content
         metadata = doc.metadata
 
+        # Skip Table of Contents chunks
+        if metadata.get("h2_header", "").lower() == "table of contents":
+            continue
         lines = text.strip().split("\n")
         table_lines = [l for l in lines if l.strip().startswith("|")]
 
