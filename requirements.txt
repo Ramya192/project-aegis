@@ -1,0 +1,4 @@
+openai
+qdrant-client
+langchain-text-splitters
+langchain-openai

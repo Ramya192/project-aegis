@@ -1,0 +1,15 @@
+# API keys - never commit these
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Qdrant local storage (if you ever switch back)
+qdrant_storage/
+
+# VS Code
+.vscode/
+
+models/cache/
+test_chunker.py
