@@ -1,6 +1,6 @@
 # Project Aegis — Advanced Enterprise RAG System
 
-> **IITM Pravartak Advanced PG Certificate in Agentic AI — Project A**  
+> **IITM Pravartak Advanced PG Certificate in Agentic AI — Agentic AI Assignment**  
 > A production-grade, context-aware RAG chatbot built to navigate complex corporate policy documents with high accuracy.
 
 ---
@@ -10,9 +10,9 @@
 Most RAG systems fail in enterprise settings because they split documents arbitrarily, lose table structure, and retrieve irrelevant context. Project Aegis solves this by building a multi-stage pipeline that understands document structure, filters by intent, and reranks results before generating an answer.
 
 **The system can answer questions like:**
-- *"What is the taxi reimbursement limit?"* → $50 per trip (TRV-POL-2005-V3)
 - *"What is the maternity leave policy?"* → 16 weeks at 100% pay (HR-POL-4001-V6)
 - *"What is the tuition reimbursement limit?"* → $5,250 USD per year (LND-POL-7010-V3)
+- *"What are the IT data security requirements?"* → Zero-Trust Architecture, Data Classification, BYOD policies (SEC-POL-8005-V7)
 
 ---
 
@@ -71,9 +71,11 @@ User Query
 ```
 project-aegis/
 │
-├── chat.py              # Main entry point — ask questions, get answers
+├── chat.py              # Pipeline entry point — ask questions, get answers
 ├── ingest.py            # Ingest pipeline — chunk, embed, upsert to Qdrant
 ├── pipeline.py          # Utility runner
+├── api.py               # FastAPI backend — exposes /ask endpoint
+├── app.py               # Streamlit frontend — chat UI
 │
 ├── ingestion/           # Document processing
 │   ├── chunker.py       # Markdown-aware semantic chunking with overlap
@@ -110,19 +112,21 @@ project-aegis/
 | Reranker | CrossEncoder ms-marco-MiniLM-L-6-v2 |
 | Query expansion & HyDE | LangChain + GPT-4o-mini |
 | Chat history | LangChain InMemoryChatMessageHistory |
+| Backend API | FastAPI + Uvicorn |
+| Frontend UI | Streamlit |
 | Framework | Python 3.13 |
 
 ---
 
 ## Key Features
 
-**Context-aware chunking** — Documents are split by Markdown headers (#, ##, ###), not arbitrary character counts. Tables are detected and preserved as single blocks. Large tables are split row-by-row with column headers prepended to every row so the LLM always understands the numbers. A 12% token overlap ensures sentences at chunk boundaries are never lost.
+**Context-aware chunking** — Documents are split by Markdown headers (#, ##, ###), not arbitrary character counts. Table of Contents chunks are automatically filtered out. Tables are detected and preserved as single blocks. Large tables are split row-by-row with column headers prepended to every row so the LLM always understands the numbers. A 12% token overlap ensures sentences at chunk boundaries are never lost.
 
 **Structured metadata tagging** — Every chunk is tagged with `document_id`, `policy_category`, `effective_date`, `policy_owner`, and header hierarchy before embedding. This enables precise filtering.
 
 **Multi-stage retrieval** — The pipeline runs 4 parallel searches (3 query variants + 1 HyDE hypothetical answer), fuses results using Reciprocal Rank Fusion, filters by date to keep only the latest policy version, then reranks the top 25 chunks using a cross-encoder down to the top 5 before answering.
 
-**Hallucination prevention** — The LLM is instructed to answer using only the retrieved context. Category pre-filtering mathematically prevents cross-domain contamination (e.g., a Travel query cannot return HR chunks).
+**Hallucination prevention** — The LLM is instructed to answer using only the retrieved context. Category pre-filtering mathematically prevents cross-domain contamination (e.g., a Travel query cannot return HR chunks). If the answer is not in the corpus, the system says so rather than making one up.
 
 ---
 
@@ -163,36 +167,49 @@ python ingest.py
 ```
 This chunks, tags, embeds, and upserts all documents to Qdrant.
 
-### 6. Ask questions
+### 6. Run via command line
 ```bash
 python chat.py
 ```
+
+### 7. Run via UI (two terminals)
+
+**Terminal 1 — FastAPI backend:**
+```bash
+uvicorn api:app --reload
+```
+
+**Terminal 2 — Streamlit frontend:**
+```bash
+streamlit run app.py
+```
+
+Open `http://localhost:8501` in your browser.
 
 ---
 
 ## Sample Output
 
 ```
-Category detected: Travel
+Category detected: HR
 
 --- Retrieved Chunks (after rerank) ---
-  Chunk 1 | Score: 0.55 | TRV-POL-1001-V4 | 6. Ground Transportation
-  Chunk 2 | Score: 0.52 | TRV-POL-3012-V2 | 9. Tolls, Parking, and Ancillary Transit Costs
-  Chunk 3 | Score: 0.68 | TRV-POL-2005-V3 | Ground Transportation
+  Chunk 1 | Score: 0.70 | LND-POL-7010-V3 | 5. Formal Tuition Assistance Program
+  Chunk 2 | Score: 0.39 | HR-POL-5050-V4  | 9. Conflicts of Interest
 
 Answer:
-The taxi reimbursement limit is up to $50 per trip.
+The tuition reimbursement limit is up to a maximum of $5,250 USD per calendar
+year for approved tuition, lab fees, and required textbooks.
 
 Sources used:
-  - TRV-POL-2005-V3 | Ground Transportation
-  - TRV-POL-1001-V4 | 6. Ground Transportation and Vehicle Policies
+  - LND-POL-7010-V3 | 5. Formal Tuition Assistance Program (Degree Programs)
 ```
 
 ---
 
 ## What I Learned
 
-Building Project Aegis taught me that retrieval quality — not LLM quality — is the primary bottleneck in enterprise RAG. The most impactful improvements came from structured chunking (tables, overlap), metadata filtering (pre and post), and the reranking step which dramatically reduced irrelevant context reaching the LLM.
+Building Project Aegis taught me that retrieval quality — not LLM quality — is the primary bottleneck in enterprise RAG. The most impactful improvements came from structured chunking (tables, overlap, ToC filtering), metadata filtering (pre and post), and the reranking step which dramatically reduced irrelevant context reaching the LLM. The system correctly refuses to answer when information is not in the corpus, demonstrating hallucination prevention in practice.
 
 ---
 

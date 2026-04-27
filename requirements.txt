@@ -1,4 +1,22 @@
+# LLM & Embeddings
 openai
-qdrant-client
-langchain-text-splitters
 langchain-openai
+langchain-core
+langchain-text-splitters
+
+# Vector Database
+qdrant-client
+
+# Reranker
+sentence-transformers
+
+# API & UI
+fastapi
+uvicorn
+streamlit
+requests
+
+# Utilities
+python-dotenv
+numpy
+pydantic

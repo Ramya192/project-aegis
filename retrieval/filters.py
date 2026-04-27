@@ -4,7 +4,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Filter, FieldCondition, MatchValue
 from ingestion.embedder import get_embedding, COLLECTION_NAME
 
-def detect_category(query:str, llm) -> str | None:
+def detect_category(query: str, llm) -> str | None:
     prompt = f"""
     You are a corporate policy classifier.
     Classify the query below into ONE of these categories:
@@ -28,8 +28,9 @@ def detect_category(query:str, llm) -> str | None:
     if result in valid:
         return result
     return None
-    
-def pre_filter_search(query:str, qdrant: QdrantClient, openai_client:OpenAI, llm, top_k:int=5) -> list:
+
+
+def pre_filter_search(query: str, qdrant: QdrantClient, openai_client: OpenAI, llm, top_k: int = 5) -> list:
     # Step 1: detect category
     category = detect_category(query, llm)
 
@@ -49,7 +50,7 @@ def pre_filter_search(query:str, qdrant: QdrantClient, openai_client:OpenAI, llm
         )
 
     # Step 4: search Qdrant with or without filter
-    results = qdrant.query_points( # type: ignore
+    results = qdrant.query_points(  # type: ignore
         collection_name=COLLECTION_NAME,
         query=query_vector,
         query_filter=query_filter,
@@ -72,18 +73,33 @@ def pre_filter_search(query:str, qdrant: QdrantClient, openai_client:OpenAI, llm
 
 
 def post_filter_by_date(results: list) -> list:
+    """
+    Keep only chunks from the most recent version of each document.
+    Groups by document_id, finds the latest effective_date per document,
+    then keeps ALL chunks from that latest version.
+    This fixes the bug where only 1 chunk per document was kept,
+    causing the correct answer chunk to be dropped.
+    """
+    # Step 1: group all chunks by document_id
     doc_groups = defaultdict(list)
-
     for item in results:
         doc_id = item["metadata"].get("document_id", "unknown")
         doc_groups[doc_id].append(item)
 
     filtered = []
     for doc_id, chunks in doc_groups.items():
-        chunks.sort(
-            key=lambda x: x["metadata"].get("effective_date") or "0000-01-01",
-            reverse=True
+        # Step 2: find the most recent effective_date for this document
+        latest_date = max(
+            chunk["metadata"].get("effective_date") or "0000-01-01"
+            for chunk in chunks
         )
-        filtered.append(chunks[0])
+
+        # Step 3: keep ALL chunks that match the latest date
+        # (drops older versions but keeps all chunks from the latest version)
+        latest_chunks = [
+            chunk for chunk in chunks
+            if (chunk["metadata"].get("effective_date") or "0000-01-01") == latest_date
+        ]
+        filtered.extend(latest_chunks)
 
     return filtered
