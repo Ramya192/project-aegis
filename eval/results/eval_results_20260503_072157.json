@@ -1,0 +1,310 @@
+{
+  "timestamp": "20260503_072157",
+  "total_questions": 15,
+  "avg_recall_at_5": 1.0,
+  "avg_faithfulness": 0.567,
+  "category_accuracy": 1.0,
+  "truncated_queries": 0,
+  "results": [
+    {
+      "id": "T001",
+      "question": "What is the daily meal per diem for employees on domestic travel?",
+      "expected_doc": "TRV-POL-1001-V4",
+      "expected_category": "Travel",
+      "detected_category": "Travel",
+      "answer_preview": "The daily meal per diem for employees on domestic travel is $85.00 USD per full day of travel. For travel days (the first and last day), it is prorated to $63.75 USD.",
+      "retrieved_docs": [
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-2005-V3"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 1.0,
+      "category_correct": true,
+      "tokens_used": 408,
+      "truncated": false
+    },
+    {
+      "id": "T002",
+      "question": "What is the hotel limit per night for a trip to New York City?",
+      "expected_doc": "TRV-POL-1001-V4",
+      "expected_category": "Travel",
+      "detected_category": "Travel",
+      "answer_preview": "The maximum nightly rate for a hotel in New York City, which falls under Tier 1 (Premium), is $375.00 USD, excluding local occupancy taxes and resort fees.",
+      "retrieved_docs": [
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-2005-V3",
+        "TRV-POL-3012-V2",
+        "TRV-POL-2005-V3"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.667,
+      "category_correct": true,
+      "tokens_used": 448,
+      "truncated": false
+    },
+    {
+      "id": "T003",
+      "question": "Can I book flights on Expedia for a business trip?",
+      "expected_doc": "TRV-POL-1001-V4",
+      "expected_category": "Travel",
+      "detected_category": "Travel",
+      "answer_preview": "No, booking flights on Expedia for a business trip is strictly prohibited. All travel must be booked through the TripIt Corporate Navigator portal or directly with the organization\u2019s designated Travel Management Company (TMC).",
+      "retrieved_docs": [
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.75,
+      "category_correct": true,
+      "tokens_used": 344,
+      "truncated": false
+    },
+    {
+      "id": "T004",
+      "question": "What is the mileage reimbursement rate if I use my personal car for a business trip?",
+      "expected_doc": "TRV-POL-3012-V2",
+      "expected_category": "Travel",
+      "detected_category": "Travel",
+      "answer_preview": "The mileage reimbursement rate for using your personal car for a business trip is $0.69 per business mile, effective January 1, 2026.",
+      "retrieved_docs": [
+        "TRV-POL-1001-V4",
+        "TRV-POL-3012-V2",
+        "TRV-POL-3012-V2",
+        "TRV-POL-3012-V2",
+        "TRV-POL-3012-V2"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.5,
+      "category_correct": true,
+      "tokens_used": 408,
+      "truncated": false
+    },
+    {
+      "id": "T005",
+      "question": "How many days do I have to submit an expense report after a trip?",
+      "expected_doc": "TRV-POL-1001-V4",
+      "expected_category": "Travel",
+      "detected_category": "Travel",
+      "answer_preview": "You have thirty (30) calendar days to submit an expense report after the trip's conclusion.",
+      "retrieved_docs": [
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-1001-V4",
+        "TRV-POL-2005-V3",
+        "TRV-POL-1001-V4"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.0,
+      "category_correct": true,
+      "tokens_used": 370,
+      "truncated": false
+    },
+    {
+      "id": "H001",
+      "question": "How much parental leave does a primary caregiver get?",
+      "expected_doc": "HR-POL-4001-V6",
+      "expected_category": "HR",
+      "detected_category": "HR",
+      "answer_preview": "A primary caregiver is eligible for up to sixteen (16) weeks of 100% paid leave.",
+      "retrieved_docs": [
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.667,
+      "category_correct": true,
+      "tokens_used": 299,
+      "truncated": false
+    },
+    {
+      "id": "H002",
+      "question": "How many PTO days do I get after 5 years of service?",
+      "expected_doc": "HR-POL-4001-V6",
+      "expected_category": "HR",
+      "detected_category": "HR",
+      "answer_preview": "After 5 years of service, you will be in Tier 2, which grants you 20 days (160 hours) of PTO annually.",
+      "retrieved_docs": [
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.667,
+      "category_correct": true,
+      "tokens_used": 368,
+      "truncated": false
+    },
+    {
+      "id": "H003",
+      "question": "What happens to unused sick leave at the end of the year?",
+      "expected_doc": "HR-POL-4001-V6",
+      "expected_category": "HR",
+      "detected_category": "HR",
+      "answer_preview": "Unused sick leave does not roll over to the following year; it is not carried over and is essentially forfeited.",
+      "retrieved_docs": [
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.0,
+      "category_correct": true,
+      "tokens_used": 347,
+      "truncated": false
+    },
+    {
+      "id": "H004",
+      "question": "How long is bereavement leave for the death of a grandparent?",
+      "expected_doc": "HR-POL-4001-V6",
+      "expected_category": "HR",
+      "detected_category": "HR",
+      "answer_preview": "For the death of a grandparent, employees are entitled to up to three (3) paid days off, as it falls under Tier 2 (Extended Family).",
+      "retrieved_docs": [
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6",
+        "HR-POL-4001-V6"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.667,
+      "category_correct": true,
+      "tokens_used": 344,
+      "truncated": false
+    },
+    {
+      "id": "S001",
+      "question": "What are the password requirements under the IT security policy?",
+      "expected_doc": "SEC-POL-8005-V7",
+      "expected_category": "IT",
+      "detected_category": "IT",
+      "answer_preview": "The password requirements under the IT security policy are as follows:\n- Passwords must be at least 14 characters in length.\n- Passwords cannot contain the user's name or the company name.",
+      "retrieved_docs": [
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.333,
+      "category_correct": true,
+      "tokens_used": 373,
+      "truncated": false
+    },
+    {
+      "id": "S002",
+      "question": "How soon must I report a phishing click to the security team?",
+      "expected_doc": "SEC-POL-8005-V7",
+      "expected_category": "IT",
+      "detected_category": "IT",
+      "answer_preview": "You must report a suspected phishing click within **1 hour** of the incident.",
+      "retrieved_docs": [
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.667,
+      "category_correct": true,
+      "tokens_used": 293,
+      "truncated": false
+    },
+    {
+      "id": "S003",
+      "question": "Can I use ChatGPT or other public AI tools for work tasks?",
+      "expected_doc": "SEC-POL-8005-V7",
+      "expected_category": "IT",
+      "detected_category": "IT",
+      "answer_preview": "No, you may not use ChatGPT or other public AI tools for work tasks that involve inputting any Tier 2, Tier 3, or Tier 4 corporate data, as this falls under the category of \"Shadow IT,\" which is prohibited.",
+      "retrieved_docs": [
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7",
+        "SEC-POL-8005-V7"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 1.0,
+      "category_correct": true,
+      "tokens_used": 383,
+      "truncated": false
+    },
+    {
+      "id": "L001",
+      "question": "What is the annual professional development budget for an individual contributor?",
+      "expected_doc": "LND-POL-7010-V3",
+      "expected_category": "HR",
+      "detected_category": "HR",
+      "answer_preview": "The annual professional development budget for an individual contributor (L1 - L4) is $1,500.",
+      "retrieved_docs": [
+        "LND-POL-7010-V3",
+        "LND-POL-7010-V3",
+        "LND-POL-7010-V3",
+        "HR-POL-6002-V5",
+        "HR-POL-6002-V5"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.25,
+      "category_correct": true,
+      "tokens_used": 421,
+      "truncated": false
+    },
+    {
+      "id": "L002",
+      "question": "If I leave the company 8 months after receiving tuition assistance, how much do I repay?",
+      "expected_doc": "LND-POL-7010-V3",
+      "expected_category": "HR",
+      "detected_category": "HR",
+      "answer_preview": "If you leave the company 8 months after receiving tuition assistance, you must repay **100%** of the reimbursed funds.",
+      "retrieved_docs": [
+        "LND-POL-7010-V3",
+        "LND-POL-7010-V3",
+        "LND-POL-7010-V3",
+        "LND-POL-7010-V3",
+        "LND-POL-7010-V3"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 0.333,
+      "category_correct": true,
+      "tokens_used": 378,
+      "truncated": false
+    },
+    {
+      "id": "P001",
+      "question": "What is the annual bonus for a manager with a Rating 4 if the company multiplier is 1.2?",
+      "expected_doc": "HR-POL-6002-V5",
+      "expected_category": "HR",
+      "detected_category": "HR",
+      "answer_preview": "To calculate the annual bonus for a manager with a Rating 4 when the company multiplier is 1.2, you can use the bonus calculation formula.\n\n1. **Target Bonus Percentage for a Manager**: 15%\n2. **Individual Multiplier for Rating 4**: 1.1x\n3. **Company Multiplier**: 1.2\n\nThe formula is: \n```\nActual Bo",
+      "retrieved_docs": [
+        "HR-POL-6002-V5",
+        "HR-POL-6002-V5",
+        "HR-POL-6002-V5",
+        "HR-POL-6002-V5",
+        "HR-POL-6002-V5"
+      ],
+      "recall_at_5": 1.0,
+      "faithfulness": 1.0,
+      "category_correct": true,
+      "tokens_used": 368,
+      "truncated": false
+    }
+  ]
+}

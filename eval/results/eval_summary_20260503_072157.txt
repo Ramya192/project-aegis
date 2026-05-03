@@ -1,0 +1,25 @@
+Project Aegis — Eval Summary [20260503_072157]
+==================================================
+Total questions     : 15
+Retrieval Recall@5  : 100.0%
+Answer Faithfulness : 56.7%
+Category Accuracy   : 100.0%
+Token truncations   : 0/15
+
+Per-question breakdown:
+--------------------------------------------------
+T001   | Recall=1.0 | Faith=1.00 | Cat=PASS | What is the daily meal per diem for employees
+T002   | Recall=1.0 | Faith=0.67 | Cat=PASS | What is the hotel limit per night for a trip 
+T003   | Recall=1.0 | Faith=0.75 | Cat=PASS | Can I book flights on Expedia for a business 
+T004   | Recall=1.0 | Faith=0.50 | Cat=PASS | What is the mileage reimbursement rate if I u
+T005   | Recall=1.0 | Faith=0.00 | Cat=PASS | How many days do I have to submit an expense 
+H001   | Recall=1.0 | Faith=0.67 | Cat=PASS | How much parental leave does a primary caregi
+H002   | Recall=1.0 | Faith=0.67 | Cat=PASS | How many PTO days do I get after 5 years of s
+H003   | Recall=1.0 | Faith=0.00 | Cat=PASS | What happens to unused sick leave at the end 
+H004   | Recall=1.0 | Faith=0.67 | Cat=PASS | How long is bereavement leave for the death o
+S001   | Recall=1.0 | Faith=0.33 | Cat=PASS | What are the password requirements under the 
+S002   | Recall=1.0 | Faith=0.67 | Cat=PASS | How soon must I report a phishing click to th
+S003   | Recall=1.0 | Faith=1.00 | Cat=PASS | Can I use ChatGPT or other public AI tools fo
+L001   | Recall=1.0 | Faith=0.25 | Cat=PASS | What is the annual professional development b
+L002   | Recall=1.0 | Faith=0.33 | Cat=PASS | If I leave the company 8 months after receivi
+P001   | Recall=1.0 | Faith=1.00 | Cat=PASS | What is the annual bonus for a manager with a

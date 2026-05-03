@@ -14,6 +14,7 @@ from retrieval.filters import detect_category, pre_filter_search, post_filter_by
 from retrieval.retriever import generate_multi_queries
 from retrieval.reranker import rerank
 from retrieval.hyde import hyde_search
+from utils.token_budget import enforce_token_budget
 
 session_store = {}
 
@@ -43,7 +44,6 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
     queries = generate_multi_queries(query, llm)
 
     # Step 3: search with pre-filter for each query variant
-    # Step 3: change top_k=10 to top_k=13
     all_ranked_lists = []
     for q in queries:
         results = pre_filter_search(q, qdrant, openai_client, llm, top_k=13)
@@ -52,7 +52,6 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
         all_ranked_lists.append(results)
 
     # Step 3b: HyDE search — embed hypothetical answer, add to pool
-    # Step 3b: HyDE search — pass category to keep it filtered
     hyde_results = hyde_search(query, qdrant, openai_client, llm, top_k=13, category=category)
     for rank, item in enumerate(hyde_results, start=1):
         item["rank"] = rank
@@ -79,14 +78,16 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
     # DEBUG: print chunk scores and text preview
     print("\n--- Retrieved Chunks (after rerank) ---")
     for i, chunk in enumerate(final_chunks, start=1):
-      source = chunk["metadata"].get("document_id", "unknown")
-      section = chunk["metadata"].get("h2_header", "")
-      score = chunk.get("score", "N/A")
-      print(f"  Chunk {i} | Score: {score} | {source} | {section}")
-      print(f"    Text: {chunk['text'][:150]}...")
+        source = chunk["metadata"].get("document_id", "unknown")
+        section = chunk["metadata"].get("h2_header", "")
+        score = chunk.get("score", "N/A")
+        print(f"  Chunk {i} | Score: {score} | {source} | {section}")
+        print(f"    Text: {chunk['text'][:150]}...")
     print("--- End Chunks ---\n")
 
-    # Step 7: build context
+    # Step 7: enforce token budget, then build context
+    # FIX: was "reranked_chunks" (unbound) — correct variable is final_chunks
+    final_chunks, token_info = enforce_token_budget(final_chunks, budget=3000)
     context = build_context(final_chunks)
 
     # Step 8: build prompt with chat history
@@ -114,10 +115,31 @@ Context:
     history.add_user_message(query)
     history.add_ai_message(response.content)
 
+    # Step 11: build sources list for the UI
+    # reranker stores score as "rerank_score" (raw CrossEncoder logit)
+    # normalize to 0-1 range using min-max for display
+    raw_scores = [float(chunk.get("rerank_score", 0)) for chunk in final_chunks]
+    min_s = min(raw_scores) if raw_scores else 0
+    max_s = max(raw_scores) if raw_scores else 1
+    score_range = max_s - min_s if max_s != min_s else 1
+
+    sources = [
+        {
+            "document_id": chunk["metadata"].get("document_id", "Unknown"),
+            "score": round((float(chunk.get("rerank_score", 0)) - min_s) / score_range, 4),
+            "text_preview": chunk["text"][:300],
+            "section": chunk["metadata"].get("h2_header", ""),
+            "policy_category": chunk["metadata"].get("policy_category", ""),
+            "effective_date": chunk["metadata"].get("effective_date", ""),
+        }
+        for chunk in final_chunks
+    ]
+
     return {
-        "answer": response.content,
-        "sources": final_chunks,
-        "category_detected": category
+        "answer": response.content,       # FIX: was undefined "answer"
+        "sources": sources,               # FIX: was undefined "sources"
+        "category_detected": category,
+        "token_info": token_info,
     }
 
 
@@ -137,7 +159,6 @@ if __name__ == "__main__":
         api_key=SecretStr(os.environ["OPENAI_API_KEY"])
     )
 
-    # Test single question
     result = ask(
         query="What is the maternity leave policy?",
         session_id="test_user_1",
@@ -150,4 +171,4 @@ if __name__ == "__main__":
     print(f"\nAnswer:\n{result['answer']}")
     print(f"\nSources used:")
     for s in result["sources"]:
-        print(f"  - {s['metadata'].get('document_id')} | {s['metadata'].get('h2_header')}")
+        print(f"  - {s['document_id']} | {s['section']}")

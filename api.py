@@ -47,11 +47,22 @@ class ChunkInfo(BaseModel):
     text_preview: str
 
 
+class TokenInfo(BaseModel):
+    total_tokens_before: int
+    total_tokens_after: int
+    chunks_before: int
+    chunks_after: int
+    truncated: bool
+    dropped_chunks: int
+    budget: int
+
+
 class QueryResponse(BaseModel):
     answer: str
     category_detected: str | None
     sources: list[ChunkInfo]
     concepts_used: list[str]
+    token_info: TokenInfo | None = None
 
 
 @app.post("/ask", response_model=QueryResponse)
@@ -64,15 +75,16 @@ def ask_question(request: QueryRequest):
         llm=llm
     )
 
-    # Format sources
+    # FIX: chat.py now returns sources as flat dicts — read keys directly
+    # Old format: chunk["metadata"]["document_id"], chunk["text"]
+    # New format: chunk["document_id"], chunk["text_preview"]
     sources = []
     for chunk in result["sources"]:
-        raw_score = float(chunk.get("rerank_score", 0))
         sources.append(ChunkInfo(
-            document_id=chunk["metadata"].get("document_id", "Unknown"),
-            section=chunk["metadata"].get("h2_header", ""),
-            score=round(raw_score, 4),
-            text_preview=chunk["text"][:400]
+            document_id=chunk.get("document_id", "Unknown"),
+            section=chunk.get("section", ""),
+            score=round(float(chunk.get("score", 0)), 4),
+            text_preview=chunk.get("text_preview", "")[:400]
         ))
 
     concepts = [
@@ -84,11 +96,26 @@ def ask_question(request: QueryRequest):
         "Cross-Encoder Reranking",
     ]
 
+    # token_info is optional — won't break if missing
+    token_info = None
+    if result.get("token_info"):
+        ti = result["token_info"]
+        token_info = TokenInfo(
+            total_tokens_before=ti.get("total_tokens_before", 0),
+            total_tokens_after=ti.get("total_tokens_after", 0),
+            chunks_before=ti.get("chunks_before", 0),
+            chunks_after=ti.get("chunks_after", 0),
+            truncated=ti.get("truncated", False),
+            dropped_chunks=ti.get("dropped_chunks", 0),
+            budget=ti.get("budget", 3000),
+        )
+
     return QueryResponse(
         answer=result["answer"],
-        category_detected=result["category_detected"],
+        category_detected=result.get("category_detected"),
         sources=sources,
-        concepts_used=concepts
+        concepts_used=concepts,
+        token_info=token_info,
     )
 
 
