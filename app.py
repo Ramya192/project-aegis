@@ -5,7 +5,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-API_URL = "http://localhost:8000"
+API_URL = "https://project-aegis-api.onrender.com"
 
 st.set_page_config(
     page_title="Aegis Policy Intelligence",
