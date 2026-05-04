@@ -5,7 +5,7 @@
 
 🚀 **Live Demo:** https://project-aegis-policy-intelligence.streamlit.app/  
 🔧 **API Backend:** https://project-aegis-api.onrender.com/health  
-👩‍💻 **Built by:** Ramya Priyanka A
+👩‍💻 **Built by:** Ramya A
 
 ---
 
@@ -56,6 +56,8 @@ User Query
                      ▼
 ┌─────────────────────────────────────────────┐
 │     Cross-Encoder Reranker                  │
+│  • Cohere Rerank API (deployed)             │
+│  • CrossEncoder ms-marco-MiniLM (local)     │
 │  • Scores each chunk against query (0–1)    │
 │  • Prunes to Top 5 most relevant chunks     │
 └────────────────────┬────────────────────────┘
@@ -93,6 +95,8 @@ Render (FastAPI Backend — always on via cron ping)
 - **Vector DB:** Qdrant Cloud (free tier, Ireland region)
 - **Session limit:** 10 queries per session (Clear conversation to reset)
 
+> ⚠️ **Note:** First query after inactivity may take ~60 seconds (Render free tier cold start). Subsequent queries respond in 5–15 seconds.
+
 ---
 
 ## 🎯 Design Philosophy — ABCDEF Framework
@@ -128,7 +132,7 @@ Corporate policies are versioned. Retrieving a chunk from an outdated policy ver
 
 Vector similarity scores measure embedding proximity, not answer quality. The top-scored chunk by cosine similarity is often a section header or glossary entry, not the specific clause that answers the question.
 
-→ **Solution:** CrossEncoder reranking (ms-marco-MiniLM-L-6-v2) re-scores all 20 fused chunks by query-document relevance, keeping only the top 5 for the LLM.
+→ **Solution:** CrossEncoder reranking (Cohere Rerank API on deployment, ms-marco-MiniLM-L-6-v2 locally) re-scores all 20 fused chunks by query-document relevance, keeping only the top 5 for the LLM.
 
 **Problem 4 — Silent context overflow**
 
@@ -230,7 +234,7 @@ project-aegis/
 | LLM (Answer generation) | GPT-4o-mini (OpenAI) |
 | Embeddings | text-embedding-3-large (OpenAI) — 3072 dimensions |
 | Vector Database | Qdrant Cloud (Ireland, AWS free tier) |
-| Reranker | CrossEncoder ms-marco-MiniLM-L-6-v2 |
+| Reranker | Cohere Rerank API rerank-english-v3.0 (deployed) / CrossEncoder ms-marco-MiniLM-L-6-v2 (local) |
 | Query expansion & HyDE | LangChain + GPT-4o-mini |
 | Chat history | LangChain InMemoryChatMessageHistory |
 | Token counting | tiktoken |
@@ -356,6 +360,9 @@ The current architecture waits for the full LLM response before displaying anyth
 
 **6. Cold start latency**
 Render free tier spins down after inactivity. A cron-job.org ping every 10 minutes keeps the backend alive. First request after a long idle period may show a "waking up" message.
+
+**7. Reranker on deployment**
+Cohere Rerank API is used on Render (zero RAM overhead, satisfies CrossEncoder requirement from project guidelines). CrossEncoder ms-marco-MiniLM-L-6-v2 is used locally. In a production environment with sufficient RAM, the local CrossEncoder would be preferred for lower latency and no external API dependency.
 
 ---
 

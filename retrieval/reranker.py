@@ -1,74 +1,67 @@
 # retrieval/reranker.py
-# Uses CrossEncoder locally, falls back to BM25 on Render (no model download needed)
+# Uses Cohere Rerank API on deployment (zero RAM, free tier = 1000 calls/month)
+# Falls back to CrossEncoder locally when COHERE_API_KEY is not set
 
 import os
 import numpy as np
 
 os.environ["TRANSFORMERS_VERBOSITY"] = "error"
 
-_rerank_model = None
-_USE_CROSSENCODER = os.getenv("USE_CROSSENCODER", "true").lower() == "true"
+_rerank_model   = None
+_cohere_client  = None
+
+COHERE_API_KEY  = os.getenv("COHERE_API_KEY")
+
+
+def get_cohere_client():
+    global _cohere_client
+    if _cohere_client is None:
+        import cohere
+        _cohere_client = cohere.ClientV2(api_key=COHERE_API_KEY)
+        print("==> Cohere Rerank client loaded.", flush=True)
+    return _cohere_client
 
 
 def get_reranker():
+    """Load CrossEncoder locally (when no COHERE_API_KEY set)."""
     global _rerank_model
-    if _rerank_model is None and _USE_CROSSENCODER:
-        try:
-            from sentence_transformers import CrossEncoder
-            _rerank_model = CrossEncoder(
-                "cross-encoder/ms-marco-MiniLM-L-6-v2",
-                model_kwargs={"cache_dir": "./models/cache"}
-            )
-            print("==> CrossEncoder loaded.", flush=True)
-        except Exception as e:
-            print(f"==> CrossEncoder failed to load: {e}. Falling back to BM25.", flush=True)
-            _rerank_model = None
+    if _rerank_model is None:
+        from sentence_transformers import CrossEncoder
+        _rerank_model = CrossEncoder(
+            "cross-encoder/ms-marco-MiniLM-L-6-v2",
+            model_kwargs={"cache_dir": "./models/cache"}
+        )
+        print("==> CrossEncoder loaded.", flush=True)
     return _rerank_model
 
 
-def _bm25_rerank(query: str, chunks: list, top_k: int) -> list:
-    """Lightweight BM25-style reranking — no model needed."""
-    from collections import Counter
-    import math
+def _cohere_rerank(query: str, chunks: list, top_k: int) -> list:
+    """Rerank using Cohere Rerank API — zero RAM, works on Render free tier."""
+    client = get_cohere_client()
 
-    query_terms = query.lower().split()
-    scores = []
+    texts = [chunk["text"][:512] for chunk in chunks]  # Cohere max ~512 chars per doc
 
-    for chunk in chunks:
-        text = chunk["text"].lower()
-        words = text.split()
-        word_count = len(words) + 1
-        tf_scores = Counter(words)
+    response = client.rerank(
+        model="rerank-english-v3.0",
+        query=query,
+        documents=texts,
+        top_n=top_k,
+    )
 
-        score = 0.0
-        for term in query_terms:
-            tf = tf_scores.get(term, 0)
-            # BM25 formula: TF * IDF approximation
-            score += (tf * 2.5) / (tf + 1.5 * (1 - 0.75 + 0.75 * word_count / 150))
+    # Build reranked list in order of Cohere's ranking
+    reranked = []
+    for i, result in enumerate(response.results):
+        chunk = chunks[result.index]
+        # Normalize relevance score to 0-1
+        chunk["rerank_score"] = round(float(result.relevance_score), 4)
+        reranked.append(chunk)
 
-        scores.append(score)
-
-    # Normalize 0-1
-    max_s = max(scores) if scores else 1
-    min_s = min(scores) if scores else 0
-    rng = max_s - min_s if max_s != min_s else 1
-
-    for i, chunk in enumerate(chunks):
-        chunk["rerank_score"] = round((scores[i] - min_s) / rng, 4)
-
-    reranked = sorted(chunks, key=lambda x: x["rerank_score"], reverse=True)
-    return reranked[:top_k]
+    return reranked
 
 
-def rerank(query: str, chunks: list, top_k: int = 5) -> list:
+def _crossencoder_rerank(query: str, chunks: list, top_k: int) -> list:
+    """Rerank using local CrossEncoder — used in local development."""
     model = get_reranker()
-
-    if model is None:
-        # No CrossEncoder available — use BM25
-        print("==> Using BM25 reranking.", flush=True)
-        return _bm25_rerank(query, chunks, top_k)
-
-    # CrossEncoder path
     pairs = [[query, chunk["text"]] for chunk in chunks]
     raw_scores = model.predict(pairs)
 
@@ -83,3 +76,12 @@ def rerank(query: str, chunks: list, top_k: int = 5) -> list:
 
     reranked = sorted(chunks, key=lambda x: x["rerank_score"], reverse=True)
     return reranked[:top_k]
+
+
+def rerank(query: str, chunks: list, top_k: int = 5) -> list:
+    if COHERE_API_KEY:
+        print("==> Using Cohere Rerank API.", flush=True)
+        return _cohere_rerank(query, chunks, top_k)
+    else:
+        print("==> Using CrossEncoder (local).", flush=True)
+        return _crossencoder_rerank(query, chunks, top_k)
