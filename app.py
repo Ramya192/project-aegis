@@ -5,7 +5,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-API_URL = "https://project-aegis-api.onrender.com"
+API_URL = "http://localhost:8000"
 
 st.set_page_config(
     page_title="Aegis Policy Intelligence",
@@ -355,14 +355,16 @@ with left_col:
         "RRF Fusion (k=60)", "Post-Filter by Date", "CrossEncoder Reranking",
         "Token Budget Check", "LLM Answer Generation",
     ]:
-        bg = "#68D391" if active else "rgba(201,168,76,0.3)"
-        shadow = "box-shadow:0 0 5px #68D391;" if active else ""
+        dot_color  = "#68D391" if active else "#C9A84C"
+        dot_opacity = "1" if active else "0.4"
+        dot_shadow  = "box-shadow:0 0 6px #68D391;" if active else ""
         st.markdown(
-            f'<div style="{LP_CSS} padding:2px 12px;">'
-            f'<div style="display:flex;align-items:center;gap:7px;">'
-            f'<div style="width:7px;height:7px;border-radius:50%;background:{bg};{shadow}'
-            f'flex-shrink:0;"></div>'
-            f'<span style="font-size:0.78rem;">{step}</span>'
+            f'<div style="{LP_CSS} padding:3px 12px;">'
+            f'<div style="display:flex;align-items:center;gap:8px;">'
+            f'<div style="width:8px;height:8px;border-radius:50%;'
+            f'background:{dot_color};opacity:{dot_opacity};{dot_shadow};'
+            f'flex-shrink:0;display:inline-block;"></div>'
+            f'<span style="font-size:0.8rem;color:#E8E4D9;">{step}</span>'
             f'</div></div>',
             unsafe_allow_html=True,
         )
@@ -494,7 +496,7 @@ with main_col:
             resp = requests.post(
                 f"{API_URL}/ask",
                 json={"query": query, "session_id": st.session_state.session_id},
-                timeout=60
+                timeout=120
             )
             resp.raise_for_status()
             data = resp.json()
@@ -509,6 +511,21 @@ with main_col:
                 "sources":  data.get("sources", []),
             })
             st.rerun()
+
+        except requests.exceptions.Timeout:
+            loading_placeholder.empty()
+            st.markdown('''
+            <div style="background:#FFFBEB; border:1px solid #F6E05E;
+                        border-left:4px solid #D69E2E; border-radius:4px;
+                        padding:0.9rem 1.25rem; font-family:'DM Sans',sans-serif;">
+                <div style="color:#744210; font-weight:600; font-size:0.95rem;">
+                    ⏳ Backend is waking up...
+                </div>
+                <div style="color:#975A16; font-size:0.85rem; margin-top:4px;">
+                    The server was sleeping (free tier). It takes ~60 seconds to wake up.
+                    Please click <strong>Run →</strong> again in a moment.
+                </div>
+            </div>''', unsafe_allow_html=True)
 
         except Exception as e:
             loading_placeholder.empty()

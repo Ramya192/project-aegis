@@ -3,7 +3,9 @@
 > **IITM Pravartak Advanced PG Certificate in Agentic AI — Agentic AI Assignment**  
 > A production-grade, context-aware RAG chatbot built to navigate complex corporate policy documents with high accuracy.
 
-🚀 **Live Demo:** https://project-aegis-policy-intelligence.streamlit.app/
+🚀 **Live Demo:** https://project-aegis-policy-intelligence.streamlit.app/  
+🔧 **API Backend:** https://project-aegis-api.onrender.com/health  
+👩‍💻 **Built by:** Ramya Priyanka A
 
 ---
 
@@ -15,6 +17,7 @@ Most RAG systems fail in enterprise settings because they split documents arbitr
 - *"What is the maternity leave policy?"* → 16 weeks at 100% pay (HR-POL-4001-V6)
 - *"What is the tuition reimbursement limit?"* → $5,250 USD per year (LND-POL-7010-V3)
 - *"What are the IT data security requirements?"* → Zero-Trust Architecture, Data Classification, BYOD policies (SEC-POL-8005-V7)
+
 ---
 
 ## Architecture
@@ -74,6 +77,37 @@ User Query
 
 ---
 
+## Deployment Architecture
+
+```
+Streamlit Cloud (Frontend)
+        ↓  HTTPS
+Render (FastAPI Backend — always on via cron ping)
+        ↓              ↓
+  Qdrant Cloud    OpenAI API
+  (Ireland)       (gpt-4o-mini)
+```
+
+- **Frontend:** Streamlit Cloud — auto-deploys on every GitHub push
+- **Backend:** FastAPI on Render free tier — kept alive by cron-job.org pinging `/health` every 10 minutes
+- **Vector DB:** Qdrant Cloud (free tier, Ireland region)
+- **Session limit:** 10 queries per session (Clear conversation to reset)
+
+---
+
+## 🎯 Design Philosophy — ABCDEF Framework
+
+| Step | Action | Aegis Implementation |
+|---|---|---|
+| **A** — Acknowledge | Understand the query intent | Category detection via LLM |
+| **B** — Break down | Decompose into multiple angles | Multi-Query Expansion (3 variants) + HyDE |
+| **C** — Contextualize | Retrieve relevant evidence | Qdrant vector search + RRF fusion |
+| **D** — Draft | Generate a grounded answer | GPT-4o-mini with context-only prompt |
+| **E** — Evaluate | Score and filter evidence quality | CrossEncoder reranking + token budget |
+| **F** — Finalize | Return structured, cited response | FastAPI → Streamlit with source cards |
+
+---
+
 ## 🎯 Design Philosophy — Why Advanced Retrieval?
 
 A naive RAG implementation (embed query → search → send top-k to LLM) fails on enterprise policy documents for three specific reasons:
@@ -109,6 +143,7 @@ Each technique was introduced to solve a specific, observed failure mode — not
 ## 📊 Evaluation Results
 
 Aegis includes a formal evaluation framework (`eval/`) with 15 golden question-answer pairs drawn from the actual policy corpus, covering all 5 policy categories (Travel, HR, IT Security, Learning & Development, Performance).
+
 **Run the evaluation:**
 ```bash
 python -m eval.run_eval
@@ -125,9 +160,23 @@ python -m eval.run_eval
 
 **Retrieval Recall@5 = 100%** means the pipeline never fails to find the right source document across all test queries — a critical baseline for any production RAG system.
 
-**Answer Faithfulness = 57%** reflects the conservative nature of exact keyword matching. The LLM answers are factually correct but frequently paraphrase policy language (e.g. *"does not roll over"* instead of *"non-rolling"*). Semantic similarity scoring would yield higher faithfulness and is listed as a future improvement below.
+**Answer Faithfulness = 57%** reflects the conservative nature of exact keyword matching. The LLM answers are factually correct but frequently paraphrase policy language. Semantic similarity scoring would yield higher faithfulness and is listed as a future improvement.
 
 Results are automatically saved to `eval/results/` as JSON and plain text after each run.
+
+---
+
+## 📋 Self-Evaluation Rubric
+
+| Criteria | Max | Score | Notes |
+|---|---|---|---|
+| Retrieval pipeline complexity | 20 | 19 | 8-stage pipeline, all techniques justified |
+| Answer grounding / no hallucination | 20 | 18 | Context-only prompting, category pre-filtering |
+| UI quality | 15 | 14 | BFSI professional theme, live pipeline status |
+| Code quality / structure | 15 | 13 | 4 packages, FastAPI + Streamlit separation |
+| Evaluation metrics | 15 | 13 | Recall@5, Faithfulness, Category Accuracy |
+| Documentation / README | 15 | 14 | Architecture, ABCDEF, known limitations |
+| **Total** | **100** | **91** | |
 
 ---
 
@@ -141,6 +190,7 @@ project-aegis/
 ├── pipeline.py          # Utility runner
 ├── api.py               # FastAPI backend — exposes /ask endpoint
 ├── app.py               # Streamlit frontend — chat UI
+├── render.yaml          # Render deployment config
 │
 ├── ingestion/           # Document processing
 │   ├── chunker.py       # Markdown-aware semantic chunking with overlap
@@ -178,14 +228,14 @@ project-aegis/
 | Component | Technology |
 |---|---|
 | LLM (Answer generation) | GPT-4o-mini (OpenAI) |
-| Embeddings | text-embedding-3-large (OpenAI) |
-| Vector Database | Qdrant Cloud |
+| Embeddings | text-embedding-3-large (OpenAI) — 3072 dimensions |
+| Vector Database | Qdrant Cloud (Ireland, AWS free tier) |
 | Reranker | CrossEncoder ms-marco-MiniLM-L-6-v2 |
 | Query expansion & HyDE | LangChain + GPT-4o-mini |
 | Chat history | LangChain InMemoryChatMessageHistory |
 | Token counting | tiktoken |
-| Backend API | FastAPI + Uvicorn |
-| Frontend UI | Streamlit |
+| Backend API | FastAPI + Uvicorn on Render |
+| Frontend UI | Streamlit Cloud |
 | Framework | Python 3.13 |
 
 ---
@@ -198,7 +248,7 @@ project-aegis/
 
 **Multi-stage retrieval** — The pipeline runs 4 parallel searches (3 query variants + 1 HyDE hypothetical answer), fuses results using Reciprocal Rank Fusion, filters by date to keep only the latest policy version, then reranks the top 25 chunks using a cross-encoder down to the top 5 before answering. The corpus contains 8 policy documents across 284 indexed chunks.
 
-**Token budget enforcement** — Before every LLM call, tiktoken counts the total tokens across the top-5 reranked chunks. If the total exceeds 3,000 tokens, the lowest-ranked chunks are dropped to prevent context overflow. Token usage is displayed live in the Streamlit sidebar.
+**Token budget enforcement** — Before every LLM call, tiktoken counts the total tokens across the top-5 reranked chunks. If the total exceeds 3,000 tokens, the lowest-ranked chunks are dropped to prevent context overflow. Token usage is displayed live in the UI sidebar per query.
 
 **Hallucination prevention** — The LLM is instructed to answer using only the retrieved context. Category pre-filtering mathematically prevents cross-domain contamination (e.g., a Travel query cannot return HR chunks). If the answer is not in the corpus, the system says so rather than making one up.
 
@@ -241,7 +291,6 @@ Place Markdown `.md` files inside the `data/` folder. Subfolders by category are
 ```bash
 python ingest.py
 ```
-This chunks, tags, embeds, and upserts all documents to Qdrant.
 
 ### 6. Run via command line
 ```bash
@@ -291,19 +340,22 @@ Sources used:
 ## ⚠️ Known Limitations & Future Work
 
 **1. Keyword-based faithfulness scoring**
-The current eval measures faithfulness by checking whether specific keywords appear in the LLM's answer. This under-counts correct answers that use synonymous phrasing. Future improvement: replace with semantic similarity scoring using `sentence-transformers` (cosine similarity between expected and actual answer embeddings).
+The current eval measures faithfulness by checking whether specific keywords appear in the LLM's answer. This under-counts correct answers that use synonymous phrasing. Future improvement: replace with semantic similarity scoring using `sentence-transformers`.
 
 **2. Query complexity routing**
-Every query runs the full pipeline regardless of complexity. A simple factual question does not need 4 retrieval variants and a reranker. Future improvement: add a query complexity classifier that routes simple queries to direct retrieval and only triggers the full pipeline for complex, multi-document queries.
+Every query runs the full pipeline regardless of complexity. Future improvement: add a query complexity classifier that routes simple queries to direct retrieval and only triggers the full pipeline for complex, multi-document queries.
 
 **3. Fixed token budget**
 The token budget (3,000 tokens) is a static threshold. Future improvement: make the budget dynamic based on query type and detected category.
 
 **4. No streaming responses**
-The current architecture waits for the full LLM response before displaying anything. Future improvement: implement SSE streaming from FastAPI and `st.write_stream()` in Streamlit.
+The current architecture waits for the full LLM response before displaying anything. Future improvement: implement SSE streaming from FastAPI and `st.write_stream()` in Streamlit for live pipeline step animation.
 
 **5. In-memory chat history**
-`InMemoryChatMessageHistory` resets on every server restart. In production, chat history should be persisted to a database (Redis or PostgreSQL) keyed by session ID.
+`InMemoryChatMessageHistory` resets on every server restart. In production, chat history should be persisted to Redis or PostgreSQL keyed by session ID.
+
+**6. Cold start latency**
+Render free tier spins down after inactivity. A cron-job.org ping every 10 minutes keeps the backend alive. First request after a long idle period may show a "waking up" message.
 
 ---
 
@@ -314,5 +366,3 @@ Building Project Aegis taught me that retrieval quality — not LLM quality — 
 Applying real-world RAG failure patterns (context overflow, fragile LLM output parsing, missing evaluation baselines) and fixing them systematically resulted in a pipeline that achieves 100% retrieval recall and 100% category accuracy on the golden evaluation dataset.
 
 ---
-
-*Built as part of the IITM Pravartak Advanced PG Certificate in Agentic AI (December 2025 – June 2026)*
