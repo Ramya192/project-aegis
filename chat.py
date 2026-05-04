@@ -12,11 +12,22 @@ from langchain_core.chat_history import InMemoryChatMessageHistory
 
 from retrieval.filters import detect_category, pre_filter_search, post_filter_by_date
 from retrieval.retriever import generate_multi_queries
-from retrieval.reranker import rerank
+from retrieval.reranker import rerank, get_reranker
 from retrieval.hyde import hyde_search
 from utils.token_budget import enforce_token_budget
 
 session_store = {}
+
+
+def preload_reranker():
+    """Called at startup to warm up the CrossEncoder model.
+    Prevents Render's 30s request timeout from killing the first /ask call.
+    """
+    import logging
+    logger = logging.getLogger("uvicorn.error")
+    logger.info("Warming up CrossEncoder model...")
+    get_reranker()
+    logger.info("CrossEncoder ready.")
 
 
 def get_session_history(session_id: str) -> InMemoryChatMessageHistory:
@@ -51,7 +62,7 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
             item["rank"] = rank
         all_ranked_lists.append(results)
 
-    # Step 3b: HyDE search — embed hypothetical answer, add to pool
+    # Step 3b: HyDE search
     hyde_results = hyde_search(query, qdrant, openai_client, llm, top_k=13, category=category)
     for rank, item in enumerate(hyde_results, start=1):
         item["rank"] = rank
@@ -75,18 +86,7 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
     # Step 6: rerank → top 5
     final_chunks = rerank(query, filtered_chunks, top_k=5)
 
-    # DEBUG: print chunk scores and text preview
-    print("\n--- Retrieved Chunks (after rerank) ---")
-    for i, chunk in enumerate(final_chunks, start=1):
-        source = chunk["metadata"].get("document_id", "unknown")
-        section = chunk["metadata"].get("h2_header", "")
-        score = chunk.get("score", "N/A")
-        print(f"  Chunk {i} | Score: {score} | {source} | {section}")
-        print(f"    Text: {chunk['text'][:150]}...")
-    print("--- End Chunks ---\n")
-
-    # Step 7: enforce token budget, then build context
-    # FIX: was "reranked_chunks" (unbound) — correct variable is final_chunks
+    # Step 7: enforce token budget
     final_chunks, token_info = enforce_token_budget(final_chunks, budget=3000)
     context = build_context(final_chunks)
 
@@ -115,9 +115,7 @@ Context:
     history.add_user_message(query)
     history.add_ai_message(response.content)
 
-    # Step 11: build sources list for the UI
-    # reranker stores score as "rerank_score" (raw CrossEncoder logit)
-    # normalize to 0-1 range using min-max for display
+    # Step 11: build sources list
     raw_scores = [float(chunk.get("rerank_score", 0)) for chunk in final_chunks]
     min_s = min(raw_scores) if raw_scores else 0
     max_s = max(raw_scores) if raw_scores else 1
@@ -136,8 +134,8 @@ Context:
     ]
 
     return {
-        "answer": response.content,       # FIX: was undefined "answer"
-        "sources": sources,               # FIX: was undefined "sources"
+        "answer": response.content,
+        "sources": sources,
         "category_detected": category,
         "token_info": token_info,
     }
