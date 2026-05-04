@@ -97,14 +97,14 @@ Render (FastAPI Backend — always on via cron ping)
 
 ## 🎯 Design Philosophy — ABCDEF Framework
 
-| Step | Action | Aegis Implementation |
+| Letter | Meaning | Aegis |
 |---|---|---|
-| **A** — Acknowledge | Understand the query intent | Category detection via LLM |
-| **B** — Break down | Decompose into multiple angles | Multi-Query Expansion (3 variants) + HyDE |
-| **C** — Contextualize | Retrieve relevant evidence | Qdrant vector search + RRF fusion |
-| **D** — Draft | Generate a grounded answer | GPT-4o-mini with context-only prompt |
-| **E** — Evaluate | Score and filter evidence quality | CrossEncoder reranking + token budget |
-| **F** — Finalize | Return structured, cited response | FastAPI → Streamlit with source cards |
+| **A** — Acknowledge | Enterprise RAG fails due to bad chunking, no reranking, and version drift — this system was built to solve those specific failures | Problem statement |
+| **B** — Background | 8 corporate policy documents, 284 indexed chunks, BFSI compliance use case requiring zero hallucination | Corpus & context |
+| **C** — Core approach | An 8-stage retrieval pipeline — MQE + HyDE → RRF fusion → date filter → CrossEncoder reranking → token budget → LLM | Solution design |
+| **D** — Details | Each technique justified by a specific failure mode it solves — not added for complexity | Implementation |
+| **E** — Evaluation | Recall@5 = 100%, Category Accuracy = 100%, Answer Faithfulness = 57% (keyword-based, conservative) | Results |
+| **F** — Future work | Semantic faithfulness scoring, SSE streaming, query complexity routing, persistent chat history | Limitations |
 
 ---
 

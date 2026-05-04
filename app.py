@@ -5,7 +5,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-API_URL = "http://localhost:8000"
+API_URL = "https://project-aegis-api.onrender.com"
 
 st.set_page_config(
     page_title="Aegis Policy Intelligence",
@@ -311,7 +311,7 @@ with left_col:
         '<div style="width:22px;height:22px;border-radius:50%;background:#C9A84C;'
         'display:flex;align-items:center;justify-content:center;'
         'font-size:0.6rem;font-weight:700;color:#0F2044;font-family:\'DM Mono\',monospace;">RA</div>'
-        '<div style="font-size:0.75rem;color:#E8E4D9;font-family:\'DM Sans\',sans-serif;">Ramya A</div>'
+        '<div style="font-size:0.75rem;color:#E8E4D9;font-family:\'DM Sans\',sans-serif;">Ramya Priyanka A</div>'
         '</div>'
     )
 
