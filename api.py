@@ -1,4 +1,5 @@
-# api.py  -- lazy-loaded version for Render free tier (512MB RAM)
+# api.py -- Render free tier (512MB RAM)
+# Strategy: full lazy loading — nothing loads at startup, first request is slow but stable
 
 import os
 from dotenv import load_dotenv
@@ -17,48 +18,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Globals — initialised at startup ────────────────────────
+# ── All globals start as None ────────────────────────────────
 _openai_client = None
 _qdrant_client = None
 _llm           = None
 
 def get_clients():
-    return _openai_client, _qdrant_client, _llm
-
-
-def _init_all():
-    """Load all clients and models synchronously at module import time.
-    Runs before uvicorn accepts any requests — safe from the 30s timeout.
-    """
     global _openai_client, _qdrant_client, _llm
 
-    print("==> Loading OpenAI client...", flush=True)
-    from openai import OpenAI
-    _openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    if _openai_client is None:
+        from openai import OpenAI
+        _openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
-    print("==> Loading Qdrant client...", flush=True)
-    from qdrant_client import QdrantClient
-    _qdrant_client = QdrantClient(
-        url=os.environ["QDRANT_URL"],
-        api_key=os.environ["QDRANT_API_KEY"],
-        timeout=60,
-    )
+    if _qdrant_client is None:
+        from qdrant_client import QdrantClient
+        _qdrant_client = QdrantClient(
+            url=os.environ["QDRANT_URL"],
+            api_key=os.environ["QDRANT_API_KEY"],
+            timeout=60,
+        )
 
-    print("==> Loading LangChain LLM...", flush=True)
-    from langchain_openai import ChatOpenAI
-    _llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        api_key=SecretStr(os.environ["OPENAI_API_KEY"]),
-    )
+    if _llm is None:
+        from langchain_openai import ChatOpenAI
+        _llm = ChatOpenAI(
+            model="gpt-4o-mini",
+            api_key=SecretStr(os.environ["OPENAI_API_KEY"]),
+        )
 
-    print("==> Warming up CrossEncoder reranker...", flush=True)
-    from chat import preload_reranker
-    preload_reranker()
-
-    print("==> All models loaded — ready to serve requests.", flush=True)
-
-# Run at import time — before uvicorn starts accepting connections
-_init_all()
+    return _openai_client, _qdrant_client, _llm
 
 
 # ── Pydantic models ──────────────────────────────────────────
@@ -97,7 +84,7 @@ def health():
 
 @app.post("/ask", response_model=QueryResponse)
 def ask_question(request: QueryRequest):
-    from chat import ask   # also lazy — imports sentence-transformers only on first call
+    from chat import ask
 
     openai_client, qdrant_client, llm = get_clients()
 
