@@ -17,35 +17,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Lazy globals — only initialised on first request ─────────
+# ── Globals — initialised at startup ────────────────────────
 _openai_client = None
 _qdrant_client = None
 _llm           = None
 
 def get_clients():
-    """Initialise heavy clients once, reuse on every subsequent request."""
+    return _openai_client, _qdrant_client, _llm
+
+
+def _init_all():
+    """Load all clients and models synchronously at module import time.
+    Runs before uvicorn accepts any requests — safe from the 30s timeout.
+    """
     global _openai_client, _qdrant_client, _llm
 
-    if _openai_client is None:
-        from openai import OpenAI
-        _openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    print("==> Loading OpenAI client...", flush=True)
+    from openai import OpenAI
+    _openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
-    if _qdrant_client is None:
-        from qdrant_client import QdrantClient
-        _qdrant_client = QdrantClient(
-            url=os.environ["QDRANT_URL"],
-            api_key=os.environ["QDRANT_API_KEY"],
-            timeout=60,
-        )
+    print("==> Loading Qdrant client...", flush=True)
+    from qdrant_client import QdrantClient
+    _qdrant_client = QdrantClient(
+        url=os.environ["QDRANT_URL"],
+        api_key=os.environ["QDRANT_API_KEY"],
+        timeout=60,
+    )
 
-    if _llm is None:
-        from langchain_openai import ChatOpenAI
-        _llm = ChatOpenAI(
-            model="gpt-4o-mini",
-            api_key=SecretStr(os.environ["OPENAI_API_KEY"]),
-        )
+    print("==> Loading LangChain LLM...", flush=True)
+    from langchain_openai import ChatOpenAI
+    _llm = ChatOpenAI(
+        model="gpt-4o-mini",
+        api_key=SecretStr(os.environ["OPENAI_API_KEY"]),
+    )
 
-    return _openai_client, _qdrant_client, _llm
+    print("==> Warming up CrossEncoder reranker...", flush=True)
+    from chat import preload_reranker
+    preload_reranker()
+
+    print("==> All models loaded — ready to serve requests.", flush=True)
+
+# Run at import time — before uvicorn starts accepting connections
+_init_all()
 
 
 # ── Pydantic models ──────────────────────────────────────────
