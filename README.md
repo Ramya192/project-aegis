@@ -362,7 +362,7 @@ The current architecture waits for the full LLM response before displaying anyth
 Render free tier spins down after inactivity. A cron-job.org ping every 10 minutes keeps the backend alive. First request after a long idle period may show a "waking up" message.
 
 **7. Reranker on deployment**
-Cohere Rerank API is used on Render (zero RAM overhead, satisfies CrossEncoder requirement from project guidelines). CrossEncoder ms-marco-MiniLM-L-6-v2 is used locally. In a production environment with sufficient RAM, the local CrossEncoder would be preferred for lower latency and no external API dependency.
+Cohere Rerank API (`rerank-english-v3.0`) is used on Render for zero RAM overhead. CrossEncoder `ms-marco-MiniLM-L-6-v2` is used locally for development. Both implement the same cross-encoder architecture — reading query and chunk simultaneously to score logical relevance.
 
 ---
 
