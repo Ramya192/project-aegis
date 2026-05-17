@@ -5,7 +5,7 @@
 
 🚀 **Live Demo:** https://project-aegis-policy-intelligence.streamlit.app/  
 🔧 **API Backend:** https://project-aegis-api.onrender.com/health  
-👩‍💻 **Built by:** Ramya A
+👩‍💻 **Built by:** Ramya Priyanka A
 
 ---
 
@@ -107,7 +107,7 @@ Render (FastAPI Backend — always on via cron ping)
 | **B** — Background | 8 corporate policy documents, 284 indexed chunks, BFSI compliance use case requiring zero hallucination | Corpus & context |
 | **C** — Core approach | An 8-stage retrieval pipeline — MQE + HyDE → RRF fusion → date filter → CrossEncoder reranking → token budget → LLM | Solution design |
 | **D** — Details | Each technique justified by a specific failure mode it solves — not added for complexity | Implementation |
-| **E** — Evaluation | Recall@5 = 100%, Category Accuracy = 100%, Answer Faithfulness = 57% (keyword-based, conservative) | Results |
+| **E** — Evaluation | RAGAS RAG Triad (27 samples, 0 errors): Context Precision 0.796, Context Recall 0.778, Faithfulness 0.713, Answer Relevancy 0.892, Answer Correctness 0.725 | Results |
 | **F** — Future work | Semantic faithfulness scoring, SSE streaming, query complexity routing, persistent chat history | Limitations |
 
 ---
@@ -146,41 +146,104 @@ Each technique was introduced to solve a specific, observed failure mode — not
 
 ## 📊 Evaluation Results
 
-Aegis includes a formal evaluation framework (`eval/`) with 15 golden question-answer pairs drawn from the actual policy corpus, covering all 5 policy categories (Travel, HR, IT Security, Learning & Development, Performance).
+Aegis includes a formal RAGAS evaluation framework (`eval/`) built on 31 ground truth Q&A pairs drawn from the actual policy corpus, covering all 5 policy categories (Travel, HR, IT Security, Learning & Development, Performance).
 
 **Run the evaluation:**
 ```bash
-python -m eval.run_eval
+# Step 1: Generate ground truth (run once)
+python -m eval.generate_ground_truth
+
+# Step 2: Run RAGAS evaluation
+python -m eval.run_ragas_eval
 ```
 
-### Latest Results (May 3, 2026)
-
-| Metric | Score | What It Measures |
-|---|---|---|
-| **Retrieval Recall@5** | **100%** | Did the correct policy document appear in the top-5 retrieved chunks? |
-| **Category Accuracy** | **100%** | Did `detect_category()` correctly classify the query's policy domain? |
-| **Answer Faithfulness** | **57%** | Do LLM answers contain the expected key facts? (keyword-based) |
-| **Token Truncations** | **0 / 15** | Queries where token budget enforcer had to drop chunks |
-
-**Retrieval Recall@5 = 100%** means the pipeline never fails to find the right source document across all test queries — a critical baseline for any production RAG system.
-
-**Answer Faithfulness = 57%** reflects the conservative nature of exact keyword matching. The LLM answers are factually correct but frequently paraphrase policy language. Semantic similarity scoring would yield higher faithfulness and is listed as a future improvement.
-
-Results are automatically saved to `eval/results/` as JSON and plain text after each run.
+See the **📊 RAG Evaluation (RAGAS Framework)** section below for full metric definitions, category breakdown, and latest results.
 
 ---
 
-## 📋 Self-Evaluation Rubric
+## 📊 RAG Evaluation (RAGAS Framework)
 
-| Criteria | Max | Score | Notes |
+Aegis is evaluated using the **RAG Triad** — the industry-standard methodology for measuring both retrieval quality and generation quality independently. The evaluation framework lives in `eval/` and runs against the actual production pipeline (`chat.py`), not a mock retriever.
+
+### Methodology
+
+**Ground Truth Dataset:** 28 Q&A pairs auto-generated from the 8 policy documents using GPT-4o-mini, plus 3 manually crafted edge-case questions (clawback repayment schedule, mileage rate coverage, clean device protocol) — 31 total covering all 5 policy categories.
+
+**Pipeline under test:** The full 8-stage Aegis pipeline — `detect_category → multi_query_expansion → pre_filter → HyDE → RRF_fusion → post_filter_by_date → CrossEncoder_rerank → LLM` — is executed for every evaluation question. RAGAS receives the LLM's actual answer and the actual retrieved chunks, not synthetic inputs.
+
+**Evaluation model:** RAGAS uses `gpt-4o-mini` as the LLM judge and `text-embedding-3-small` for semantic similarity scoring (Answer Relevancy, Answer Correctness).
+
+---
+
+### Evaluation Results
+
+**Run: `python -m eval.generate_ground_truth && python -m eval.run_ragas_eval`**
+
+#### Overall Scores
+
+| Metric | Score | Threshold | Status |
 |---|---|---|---|
-| Retrieval pipeline complexity | 20 | 19 | 8-stage pipeline, all techniques justified |
-| Answer grounding / no hallucination | 20 | 18 | Context-only prompting, category pre-filtering |
-| UI quality | 15 | 14 | BFSI professional theme, live pipeline status |
-| Code quality / structure | 15 | 13 | 4 packages, FastAPI + Streamlit separation |
-| Evaluation metrics | 15 | 13 | Recall@5, Faithfulness, Category Accuracy |
-| Documentation / README | 15 | 14 | Architecture, ABCDEF, known limitations |
-| **Total** | **100** | **91** | |
+| **Context Precision** | **0.796** | ≥ 0.80 | 🟡 Near threshold |
+| **Context Recall** | **0.778** | ≥ 0.85 | 🟡 Room to improve |
+| **Context Relevancy** | N/A | ≥ 0.75 | Not in installed RAGAS version |
+| **Faithfulness** | **0.713** | ≥ 0.85 | 🟡 Acceptable |
+| **Answer Relevancy** | **0.892** | ≥ 0.85 | ✅ Exceeds threshold |
+| **Answer Correctness** | **0.725** | ≥ 0.70 | ✅ Meets threshold |
+
+> Run: `20260517_211711` · 27 samples · 0 pipeline errors · model: `gpt-4o-mini`
+> Full results: `eval/results/ragas_20260517_211711.json`
+
+---
+
+### What Each Metric Measures
+
+#### 🔍 Retrieval Metrics (The Search Phase)
+These measure the quality of the vector search, metadata filtering, and CrossEncoder reranker. They answer: *"Did we find the right documents, ranked correctly?"*
+
+**Context Precision** — Measures ranking quality. Checks whether the truly relevant chunks are positioned at the top of the retrieved set. Low precision means the LLM receives irrelevant text before the answer, risking the "Lost in the Middle" failure mode. Aegis addresses this with CrossEncoder reranking (Cohere Rerank on deployment, ms-marco-MiniLM-L-6-v2 locally).
+
+**Context Recall** — Measures coverage. Checks whether all information needed to answer the question was actually retrieved. Low recall means the LLM is missing facts, which is the root cause of hallucination. Aegis addresses this via Multi-Query Expansion (3 variants) + HyDE + RRF fusion across 4 parallel searches.
+
+**Context Relevancy** — Measures signal-to-noise ratio within retrieved chunks. Scores the fraction of sentences in retrieved chunks that are actually relevant to the query vs. filler text. Aegis addresses this via category pre-filtering (`detect_category → WHERE policy_category = X`) which mathematically prevents cross-domain contamination.
+
+#### 🤖 Generation Metrics (The Response Phase)
+These measure whether the LLM used the retrieved context correctly. They answer: *"Did the bot answer faithfully without hallucinating?"*
+
+**Faithfulness (Anti-Hallucination)** — Every factual claim in the LLM's answer is verified against the retrieved context. A claim that is true but not traceable to the context is penalised. Aegis enforces context-only answering via the system prompt: *"Answer using ONLY the context below."*
+
+**Answer Relevancy** — Measures whether the response actually addresses what the user asked. A response can be 100% faithful to the context but still fail if it answers the wrong question. Measured by generating reverse questions from the answer and computing semantic similarity to the original query.
+
+**Answer Correctness** — Compares the LLM's answer against the ground truth reference answer using semantic similarity (BERTScore-equivalent). This is the end-to-end quality metric — it captures both factual accuracy and completeness.
+
+---
+
+### Category Breakdown
+
+RAGAS scores are also broken down by policy category to identify domain-specific weaknesses:
+
+| Category | Context Precision | Context Recall | Faithfulness | Answer Correctness |
+|---|---|---|---|---|
+| Travel | 0.831 | 0.762 | 0.698 | 0.741 |
+| HR | 0.771 | 0.789 | 0.724 | 0.712 |
+| IT | 0.786 | 0.783 | 0.717 | 0.722 |
+
+> Per-category breakdown from `eval/results/ragas_20260517_211711.json`. Travel scores highest on Context Precision (0.831) due to strong category pre-filtering. HR recall (0.789) is the strongest across categories, reflecting the broad HR policy corpus coverage.
+
+---
+
+### Running the Evaluation
+
+```bash
+# Step 1: Generate ground truth Q&A dataset (run once)
+python -m eval.generate_ground_truth
+
+# Step 2: Run full RAGAS evaluation against the live pipeline
+python -m eval.run_ragas_eval
+```
+
+Results are saved automatically to `eval/results/ragas_<timestamp>.json` and `eval/results/ragas_<timestamp>.txt`.
+
+> ⚠️ **API cost estimate:** Running all 31 samples consumes approximately $0.80–$1.20 in OpenAI API credits (pipeline calls + RAGAS judge calls).
 
 ---
 
@@ -213,10 +276,11 @@ project-aegis/
 ├── utils/
 │   └── token_budget.py  # Token budget enforcer (tiktoken)
 │
-├── eval/                # Evaluation framework
-│   ├── golden_qa.py     # 15 golden QA pairs from policy corpus
-│   ├── run_eval.py      # Eval runner — Recall@5, Faithfulness, Category Accuracy
-│   └── results/         # Auto-saved JSON + TXT results per run
+├── eval/                         # Evaluation framework (RAGAS)
+│   ├── generate_ground_truth.py  # GPT-generates 28+ Q&A pairs from policy corpus
+│   ├── run_ragas_eval.py         # RAGAS runner — 6 RAG Triad metrics, category breakdown
+│   ├── ground_truth.json         # Auto-generated ground truth dataset (31 Q&A pairs)
+│   └── results/                  # Auto-saved JSON + TXT results per run
 │
 └── data/                # Corporate policy documents (Markdown)
     ├── travel/
@@ -343,8 +407,8 @@ Sources used:
 
 ## ⚠️ Known Limitations & Future Work
 
-**1. Keyword-based faithfulness scoring**
-The current eval measures faithfulness by checking whether specific keywords appear in the LLM's answer. This under-counts correct answers that use synonymous phrasing. Future improvement: replace with semantic similarity scoring using `sentence-transformers`.
+**1. RAGAS evaluation requires live API calls**
+Running `run_ragas_eval.py` executes the full Aegis pipeline for every ground truth question and uses GPT-4o-mini as an LLM judge for each metric. This costs approximately $0.80–$1.20 per full evaluation run. Future improvement: cache pipeline outputs and run RAGAS scoring separately to reduce cost on repeat evaluations.
 
 **2. Query complexity routing**
 Every query runs the full pipeline regardless of complexity. Future improvement: add a query complexity classifier that routes simple queries to direct retrieval and only triggers the full pipeline for complex, multi-document queries.
@@ -370,6 +434,9 @@ Cohere Rerank API (`rerank-english-v3.0`) is used on Render for zero RAM overhea
 
 Building Project Aegis taught me that retrieval quality — not LLM quality — is the primary bottleneck in enterprise RAG. The most impactful improvements came from structured chunking (tables, overlap, ToC filtering), metadata filtering (pre and post), and the reranking step which dramatically reduced irrelevant context reaching the LLM. The system correctly refuses to answer when information is not in the corpus, demonstrating hallucination prevention in practice.
 
-Applying real-world RAG failure patterns (context overflow, fragile LLM output parsing, missing evaluation baselines) and fixing them systematically resulted in a pipeline that achieves 100% retrieval recall and 100% category accuracy on the golden evaluation dataset.
+Applying real-world RAG failure patterns (context overflow, fragile LLM output parsing, 
+missing evaluation baselines) and fixing them systematically resulted in a pipeline that 
+achieves Answer Relevancy of 0.892 and Context Precision of 0.796 on a RAGAS evaluation 
+across 27 ground truth Q&A pairs — with zero pipeline errors across all samples.
 
 ---

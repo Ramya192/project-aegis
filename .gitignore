@@ -13,3 +13,5 @@ qdrant_storage/
 
 models/cache/
 test_chunker.py
+practice/
+eval/results/

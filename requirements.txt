@@ -23,3 +23,6 @@ pydantic
 
 tiktoken>=0.6.0
 cohere>=5.0.0
+# Evaluation
+ragas>=0.1.0
+datasets

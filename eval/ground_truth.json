@@ -1,0 +1,164 @@
+[
+  {
+    "question": "What is the minimum password length required by the policy?",
+    "ground_truth": "Passwords must be at least 14 characters in length.",
+    "source_doc": "it security and data privacy.md",
+    "category": "IT"
+  },
+  {
+    "question": "How long do employees have to forward a Data Subject Access Request (DSAR) to privacy@company.com?",
+    "ground_truth": "Employees must forward the request within 24 hours.",
+    "source_doc": "it security and data privacy.md",
+    "category": "IT"
+  },
+  {
+    "question": "What happens if Tier 4 data is transferred via standard email?",
+    "ground_truth": "Transferring Tier 4 data via Slack or standard email is a Level 3 Disciplinary Violation.",
+    "source_doc": "it security and data privacy.md",
+    "category": "IT"
+  },
+  {
+    "question": "What is the maximum reimbursement amount for tuition under the Tuition Assistance Program per calendar year?",
+    "ground_truth": "$5,250 USD",
+    "source_doc": "learning and tuition.md",
+    "category": "HR"
+  },
+  {
+    "question": "How long must an employee have completed continuous full-time service to be eligible for the Tuition Assistance Program?",
+    "ground_truth": "Twelve (12) months",
+    "source_doc": "learning and tuition.md",
+    "category": "HR"
+  },
+  {
+    "question": "What happens if an employee fails to complete mandatory training by the deadline?",
+    "ground_truth": "Immediate suspension of corporate network access and formal disciplinary action.",
+    "source_doc": "learning and tuition.md",
+    "category": "HR"
+  },
+  {
+    "question": "What is the reimbursement rate for personal vehicle usage under the Standard Mileage Rate (SMR) program effective January 1, 2026?",
+    "ground_truth": "$0.69 USD per business mile.",
+    "source_doc": "fuel and mileage policy.md",
+    "category": "Travel"
+  },
+  {
+    "question": "How must employees refuel rental vehicles before returning them to the rental agency?",
+    "ground_truth": "Employees must refuel rental vehicles to the required level (usually 'Full') prior to returning the vehicle to the rental agency.",
+    "source_doc": "fuel and mileage policy.md",
+    "category": "Travel"
+  },
+  {
+    "question": "What happens if an employee fails to refuel a rental car and incurs a refueling penalty?",
+    "ground_truth": "The difference between the local market rate and the penalty rate will be deducted from the employee's reimbursement.",
+    "source_doc": "fuel and mileage policy.md",
+    "category": "Travel"
+  },
+  {
+    "question": "What is the minimum lead time required for international travel to a high-risk destination?",
+    "ground_truth": "45 Days",
+    "source_doc": "international travel.md",
+    "category": "Travel"
+  },
+  {
+    "question": "How long must a passport be valid beyond the intended date of return for international travel?",
+    "ground_truth": "At least six (6) months",
+    "source_doc": "international travel.md",
+    "category": "Travel"
+  },
+  {
+    "question": "What happens if an employee conducts official company business on a 'Tourist Visa' without clearance?",
+    "ground_truth": "It constitutes a Level 1 Policy Violation and grounds for immediate termination.",
+    "source_doc": "international travel.md",
+    "category": "Travel"
+  },
+  {
+    "question": "What is the minimum lead time required for trips estimated to cost between $1,000 and $2,999?",
+    "ground_truth": "14 Days",
+    "source_doc": "travel policy.md",
+    "category": "Travel"
+  },
+  {
+    "question": "How must all travel be booked according to the policy?",
+    "ground_truth": "All travel (flights, hotels, and rental cars) MUST be booked through the TripIt Corporate Navigator portal or directly with the organization’s designated Travel Management Company (TMC) via phone.",
+    "source_doc": "travel policy.md",
+    "category": "Travel"
+  },
+  {
+    "question": "What happens if an employee's travel is funded by a third party?",
+    "ground_truth": "The stricter of the two policies (the company's policy or the client's policy) shall apply.",
+    "source_doc": "travel policy.md",
+    "category": "Travel"
+  },
+  {
+    "question": "What is the timeline for a manager to report a Level 2 or Level 3 violation to Human Resources?",
+    "ground_truth": "Managers must report the incident to Human Resources within 24 hours.",
+    "source_doc": "code of conduct.md",
+    "category": "HR"
+  },
+  {
+    "question": "What are the consequences for an employee found to have retaliated against a whistleblower?",
+    "ground_truth": "Any employee found to have retaliated against a whistleblower will face immediate Level 3 disciplinary action, up to and including termination.",
+    "source_doc": "code of conduct.md",
+    "category": "HR"
+  },
+  {
+    "question": "How long does the Employee Relations team have to open an investigation after receiving a report?",
+    "ground_truth": "The ER team is mandated to open an investigation within three (3) business days of receiving a report.",
+    "source_doc": "code of conduct.md",
+    "category": "HR"
+  },
+  {
+    "question": "What is the maximum PTO carryover limit at the end of the calendar year?",
+    "ground_truth": "At the end of the calendar year (December 31st), employees may carry over a maximum of forty (40) hours (5 days) of unused PTO into the following calendar year.",
+    "source_doc": "leave_and_absence.md",
+    "category": "HR"
+  },
+  {
+    "question": "How many Paid Floating Holidays do full-time employees receive each year?",
+    "ground_truth": "All full-time employees receive two (2) Paid Floating Holidays (16 hours) on January 1st of each year.",
+    "source_doc": "leave_and_absence.md",
+    "category": "HR"
+  },
+  {
+    "question": "What happens if an employee does not provide a medical certificate after using more than three consecutive days of sick leave?",
+    "ground_truth": "Failure to provide a requested medical certificate within 5 business days of returning to work will result in the absence being coded as Unpaid Leave.",
+    "source_doc": "leave_and_absence.md",
+    "category": "HR"
+  },
+  {
+    "question": "What is the eligibility cutoff date for receiving a formal Year-End rating?",
+    "ground_truth": "To receive a formal Year-End rating and be eligible for the subsequent merit cycle, an employee must have been hired on or before September 30th of the review year.",
+    "source_doc": "performance and compensation.md",
+    "category": "HR"
+  },
+  {
+    "question": "How is the Actual Bonus Payout calculated?",
+    "ground_truth": "Actual Bonus Payout = `(Base Salary) * (Target Bonus Percentage) * (Company Multiplier) * (Individual Multiplier)`",
+    "source_doc": "performance and compensation.md",
+    "category": "HR"
+  },
+  {
+    "question": "What happens if an employee relocates from a Tier A to a Tier C market?",
+    "ground_truth": "If an employee voluntarily relocates from a Tier A to a Tier C market, their base salary will be adjusted downward to align with the new geographic band within 60 days of relocation.",
+    "source_doc": "performance and compensation.md",
+    "category": "HR"
+  },
+  {
+    "question": "If I resign 18 months after receiving tuition reimbursement, how much do I need to repay?",
+    "ground_truth": "50% of the reimbursed funds must be repaid if departure occurs between 12 and 24 months of the payout date.",
+    "source_doc": "learning and tuition.md",
+    "category": "HR"
+  },
+  {
+    "question": "What is the mileage reimbursement rate for personal vehicles and what does it cover?",
+    "ground_truth": "$0.69 USD per business mile. The rate covers petrol/diesel, routine maintenance, oil changes, tire wear, depreciation, and personal auto insurance.",
+    "source_doc": "fuel and mileage policy.md",
+    "category": "Travel"
+  },
+  {
+    "question": "Can employees traveling to China bring their standard corporate laptops?",
+    "ground_truth": "No. Employees traveling to countries categorized as High Cyber-Risk such as China are strictly prohibited from bringing standard-issue corporate laptops. They must request Clean or Burner devices from IT Procurement 14 days prior to travel.",
+    "source_doc": "international travel.md",
+    "category": "Travel"
+  }
+]
