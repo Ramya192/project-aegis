@@ -105,7 +105,7 @@ Render (FastAPI Backend — always on via cron ping)
 |---|---|---|
 | **A** — Acknowledge | Enterprise RAG fails due to bad chunking, no reranking, and version drift — this system was built to solve those specific failures | Problem statement |
 | **B** — Background | 8 corporate policy documents, 284 indexed chunks, BFSI compliance use case requiring zero hallucination | Corpus & context |
-| **C** — Core approach | An 8-stage retrieval pipeline — MQE + HyDE → RRF fusion → date filter → CrossEncoder reranking → token budget → LLM | Solution design |
+| **C** — Core approach | An 8-stage retrieval pipeline — MQE + HyDE → RRF fusion → date filter → Reranker (Cohere on deployment / CrossEncoder locally) → token budget → LLM | Solution design |
 | **D** — Details | Each technique justified by a specific failure mode it solves — not added for complexity | Implementation |
 | **E** — Evaluation | RAGAS RAG Triad (27 samples, 0 errors): Context Precision 0.796, Context Recall 0.778, Faithfulness 0.713, Answer Relevancy 0.892, Answer Correctness 0.725 | Results |
 | **F** — Future work | Semantic faithfulness scoring, SSE streaming, query complexity routing, persistent chat history | Limitations |
