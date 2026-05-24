@@ -1,3 +1,13 @@
+---
+title: Project Aegis API
+emoji: 🛡️
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
+
 # Project Aegis — Advanced Enterprise RAG System
 
 > **IITM Pravartak Advanced PG Certificate in Agentic AI — Agentic AI Assignment**  

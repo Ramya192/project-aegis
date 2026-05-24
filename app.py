@@ -5,17 +5,18 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-API_URL = "https://project-aegis-api.onrender.com"
+API_URL = "https://ramya192-project-aegis-api.hf.space"
 
 st.set_page_config(
     page_title="Aegis Policy Intelligence",
     page_icon="📋",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
 # ── CSS ──────────────────────────────────────────────────────
-st.markdown("""
+st.markdown(
+    """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
@@ -230,7 +231,9 @@ div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p {
 #MainMenu, footer, header { visibility: hidden; }
 div[data-testid="stDecoration"] { display: none; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ── Session state ────────────────────────────────────────────
 if "chat_history" not in st.session_state:
@@ -252,6 +255,7 @@ LP_CSS = (
     "border-right:3px solid #C9A84C;"
 )
 
+
 def lp_block(html: str):
     """Render a small HTML chunk inside the left-panel styling."""
     st.markdown(
@@ -259,34 +263,41 @@ def lp_block(html: str):
         unsafe_allow_html=True,
     )
 
+
 def lp_divider():
     st.markdown(
         f'<div style="{LP_CSS} padding:0 12px;">'
         '<hr style="border:none;border-top:1px solid rgba(201,168,76,0.3);margin:4px 0;">'
-        '</div>',
+        "</div>",
         unsafe_allow_html=True,
     )
+
 
 def lp_section(title: str):
     st.markdown(
         f'<div style="{LP_CSS} padding:6px 12px 2px 12px;">'
         f'<div style="font-size:0.66rem;font-weight:600;letter-spacing:0.1em;'
-        f'text-transform:uppercase;color:#C9A84C;font-family:\'DM Mono\',monospace;">'
-        f'{title}</div></div>',
+        f"text-transform:uppercase;color:#C9A84C;font-family:'DM Mono',monospace;\">"
+        f"{title}</div></div>",
         unsafe_allow_html=True,
     )
 
+
 def lp_stat(label: str, value: str, small: bool = False):
-    vs = "font-size:0.7rem;margin-top:1px;" if small else "font-size:1rem;margin-top:1px;"
+    vs = (
+        "font-size:0.7rem;margin-top:1px;"
+        if small
+        else "font-size:1rem;margin-top:1px;"
+    )
     st.markdown(
         f'<div style="{LP_CSS} padding:4px 12px;">'
         '<div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);'
         'border-radius:3px;padding:7px 10px;">'
         f'<div style="font-size:0.64rem;color:#A8B8C8;letter-spacing:0.08em;'
-        f'text-transform:uppercase;font-family:\'DM Mono\',monospace;">{label}</div>'
+        f"text-transform:uppercase;font-family:'DM Mono',monospace;\">{label}</div>"
         f'<div style="{vs}color:#C9A84C;font-weight:600;'
-        f'font-family:\'DM Mono\',monospace;">{value}</div>'
-        '</div></div>',
+        f"font-family:'DM Mono',monospace;\">{value}</div>"
+        "</div></div>",
         unsafe_allow_html=True,
     )
 
@@ -301,18 +312,18 @@ with left_col:
 
     # Brand header
     lp_block(
-        '<div style="font-family:\'DM Mono\',monospace;font-size:0.62rem;'
+        "<div style=\"font-family:'DM Mono',monospace;font-size:0.62rem;"
         'color:#C9A84C;letter-spacing:0.15em;">IITM PRAVARTAK · AGENTIC AI</div>'
-        '<div style="font-family:\'DM Serif Display\',serif;font-size:1.35rem;'
+        "<div style=\"font-family:'DM Serif Display',serif;font-size:1.35rem;"
         'color:#FFFFFF;line-height:1.2;">Project Aegis</div>'
         '<div style="font-size:0.76rem;color:#A8B8C8;">Enterprise Policy Intelligence</div>'
         '<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.2);'
         'display:flex;align-items:center;gap:6px;">'
         '<div style="width:22px;height:22px;border-radius:50%;background:#C9A84C;'
-        'display:flex;align-items:center;justify-content:center;'
-        'font-size:0.6rem;font-weight:700;color:#0F2044;font-family:\'DM Mono\',monospace;">RA</div>'
-        '<div style="font-size:0.75rem;color:#E8E4D9;font-family:\'DM Sans\',sans-serif;">Ramya Priyanka A</div>'
-        '</div>'
+        "display:flex;align-items:center;justify-content:center;"
+        "font-size:0.6rem;font-weight:700;color:#0F2044;font-family:'DM Mono',monospace;\">RA</div>"
+        "<div style=\"font-size:0.75rem;color:#E8E4D9;font-family:'DM Sans',sans-serif;\">Ramya Priyanka A</div>"
+        "</div>"
     )
 
     lp_divider()
@@ -339,9 +350,9 @@ with left_col:
         rows += (
             f'<div style="display:flex;justify-content:space-between;align-items:center;'
             f'padding:4px 0;border-bottom:1px solid rgba(201,168,76,0.1);font-size:0.84rem;">'
-            f'<span>{icon}&nbsp;&nbsp;{name}</span>'
-            f'<span style="font-family:\'DM Mono\',monospace;font-size:0.7rem;color:#C9A84C;">'
-            f'{count}</span></div>'
+            f"<span>{icon}&nbsp;&nbsp;{name}</span>"
+            f"<span style=\"font-family:'DM Mono',monospace;font-size:0.7rem;color:#C9A84C;\">"
+            f"{count}</span></div>"
         )
     lp_block(rows)
 
@@ -351,21 +362,26 @@ with left_col:
     lp_section("Retrieval Pipeline")
     active = st.session_state.last_result is not None
     for step in [
-        "Multi-Query Expansion", "HyDE Search", "Metadata Pre-Filter",
-        "RRF Fusion (k=60)", "Post-Filter by Date", "CrossEncoder Reranking",
-        "Token Budget Check", "LLM Answer Generation",
+        "Multi-Query Expansion",
+        "HyDE Search",
+        "Metadata Pre-Filter",
+        "RRF Fusion (k=60)",
+        "Post-Filter by Date",
+        "CrossEncoder Reranking",
+        "Token Budget Check",
+        "LLM Answer Generation",
     ]:
-        dot_color  = "#68D391" if active else "#C9A84C"
+        dot_color = "#68D391" if active else "#C9A84C"
         dot_opacity = "1" if active else "0.4"
-        dot_shadow  = "box-shadow:0 0 6px #68D391;" if active else ""
+        dot_shadow = "box-shadow:0 0 6px #68D391;" if active else ""
         st.markdown(
             f'<div style="{LP_CSS} padding:3px 12px;">'
             f'<div style="display:flex;align-items:center;gap:8px;">'
             f'<div style="width:8px;height:8px;border-radius:50%;'
-            f'background:{dot_color};opacity:{dot_opacity};{dot_shadow};'
+            f"background:{dot_color};opacity:{dot_opacity};{dot_shadow};"
             f'flex-shrink:0;display:inline-block;"></div>'
             f'<span style="font-size:0.8rem;color:#E8E4D9;">{step}</span>'
-            f'</div></div>',
+            f"</div></div>",
             unsafe_allow_html=True,
         )
 
@@ -374,10 +390,10 @@ with left_col:
     # Token budget (conditional)
     if st.session_state.last_result and st.session_state.last_result.get("token_info"):
         ti = st.session_state.last_result["token_info"]
-        used   = ti.get("total_tokens_after", 0)
+        used = ti.get("total_tokens_after", 0)
         budget = ti.get("budget", 3000)
-        pct    = min(int((used / budget) * 100), 100)
-        bar_c  = "#EF4444" if ti.get("truncated") else "#68D391"
+        pct = min(int((used / budget) * 100), 100)
+        bar_c = "#EF4444" if ti.get("truncated") else "#68D391"
 
         lp_section("Context Window")
         st.markdown(
@@ -385,13 +401,13 @@ with left_col:
             '<div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);'
             'border-radius:3px;padding:7px 10px;">'
             '<div style="font-size:0.64rem;color:#A8B8C8;letter-spacing:0.08em;'
-            'text-transform:uppercase;font-family:\'DM Mono\',monospace;">Tokens used / budget</div>'
+            "text-transform:uppercase;font-family:'DM Mono',monospace;\">Tokens used / budget</div>"
             f'<div style="font-size:1rem;color:#C9A84C;font-weight:600;'
-            f'font-family:\'DM Mono\',monospace;margin-top:1px;">{used:,} / {budget:,}</div>'
+            f"font-family:'DM Mono',monospace;margin-top:1px;\">{used:,} / {budget:,}</div>"
             f'<div style="background:rgba(255,255,255,0.06);border-radius:3px;height:5px;'
             f'margin-top:5px;overflow:hidden;">'
             f'<div style="height:5px;border-radius:3px;width:{pct}%;background:{bar_c};"></div>'
-            '</div></div></div>',
+            "</div></div></div>",
             unsafe_allow_html=True,
         )
         if ti.get("truncated"):
@@ -406,22 +422,23 @@ with left_col:
     lp_stat("Queries this session", f"{st.session_state.query_count} / 10")
     lp_block(
         f'<div style="font-size:0.7rem;color:{"#FCA5A5" if remaining == 0 else "#68D391" if remaining > 3 else "#F6AD55"};'
-        f'font-family:\'DM Mono\',monospace;margin-top:2px;">'
+        f"font-family:'DM Mono',monospace;margin-top:2px;\">"
         f'{"⚠ Limit reached" if remaining == 0 else f"{remaining} remaining"}</div>'
     )
 
     # Clear button
     if st.button("Clear conversation", use_container_width=True):
         st.session_state.chat_history = []
-        st.session_state.last_result  = None
-        st.session_state.query_count  = 0
+        st.session_state.last_result = None
+        st.session_state.query_count = 0
         st.rerun()
 
 
 # ── MAIN CONTENT ─────────────────────────────────────────────
 with main_col:
 
-    st.markdown("""
+    st.markdown(
+        """
     <div class="aegis-header">
         <h1>Policy Intelligence System</h1>
         <p>
@@ -431,45 +448,53 @@ with main_col:
             Grounded answers
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
-    st.markdown('<div class="section-label">Policy Question</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-label">Policy Question</div>', unsafe_allow_html=True
+    )
 
     q_col, b_col = st.columns([5, 1])
     with q_col:
         query = st.text_input(
             label="query",
             placeholder="e.g.  What is the maternity leave entitlement for a primary caregiver?",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
         )
     with b_col:
         ask_btn = st.button("Run →", type="primary", use_container_width=True)
 
-    st.markdown("""
+    st.markdown(
+        """
     <div style="font-size:0.75rem; color:#A0AEC0; margin-top:6px;
                 font-family:'DM Mono',monospace; letter-spacing:0.02em;">
         Try: &nbsp;"What is the daily meal per diem?" &nbsp;·&nbsp;
         "Mileage rate for personal car?" &nbsp;·&nbsp;
         "Phishing incident reporting SLA?"
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     # ── Execute query ────────────────────────────────────────
     QUERY_LIMIT = 10
     if st.session_state.query_count >= QUERY_LIMIT:
         st.markdown(
-            f'''<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-left:4px solid #E53E3E;
+            f"""<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-left:4px solid #E53E3E;
             border-radius:4px;padding:0.9rem 1.25rem;margin-top:0.75rem;font-family:'DM Sans',sans-serif;">
             <div style="color:#742A2A;font-weight:600;font-size:0.95rem;">Session limit reached</div>
             <div style="color:#9B2C2C;font-size:0.85rem;margin-top:3px;">
             You have used all {QUERY_LIMIT} queries for this session.
             Click <strong>Clear conversation</strong> in the left panel to start a new session.
-            </div></div>''',
-            unsafe_allow_html=True
+            </div></div>""",
+            unsafe_allow_html=True,
         )
     elif ask_btn and query.strip():
         loading_placeholder = st.empty()
-        loading_placeholder.markdown("""
+        loading_placeholder.markdown(
+            """
         <div style="background:#0F2044; border-left:4px solid #C9A84C; border-radius:4px;
                     padding:1rem 1.25rem; margin-top:0.75rem; display:flex;
                     align-items:center; gap:12px;">
@@ -490,31 +515,36 @@ with main_col:
         <style>
         @keyframes spin { to { transform: rotate(360deg); } }
         </style>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
         try:
             resp = requests.post(
                 f"{API_URL}/ask",
                 json={"query": query, "session_id": st.session_state.session_id},
-                timeout=120
+                timeout=120,
             )
             resp.raise_for_status()
             data = resp.json()
 
             loading_placeholder.empty()
-            st.session_state.last_result  = data
+            st.session_state.last_result = data
             st.session_state.query_count += 1
-            st.session_state.chat_history.append({
-                "query":    query,
-                "answer":   data.get("answer", ""),
-                "category": data.get("category_detected", ""),
-                "sources":  data.get("sources", []),
-            })
+            st.session_state.chat_history.append(
+                {
+                    "query": query,
+                    "answer": data.get("answer", ""),
+                    "category": data.get("category_detected", ""),
+                    "sources": data.get("sources", []),
+                }
+            )
             st.rerun()
 
         except requests.exceptions.Timeout:
             loading_placeholder.empty()
-            st.markdown('''
+            st.markdown(
+                """
             <div style="background:#FFFBEB; border:1px solid #F6E05E;
                         border-left:4px solid #D69E2E; border-radius:4px;
                         padding:0.9rem 1.25rem; font-family:'DM Sans',sans-serif;">
@@ -525,7 +555,9 @@ with main_col:
                     The server was sleeping (free tier). It takes ~60 seconds to wake up.
                     Please click <strong>Run →</strong> again in a moment.
                 </div>
-            </div>''', unsafe_allow_html=True)
+            </div>""",
+                unsafe_allow_html=True,
+            )
 
         except Exception as e:
             loading_placeholder.empty()
@@ -535,7 +567,7 @@ with main_col:
     if st.session_state.chat_history:
         st.markdown(
             '<div class="section-label" style="margin-top:1.5rem;">Results</div>',
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
         for turn in reversed(st.session_state.chat_history):
@@ -547,7 +579,7 @@ with main_col:
                 cat = turn["category"].lower()
                 st.markdown(
                     f'<span class="category-badge {cat}">📂 {turn["category"].upper()}</span>',
-                    unsafe_allow_html=True
+                    unsafe_allow_html=True,
                 )
 
             with st.chat_message("assistant"):
@@ -556,16 +588,17 @@ with main_col:
             if turn.get("sources"):
                 st.markdown(
                     '<div class="section-label" style="margin-top:0.75rem;">Sources</div>',
-                    unsafe_allow_html=True
+                    unsafe_allow_html=True,
                 )
                 for i, src in enumerate(turn["sources"], 1):
-                    doc_id  = src.get("document_id", "Unknown")
+                    doc_id = src.get("document_id", "Unknown")
                     section = src.get("section", "")
-                    score   = float(src.get("score", 0))
+                    score = float(src.get("score", 0))
                     preview = src.get("text_preview", "")[:250]
                     bar_pct = int(score * 100)
 
-                    st.markdown(f"""
+                    st.markdown(
+                        f"""
                     <div class="source-card">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span class="doc-id">{i}. {doc_id}</span>
@@ -578,9 +611,11 @@ with main_col:
                         </div>
                         <div class="preview">{preview}...</div>
                     </div>
-                    """, unsafe_allow_html=True)
+                    """,
+                        unsafe_allow_html=True,
+                    )
 
             st.markdown(
                 "<hr style='border-color:#E2E8F0; margin:1.25rem 0;'>",
-                unsafe_allow_html=True
+                unsafe_allow_html=True,
             )
