@@ -15,7 +15,8 @@ models/cache/
 test_chunker.py
 practice/
 eval/results/*
-# keep the RAGAS runs referenced from the README (latest + the one it is compared against)
+# keep the RAGAS runs referenced from the README
+!eval/results/ragas_20260925_105722.*
 !eval/results/ragas_20260925_100212.*
 !eval/results/ragas_20260925_091755.*
 

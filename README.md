@@ -94,7 +94,8 @@ Streamlit Community Cloud  (single free service: UI + retrieval pipeline in one 
 - **Secrets:** `OPENAI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`, `COHERE_API_KEY` in Streamlit → App settings → Secrets (template: `.streamlit/secrets.toml.example`)
 - **Vector DB:** Qdrant Cloud (free tier)
 - **Reranker:** Cohere Rerank API (zero local RAM — no torch in the deployed image)
-- **Cost guards:** 10 queries per session (clearing the conversation does not reset it) and 200 queries per day across all visitors
+- **Cost guards:** 10 queries per visit (clearing the conversation does not reset it; the sidebar says so) and 200 queries per day across all visitors
+- **Source cards:** each source shows a cleaned preview and, when the chunk is longer, an expander with the full text
 
 ---
 
@@ -103,10 +104,10 @@ Streamlit Community Cloud  (single free service: UI + retrieval pipeline in one 
 | Letter | Meaning | Aegis |
 |---|---|---|
 | **A** — Acknowledge | Enterprise RAG fails due to bad chunking, no reranking, and version drift — this system was built to solve those specific failures | Problem statement |
-| **B** — Background | 8 corporate policy documents, 285 indexed chunks, BFSI compliance use case requiring zero hallucination | Corpus & context |
+| **B** — Background | 8 corporate policy documents, 286 indexed chunks, BFSI compliance use case requiring zero hallucination | Corpus & context |
 | **C** — Core approach | An 8-stage retrieval pipeline — MQE + HyDE → RRF fusion → date filter → Reranker (Cohere on deployment / CrossEncoder locally) → token budget → LLM | Solution design |
 | **D** — Details | Each technique justified by a specific failure mode it solves — not added for complexity | Implementation |
-| **E** — Evaluation | RAGAS RAG Triad (27 samples, 0 errors): Context Precision 0.967, Context Recall 1.000, Faithfulness 0.969, Answer Relevancy 0.886, Answer Correctness 0.820 | Results |
+| **E** — Evaluation | RAGAS RAG Triad (27 samples, 0 errors): Context Precision 0.992, Context Recall 1.000, Faithfulness 0.988, Answer Relevancy 0.917, Answer Correctness 0.804 | Results |
 | **F** — Future work | Semantic faithfulness scoring, SSE streaming, query complexity routing, persistent chat history | Limitations |
 
 ---
@@ -184,19 +185,21 @@ Aegis is evaluated using the **RAG Triad** — the industry-standard methodology
 
 | Metric | Score | Threshold | Status |
 |---|---|---|---|
-| **Context Precision** | **0.967** | ≥ 0.80 | ✅ Exceeds threshold |
+| **Context Precision** | **0.992** | ≥ 0.80 | ✅ Exceeds threshold |
 | **Context Recall** | **1.000** | ≥ 0.85 | ✅ Exceeds threshold |
-| **Noise Sensitivity** (lower is better) | **0.412** | — | 🟡 Some irrelevant context still reaches the LLM |
-| **Faithfulness** | **0.969** | ≥ 0.85 | ✅ Exceeds threshold |
-| **Answer Relevancy** | **0.886** | ≥ 0.85 | ✅ Exceeds threshold |
-| **Answer Correctness** | **0.820** | ≥ 0.70 | ✅ Exceeds threshold |
+| **Noise Sensitivity** (lower is better) | **0.403** | — | 🟡 Some irrelevant context still reaches the LLM |
+| **Faithfulness** | **0.988** | ≥ 0.85 | ✅ Exceeds threshold |
+| **Answer Relevancy** | **0.917** | ≥ 0.85 | ✅ Exceeds threshold |
+| **Answer Correctness** | **0.804** | ≥ 0.70 | ✅ Exceeds threshold |
 
-> Run: `20260925_100212` · 27 samples · 0 pipeline errors · model: `gpt-4o-mini` · reranker: Cohere `rerank-english-v3.0`
-> Full results: `eval/results/ragas_20260925_100212.json`
+> Run: `20260925_105722` · 27 samples · 0 pipeline errors · model: `gpt-4o-mini` · reranker: Cohere `rerank-english-v3.0`
+> Full results: `eval/results/ragas_20260925_105722.json`
 
 These scores come from a 27-question regression benchmark over this corpus, not a general accuracy claim.
 
-**Change vs. the previous run (`20260925_091755`, same 27 questions):** Context Precision 0.893 → 0.967, Context Recall 0.889 → 1.000, Faithfulness 0.818 → 0.969, Answer Correctness 0.798 → 0.820, Answer Relevancy 0.915 → 0.886, Noise Sensitivity 0.323 → 0.412 (worse). Most of the change comes from how the evaluation is measured, not from the pipeline: earlier runs gave RAGAS only a 300-character preview of each retrieved chunk, while the LLM answered from the full chunk, so faithfulness and recall were understated. RAGAS now sees the full chunks the LLM saw. The same change likely explains the higher noise sensitivity, since longer contexts give the judge more unrelated text to find. The pipeline changes in the same run: the query category is detected once per question, the prompt tells the LLM to say when the answer isn't in the documents, Cohere receives untruncated chunks, and the prose next to large tables is now indexed. RAGAS judge scores also vary somewhat from run to run.
+**Change vs. the previous run (`20260925_100212`, same 27 questions):** Context Precision 0.967 → 0.992, Faithfulness 0.969 → 0.988, Answer Relevancy 0.886 → 0.917, Noise Sensitivity 0.412 → 0.403, Context Recall 1.000 → 1.000, Answer Correctness 0.820 → 0.804. Between the two runs Cohere results scoring below 0.1 relevance started being dropped, and the travel policy's conflicting mileage rate ($0.67 vs $0.69) was aligned to one source (286 chunks after re-ingest). The gains in precision and faithfulness are consistent with less irrelevant text reaching the LLM, but noise sensitivity barely moved and correctness dipped slightly, and RAGAS judge scores vary somewhat from run to run, so treat differences of a few hundredths as noise.
+
+**Change vs. the run before that (`20260925_091755`):** that run gave RAGAS only a 300-character preview of each retrieved chunk, while the LLM answered from the full chunk, so faithfulness and recall were understated. Later runs pass RAGAS the full chunks the LLM saw, which accounts for most of the jump (for example Faithfulness 0.818 → 0.969) and probably for the higher noise sensitivity, since longer contexts give the judge more unrelated text to find.
 
 ---
 
@@ -302,7 +305,7 @@ project-aegis/
 
 **Structured metadata tagging** — Every chunk is tagged with `document_id`, `policy_category`, `effective_date`, `policy_owner`, and header hierarchy before embedding. This enables precise filtering.
 
-**Multi-stage retrieval** — The pipeline runs up to 5 searches (the original query, 3 LLM-generated variants, and 1 HyDE hypothetical answer), fuses results using Reciprocal Rank Fusion, filters by date to keep only the latest policy version, then reranks the top 25 chunks using a cross-encoder down to the top 5 before answering. The corpus contains 8 policy documents across 285 indexed chunks.
+**Multi-stage retrieval** — The pipeline runs up to 5 searches (the original query, 3 LLM-generated variants, and 1 HyDE hypothetical answer), fuses results using Reciprocal Rank Fusion, filters by date to keep only the latest policy version, then reranks the top 25 chunks using a cross-encoder down to the top 5 before answering. With Cohere, chunks scoring below 0.1 relevance are dropped so near-irrelevant text never reaches the LLM (the best chunk is always kept). The corpus contains 8 policy documents across 286 indexed chunks.
 
 **Token budget enforcement** — Before every LLM call, tiktoken counts the total tokens across the top-5 reranked chunks. If the total exceeds 3,000 tokens, the lowest-ranked chunks are dropped to prevent context overflow. Token usage is displayed live in the UI sidebar per query.
 
@@ -417,7 +420,7 @@ Building Project Aegis taught me that retrieval quality — not LLM quality — 
 
 Applying real-world RAG failure patterns (context overflow, fragile LLM output parsing, 
 missing evaluation baselines) and fixing them systematically resulted in a pipeline that 
-achieves Faithfulness of 0.969 and Context Precision of 0.967 on a RAGAS evaluation 
+achieves Faithfulness of 0.988 and Context Precision of 0.992 on a RAGAS evaluation 
 across 27 ground truth Q&A pairs — with zero pipeline errors across all samples.
 
 ---

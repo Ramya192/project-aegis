@@ -54,7 +54,7 @@ def run_query(query: str, session_id: str) -> dict:
             "document_id": chunk.get("document_id", "Unknown"),
             "section": chunk.get("section", ""),
             "score": round(float(chunk.get("score", 0)), 4),
-            "text_preview": chunk["text"][:400],
+            "text": chunk["text"],
         }
         for chunk in result["sources"]
     ]

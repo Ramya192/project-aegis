@@ -4,6 +4,7 @@
 import datetime
 import html
 import os
+import re
 import threading
 import uuid
 
@@ -46,6 +47,34 @@ def record_daily_query() -> None:
     usage = _daily_usage()
     with usage["lock"]:
         usage["count"] += 1
+
+
+PREVIEW_CHARS = 300
+
+
+def clean_markdown(text: str) -> str:
+    """Strip Markdown syntax (headings, bold markers, bullets, table rules) for display."""
+    lines = []
+    for line in text.splitlines():
+        s = line.strip()
+        if not s or (re.fullmatch(r"[\s:\-|]+", s) and "-" in s):  # blank line / table rule
+            continue
+        if s.startswith("|"):  # table row -> "cell · cell"
+            s = " · ".join(cell.strip() for cell in s.strip("|").split("|"))
+        s = re.sub(r"^#{1,6}\s*", "", s)
+        s = re.sub(r"^[*\-•]\s+", "• ", s)
+        s = re.sub(r"(\*\*|__)(.+?)\1", r"\2", s)
+        lines.append(s)
+    return "\n".join(lines)
+
+
+def make_preview(clean_text: str, limit: int = PREVIEW_CHARS) -> tuple[str, bool]:
+    """Flatten to one line and cut at a word boundary; returns (preview, was_cut)."""
+    flat = " ".join(clean_text.split())
+    if len(flat) <= limit:
+        return flat, False
+    return flat[:limit].rsplit(" ", 1)[0].rstrip(" •·,;:"), True
+
 
 st.set_page_config(
     page_title="Aegis Policy Intelligence",
@@ -371,7 +400,7 @@ with left_col:
     # Corpus stats
     lp_section("Corpus")
     lp_stat("Policy documents", "8")
-    lp_stat("Indexed chunks", "285")
+    lp_stat("Indexed chunks", "286")
     lp_stat("Embedding model", "text-embedding-3-large", small=True)
 
     lp_divider()
@@ -459,11 +488,13 @@ with left_col:
 
     # Session query count
     remaining = SESSION_QUERY_LIMIT - st.session_state.query_count
-    lp_stat("Queries this session", f"{st.session_state.query_count} / {SESSION_QUERY_LIMIT}")
+    lp_stat("Queries used", f"{st.session_state.query_count} / {SESSION_QUERY_LIMIT}")
     lp_block(
         f'<div style="font-size:0.7rem;color:{"#FCA5A5" if remaining == 0 else "#68D391" if remaining > 3 else "#F6AD55"};'
         f"font-family:'DM Mono',monospace;margin-top:2px;\">"
         f'{"⚠ Limit reached" if remaining == 0 else f"{remaining} remaining"}</div>'
+        '<div style="font-size:0.66rem;color:#A8B8C8;margin-top:4px;">'
+        "Clear conversation does not reset this limit.</div>"
     )
 
     # Clear button (clears the conversation; the query count is kept)
@@ -622,7 +653,9 @@ with main_col:
                     doc_id = html.escape(str(src.get("document_id", "Unknown")))
                     section = html.escape(src.get("section", ""))
                     score = float(src.get("score", 0))
-                    preview = html.escape(src.get("text_preview", "")[:250])
+                    clean_text = clean_markdown(src.get("text", ""))
+                    preview, was_cut = make_preview(clean_text)
+                    preview = html.escape(preview) + ("…" if was_cut else "")
                     bar_pct = int(score * 100)
 
                     st.markdown(
@@ -637,11 +670,14 @@ with main_col:
                         <div class="score-bar-wrap">
                             <div class="score-bar-fill" style="width:{bar_pct}%;"></div>
                         </div>
-                        <div class="preview">{preview}...</div>
+                        <div class="preview">{preview}</div>
                     </div>
                     """,
                         unsafe_allow_html=True,
                     )
+                    if was_cut:
+                        with st.expander(f"View full text of source {i}"):
+                            st.markdown(clean_text.replace("\n", "\n\n").replace("$", "\\$"))
 
             st.markdown(
                 "<hr style='border-color:#E2E8F0; margin:1.25rem 0;'>",

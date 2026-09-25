@@ -12,6 +12,11 @@ os.environ["TRANSFORMERS_VERBOSITY"] = "error"
 logger = logging.getLogger(__name__)
 
 COHERE_MODEL = "rerank-english-v3.0"
+
+# Cohere relevance scores are absolute (0-1), so chunks scoring below this are dropped
+# instead of being padded into the context up to top_k. The best chunk is always kept.
+# (The local CrossEncoder's scores are min-max scaled per query, so no cutoff applies there.)
+MIN_COHERE_RELEVANCE = 0.1
 CROSSENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 _rerank_model = None
@@ -49,8 +54,12 @@ def _cohere_rerank(query: str, chunks: list, top_k: int) -> list:
         top_n=top_k,
     )
 
+    # Results come back best-first; keep the top one even if it scores below the cutoff.
+    results = [r for r in response.results if r.relevance_score >= MIN_COHERE_RELEVANCE]
+    results = results or response.results[:1]
+
     reranked = []
-    for result in response.results:
+    for result in results:
         chunk = chunks[result.index]
         chunk["rerank_score"] = round(float(result.relevance_score), 4)
         reranked.append(chunk)

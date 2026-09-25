@@ -87,7 +87,7 @@ Rideshare applications (Uber, Lyft) and licensed taxis are approved for transpor
 
 ### 6.3 Personal Vehicle Usage
 Employees may use their personal vehicles for business travel if it is more economical than renting a car or booking airfare. 
-* **Mileage Reimbursement:** Mileage will be reimbursed at the standard IRS rate for the current calendar year (e.g., $0.67 per mile for 2026). This rate is designed to cover fuel, maintenance, and depreciation; therefore, employees cannot expense gas receipts when driving a personal vehicle.
+* **Mileage Reimbursement:** Mileage will be reimbursed at the Standard Mileage Rate defined in the Personal Vehicle, Fuel, and Mileage Reimbursement Policy (TRV-POL-3012-V2), currently $0.69 USD per business mile (effective January 1, 2026). This rate is designed to cover fuel, maintenance, and depreciation; therefore, employees cannot expense gas receipts when driving a personal vehicle.
 * **Commute Deduction:** The distance of the employee's standard commute to their primary office must be deducted from the total trip mileage if the travel originates from the employee's home during normal business days.
 
 ## 7. Lodging and Accommodation Standards
