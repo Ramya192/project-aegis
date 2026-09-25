@@ -1,0 +1,15 @@
+{
+  "timestamp": "20260925_100212",
+  "model": "gpt-4o-mini",
+  "samples_evaluated": 27,
+  "overall_scores": {
+    "context_precision": 0.9673,
+    "context_recall": 1.0,
+    "noise_sensitivity(mode=relevant)": 0.4123,
+    "faithfulness": 0.9691,
+    "answer_relevancy": 0.8855,
+    "answer_correctness": 0.8197
+  },
+  "category_breakdown": {},
+  "per_question_results": []
+}

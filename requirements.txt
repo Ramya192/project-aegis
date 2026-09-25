@@ -1,3 +1,6 @@
+# Runtime dependencies (Streamlit Community Cloud installs this file).
+# Deliberately excludes sentence-transformers/torch — reranking uses the Cohere API.
+
 # LLM & Embeddings
 openai
 langchain-openai
@@ -7,22 +10,14 @@ langchain-text-splitters
 # Vector Database
 qdrant-client
 
-# Reranker
-sentence-transformers
+# Reranker (API — zero local RAM)
+cohere>=5.0.0
 
-# API & UI
-fastapi
-uvicorn
+# UI
 streamlit
-requests
 
 # Utilities
 python-dotenv
 numpy
 pydantic
-
 tiktoken>=0.6.0
-cohere>=5.0.0
-# Evaluation
-ragas>=0.1.0
-datasets

@@ -3,8 +3,8 @@ import logging
 from collections import defaultdict
 from openai import OpenAI
 from qdrant_client import QdrantClient
-from qdrant_client.models import Filter, FieldCondition, MatchValue
-from ingestion.embedder import get_embedding, COLLECTION_NAME
+from ingestion.embedder import get_embedding
+from retrieval.retriever import vector_search
 
 logger = logging.getLogger(__name__)
 
@@ -62,58 +62,21 @@ def detect_category(query: str, llm) -> str | None:
         raw
     )
     return None
-    # ── END DEFENSIVE PARSING ─────────────────────────────────────────────────
 
 
-def pre_filter_search(query: str, qdrant: QdrantClient, openai_client: OpenAI, llm, top_k: int = 5) -> list:
-    # Step 1: detect category
-    category = detect_category(query, llm)
-
-    # Step 2: embed query
+def pre_filter_search(query: str, qdrant: QdrantClient, openai_client: OpenAI,
+                      category: str | None, top_k: int = 5) -> list:
+    """Embed the query and search Qdrant, restricted to the detected category if any."""
     query_vector = get_embedding(query, openai_client)
-
-    # Step 3: build filter if category found
-    query_filter = None
-    if category is not None:
-        query_filter = Filter(
-            must=[
-                FieldCondition(
-                    key="policy_category",
-                    match=MatchValue(value=category)
-                )
-            ]
-        )
-
-    # Step 4: search Qdrant with or without filter
-    results = qdrant.query_points(  # type: ignore
-        collection_name=COLLECTION_NAME,
-        query=query_vector,
-        query_filter=query_filter,
-        limit=top_k
-    ).points
-
-    # Step 5: format results
-    response = []
-    for hit in results:
-        if hit.payload is None:
-            continue
-        response.append({
-            "id": hit.id,
-            "score": hit.score,
-            "text": hit.payload.get("chunk_text", ""),
-            "metadata": hit.payload
-        })
-
-    return response
+    return vector_search(query_vector, qdrant, top_k=top_k, category=category)
 
 
 def post_filter_by_date(results: list) -> list:
     """
     Keep only chunks from the most recent version of each document.
     Groups by document_id, finds the latest effective_date per document,
-    then keeps ALL chunks from that latest version.
-    This fixes the bug where only 1 chunk per document was kept,
-    causing the correct answer chunk to be dropped.
+    then keeps ALL chunks from that latest version (not just one chunk per
+    document, which would drop the chunk that actually answers the question).
     """
     # Step 1: group all chunks by document_id
     doc_groups = defaultdict(list)

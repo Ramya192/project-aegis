@@ -1,11 +1,51 @@
-# app.py -- Project Aegis (Redesigned UI -- BFSI Professional Theme)
+# app.py -- Project Aegis Streamlit UI
 # Uses st.columns([1, 3]) instead of st.sidebar — panel always visible.
 
-import streamlit as st
-import requests
-from datetime import datetime
+import datetime
+import html
+import os
+import threading
+import uuid
 
-API_URL = "https://ramya192-project-aegis-api.hf.space"
+import streamlit as st
+
+# On Streamlit Cloud, keys live in st.secrets. Export them to the environment
+# before importing the pipeline, which reads them from os.environ.
+# Locally there is no secrets.toml, so the .env file (loaded by service.py) is used.
+try:
+    for _key in ("OPENAI_API_KEY", "QDRANT_URL", "QDRANT_API_KEY", "COHERE_API_KEY"):
+        if _key in st.secrets:
+            os.environ.setdefault(_key, st.secrets[_key])
+except Exception:
+    pass
+
+from service import clear_session, run_query
+
+# Cost guards for the public deployment. The per-session cap survives "Clear
+# conversation"; the daily cap is shared by every visitor (a page refresh starts
+# a new session, so the session cap alone can be bypassed).
+SESSION_QUERY_LIMIT = 10
+DAILY_QUERY_LIMIT = 200
+
+
+@st.cache_resource
+def _daily_usage() -> dict:
+    """Process-wide query counter, shared across all sessions (resets daily)."""
+    return {"date": None, "count": 0, "lock": threading.Lock()}
+
+
+def daily_queries_used() -> int:
+    usage = _daily_usage()
+    with usage["lock"]:
+        if usage["date"] != datetime.date.today():
+            usage["date"], usage["count"] = datetime.date.today(), 0
+        return usage["count"]
+
+
+def record_daily_query() -> None:
+    usage = _daily_usage()
+    with usage["lock"]:
+        usage["count"] += 1
 
 st.set_page_config(
     page_title="Aegis Policy Intelligence",
@@ -239,7 +279,7 @@ div[data-testid="stDecoration"] { display: none; }
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 if "session_id" not in st.session_state:
-    st.session_state.session_id = f"session_{datetime.now().strftime('%H%M%S')}"
+    st.session_state.session_id = f"session_{uuid.uuid4().hex}"
 if "last_result" not in st.session_state:
     st.session_state.last_result = None
 if "query_count" not in st.session_state:
@@ -331,7 +371,7 @@ with left_col:
     # Corpus stats
     lp_section("Corpus")
     lp_stat("Policy documents", "8")
-    lp_stat("Indexed chunks", "284")
+    lp_stat("Indexed chunks", "285")
     lp_stat("Embedding model", "text-embedding-3-large", small=True)
 
     lp_divider()
@@ -418,19 +458,20 @@ with left_col:
         lp_divider()
 
     # Session query count
-    remaining = 10 - st.session_state.query_count
-    lp_stat("Queries this session", f"{st.session_state.query_count} / 10")
+    remaining = SESSION_QUERY_LIMIT - st.session_state.query_count
+    lp_stat("Queries this session", f"{st.session_state.query_count} / {SESSION_QUERY_LIMIT}")
     lp_block(
         f'<div style="font-size:0.7rem;color:{"#FCA5A5" if remaining == 0 else "#68D391" if remaining > 3 else "#F6AD55"};'
         f"font-family:'DM Mono',monospace;margin-top:2px;\">"
         f'{"⚠ Limit reached" if remaining == 0 else f"{remaining} remaining"}</div>'
     )
 
-    # Clear button
+    # Clear button (clears the conversation; the query count is kept)
     if st.button("Clear conversation", use_container_width=True):
+        clear_session(st.session_state.session_id)
+        st.session_state.session_id = f"session_{uuid.uuid4().hex}"
         st.session_state.chat_history = []
         st.session_state.last_result = None
-        st.session_state.query_count = 0
         st.rerun()
 
 
@@ -479,16 +520,21 @@ with main_col:
     )
 
     # ── Execute query ────────────────────────────────────────
-    QUERY_LIMIT = 10
-    if st.session_state.query_count >= QUERY_LIMIT:
+    session_limit_hit = st.session_state.query_count >= SESSION_QUERY_LIMIT
+    daily_limit_hit = daily_queries_used() >= DAILY_QUERY_LIMIT
+    if session_limit_hit or daily_limit_hit:
+        if session_limit_hit:
+            limit_title = "Session limit reached"
+            limit_text = f"You have used all {SESSION_QUERY_LIMIT} queries for this session."
+        else:
+            limit_title = "Daily limit reached"
+            limit_text = "This demo has reached its query limit for today. Please try again tomorrow."
         st.markdown(
             f"""<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-left:4px solid #E53E3E;
             border-radius:4px;padding:0.9rem 1.25rem;margin-top:0.75rem;font-family:'DM Sans',sans-serif;">
-            <div style="color:#742A2A;font-weight:600;font-size:0.95rem;">Session limit reached</div>
-            <div style="color:#9B2C2C;font-size:0.85rem;margin-top:3px;">
-            You have used all {QUERY_LIMIT} queries for this session.
-            Click <strong>Clear conversation</strong> in the left panel to start a new session.
-            </div></div>""",
+            <div style="color:#742A2A;font-weight:600;font-size:0.95rem;">{limit_title}</div>
+            <div style="color:#9B2C2C;font-size:0.85rem;margin-top:3px;">{limit_text}</div>
+            </div>""",
             unsafe_allow_html=True,
         )
     elif ask_btn and query.strip():
@@ -520,17 +566,12 @@ with main_col:
         )
 
         try:
-            resp = requests.post(
-                f"{API_URL}/ask",
-                json={"query": query, "session_id": st.session_state.session_id},
-                timeout=120,
-            )
-            resp.raise_for_status()
-            data = resp.json()
+            data = run_query(query, st.session_state.session_id)
 
             loading_placeholder.empty()
             st.session_state.last_result = data
             st.session_state.query_count += 1
+            record_daily_query()
             st.session_state.chat_history.append(
                 {
                     "query": query,
@@ -541,23 +582,9 @@ with main_col:
             )
             st.rerun()
 
-        except requests.exceptions.Timeout:
+        except KeyError as e:
             loading_placeholder.empty()
-            st.markdown(
-                """
-            <div style="background:#FFFBEB; border:1px solid #F6E05E;
-                        border-left:4px solid #D69E2E; border-radius:4px;
-                        padding:0.9rem 1.25rem; font-family:'DM Sans',sans-serif;">
-                <div style="color:#744210; font-weight:600; font-size:0.95rem;">
-                    ⏳ Backend is waking up...
-                </div>
-                <div style="color:#975A16; font-size:0.85rem; margin-top:4px;">
-                    The server was sleeping (free tier). It takes ~60 seconds to wake up.
-                    Please click <strong>Run →</strong> again in a moment.
-                </div>
-            </div>""",
-                unsafe_allow_html=True,
-            )
+            st.error(f"Missing configuration: {e}. Add it to Streamlit secrets (or .env locally).")
 
         except Exception as e:
             loading_placeholder.empty()
@@ -583,7 +610,8 @@ with main_col:
                 )
 
             with st.chat_message("assistant"):
-                st.write(turn["answer"])
+                # Escape "$" so amounts like "$80 ... $70" aren't rendered as LaTeX
+                st.markdown(turn["answer"].replace("$", "\\$"))
 
             if turn.get("sources"):
                 st.markdown(
@@ -591,10 +619,10 @@ with main_col:
                     unsafe_allow_html=True,
                 )
                 for i, src in enumerate(turn["sources"], 1):
-                    doc_id = src.get("document_id", "Unknown")
-                    section = src.get("section", "")
+                    doc_id = html.escape(str(src.get("document_id", "Unknown")))
+                    section = html.escape(src.get("section", ""))
                     score = float(src.get("score", 0))
-                    preview = src.get("text_preview", "")[:250]
+                    preview = html.escape(src.get("text_preview", "")[:250])
                     bar_pct = int(score * 100)
 
                     st.markdown(

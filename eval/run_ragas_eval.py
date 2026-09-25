@@ -44,8 +44,7 @@ def load_ground_truth(path: str) -> list[dict]:
 
 
 def build_pipeline_clients():
-    """Initialise Qdrant, OpenAI, and LangChain LLM — same as chat.py."""
-    import os
+    """Initialise Qdrant, OpenAI, and LangChain LLM — same as service.py."""
     from openai import OpenAI
     from qdrant_client import QdrantClient
     from langchain_openai import ChatOpenAI
@@ -81,7 +80,7 @@ def run_pipeline_for_sample(question: str, qdrant, openai_client, llm) -> dict:
             )
             return {
                 "answer": result["answer"],
-                "contexts": [s["text_preview"] for s in result["sources"]],
+                "contexts": [s["text"] for s in result["sources"]],
                 "category_detected": result.get("category_detected"),
                 "error": None,
             }

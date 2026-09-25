@@ -60,7 +60,7 @@ def main():
     # --- Step 2: Embed + Upsert ---
     print("\nStep 2: Embedding and upserting...")
     setup_qdrant_collection(qdrant_client)
-    create_payload_indexes(qdrant_client)   
+    create_payload_indexes(qdrant_client)
     upsert_chunks_batch(all_tagged_chunks, openai_client, qdrant_client)
 
     print("\n✅ Ingestion complete!")

@@ -1,6 +1,5 @@
 import json
 import re
-from langchain_openai import ChatOpenAI
 
 def extract_metadata(chunk_text: str, llm) -> dict:
 
@@ -29,35 +28,11 @@ def extract_metadata(chunk_text: str, llm) -> dict:
     response = re.sub(r"```json|```", "", response).strip()
 
     try:
-    # attempt something risky
-        result = json.loads(response)
-        return result
+        return json.loads(response)
     except json.JSONDecodeError:
-    # if it fails, do this instead
         return {
-        "document_id": None,
-        "policy_category": "Other",
-        "policy_owner": None,
-        "effective_date": None
-    }
-
-def tag_chunks_with_metadata(chunks: list, llm) -> list:
-    tagged = []
-    
-    for chunk in chunks:
-        # Step 1: call extract_metadata on chunk["content"]
-        llm_meta = extract_metadata(chunk["content"], llm)
-
-        # Step 2: merge existing header metadata with LLM metadata
-        full_metadata = {
-            **chunk["metadata"],   # h1, h2, h3 from header splitter
-            **llm_meta             # document_id, policy_category etc from LLM
+            "document_id": None,
+            "policy_category": "Other",
+            "policy_owner": None,
+            "effective_date": None
         }
-
-        # Step 3: append to tagged list
-        tagged.append({
-            "content": chunk["content"],
-            "metadata": full_metadata
-        })
-    
-    return tagged

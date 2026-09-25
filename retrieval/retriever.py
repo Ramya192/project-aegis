@@ -1,10 +1,11 @@
 # retrieval/retriever.py
 import logging
 import re
-from openai import OpenAI
-from qdrant_client import QdrantClient
-from ingestion.embedder import get_embedding, COLLECTION_NAME
 from collections import defaultdict
+
+from qdrant_client import QdrantClient
+from qdrant_client.models import Filter, FieldCondition, MatchValue
+from ingestion.embedder import COLLECTION_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -18,30 +19,60 @@ _PREAMBLE_PHRASES = [
 ]
 
 
-def basic_search(query, qdrant, openai_client, top_k=5):
-    # Step 1: embed the query
-    query_vector = get_embedding(query, openai_client)
+def vector_search(query_vector: list, qdrant: QdrantClient, top_k: int = 5,
+                  category: str | None = None) -> list:
+    """Dense search in Qdrant, optionally restricted to one policy_category.
 
-    # Step 2: search Qdrant
+    The detected category may not exist in the corpus (e.g. the LLM says "Legal"
+    but every chunk is tagged HR), so an empty filtered search is retried unfiltered.
+    """
+    query_filter = None
+    if category is not None:
+        query_filter = Filter(
+            must=[FieldCondition(key="policy_category", match=MatchValue(value=category))]
+        )
+
     results = qdrant.query_points(
         collection_name=COLLECTION_NAME,
         query=query_vector,
+        query_filter=query_filter,
         limit=top_k
     ).points
 
-    # Step 3: format results
-    response = []
-    for hit in results:
-        if hit.payload is None:
-            continue
-        response.append({
+    if not results and query_filter is not None:
+        logger.warning(
+            "vector_search: category '%s' matched no chunks — retrying without filter",
+            category,
+        )
+        results = qdrant.query_points(
+            collection_name=COLLECTION_NAME,
+            query=query_vector,
+            limit=top_k
+        ).points
+
+    return [
+        {
             "id": hit.id,
             "score": hit.score,
             "text": hit.payload.get("chunk_text", ""),
             "metadata": hit.payload
-        })
+        }
+        for hit in results
+        if hit.payload is not None
+    ]
 
-    return response
+
+def rrf_fuse(ranked_lists: list[list], limit: int, k: int = 60) -> list:
+    """Reciprocal Rank Fusion: score each chunk by sum(1 / (k + rank)) across lists."""
+    doc_store = {}
+    rrf_scores = defaultdict(float)
+    for ranked_list in ranked_lists:
+        for rank, item in enumerate(ranked_list, start=1):
+            doc_store[item["id"]] = item
+            rrf_scores[item["id"]] += 1 / (k + rank)
+
+    fused = sorted(doc_store, key=lambda doc_id: rrf_scores[doc_id], reverse=True)
+    return [doc_store[doc_id] for doc_id in fused[:limit]]
 
 
 def generate_multi_queries(query: str, llm, n: int = 3) -> list:
@@ -88,42 +119,7 @@ def generate_multi_queries(query: str, llm, n: int = 3) -> list:
         return [query]
 
     # 5. Combine original + variants, deduplicate, preserve order
-    all_queries = [query] + clean_queries
-    all_queries = list(dict.fromkeys(all_queries))
+    all_queries = list(dict.fromkeys([query] + clean_queries))
 
     logger.debug("generate_multi_queries: final query list: %s", all_queries)
     return all_queries
-    # ── END DEFENSIVE PARSING ─────────────────────────────────────────────────
-
-
-def multi_query_search(query: str, qdrant: QdrantClient, openai_client: OpenAI, llm, top_k: int = 5) -> list:
-
-    # Step 1: generate multiple queries
-    queries = generate_multi_queries(query, llm)
-
-    # Step 2: search Qdrant for each query
-    all_ranked_lists = []
-    for q in queries:
-        results = basic_search(q, qdrant, openai_client, top_k=10)
-
-        # Add rank to each result
-        for rank, item in enumerate(results, start=1):
-            item["rank"] = rank
-
-        all_ranked_lists.append(results)
-
-    # Step 3: RRF fusion
-    doc_store = {}
-    rrf_scores = defaultdict(float)
-    k = 60
-
-    for ranked_list in all_ranked_lists:
-        for item in ranked_list:
-            doc_id = item["id"]
-            rank = item["rank"]
-            doc_store[doc_id] = item
-            rrf_scores[doc_id] += 1 / (k + rank)
-
-    # Step 4: sort by fused score and return top_k
-    fused = sorted(doc_store.keys(), key=lambda x: rrf_scores[x], reverse=True)
-    return [doc_store[doc_id] for doc_id in fused[:top_k]]

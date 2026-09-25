@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# Local CrossEncoder fallback (used when COHERE_API_KEY is not set)
+sentence-transformers
+
+# Evaluation
+ragas>=0.1.0
+datasets

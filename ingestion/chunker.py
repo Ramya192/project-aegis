@@ -21,7 +21,7 @@ def chunk_markdown_document(markdown_text: str, chunk_size: int = 500, overlap_p
     # --- Overlap splitter setup ---
     overlap = int(chunk_size * overlap_pct)  # 12% of chunk_size
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,               # Bug 1 fix: use parameter
+        chunk_size=chunk_size,
         chunk_overlap=overlap,
         separators=["\n\n", "\n", " ", ""]
     )
@@ -50,6 +50,16 @@ def chunk_markdown_document(markdown_text: str, chunk_size: int = 500, overlap_p
                         "metadata": metadata,
                         "has_table": True
                     })
+
+                # Keep the section's prose (text around the table) as ordinary chunks
+                prose_lines = [l for l in lines if not l.strip().startswith("|")]
+                if any(l.strip() and not l.lstrip().startswith("#") for l in prose_lines):
+                    for chunk in text_splitter.split_text("\n".join(prose_lines).strip()):
+                        final_chunks.append({
+                            "content": chunk,
+                            "metadata": metadata,
+                            "has_table": False
+                        })
             else:
                 # Small table → keep whole
                 final_chunks.append({
@@ -61,7 +71,7 @@ def chunk_markdown_document(markdown_text: str, chunk_size: int = 500, overlap_p
             sub_chunks = text_splitter.split_text(text)
             for chunk in sub_chunks:
                 final_chunks.append({
-                    "content": chunk,    # Bug 2 fix: use chunk not text
+                    "content": chunk,
                     "metadata": metadata,
                     "has_table": False
                 })

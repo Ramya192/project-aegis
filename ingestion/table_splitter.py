@@ -1,28 +1,9 @@
-def split_large_table(table_text):
+def split_large_table(table_text: str) -> list[str]:
+    """Split a Markdown table into one chunk per data row, each repeating the header rows."""
     lines = table_text.strip().split("\n")
-    
+
     header = lines[0]      # | Destination | Daily Allowance |
     separator = lines[1]   # |-------------|-----------------|
-    data_rows = lines[2:]  # everything after
-    
-    chunks = []
-    for row in data_rows:
-        chunks.append(f"{header}\n{separator}\n{row}")
-        pass
-    
-    return chunks
+    data_rows = lines[2:]
 
-
-# Test it
-table = """| Destination | Daily Allowance |
-|-------------|-----------------|
-| USA         | $80             |
-| Europe      | $70             |
-| Asia        | $60             |"""
-
-if __name__ == "__main__":
-    result = split_large_table(table)
-    for i, chunk in enumerate(result):
-        print(f"--- Table Chunk {i+1} ---")
-        print(chunk)
-        print()
+    return [f"{header}\n{separator}\n{row}" for row in data_rows]
