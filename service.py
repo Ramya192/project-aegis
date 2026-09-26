@@ -31,6 +31,9 @@ def get_clients():
     )
     llm = ChatOpenAI(
         model="gpt-4o-mini",
+        # 0 = repeatable answers, category detection and citations; at the default of 1.0 the same
+        # question sometimes got a full answer, a half-refusal, or a reversed "excluding taxes".
+        temperature=0,
         api_key=SecretStr(os.environ["OPENAI_API_KEY"]),
     )
     return openai_client, qdrant_client, llm

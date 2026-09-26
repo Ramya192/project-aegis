@@ -724,7 +724,9 @@ with main_col:
 
                 if low_relevance:
                     # The model received these too, so list them rather than hide them
-                    with st.expander(f"{len(low_relevance)} more passage(s) the model also received (not cited)"):
+                    # "(not cited)" only makes sense when the model cited something
+                    suffix = " (not cited)" if cited_mode else ""
+                    with st.expander(f"{len(low_relevance)} more passage(s) the model also received{suffix}"):
                         for x in low_relevance:
                             st.markdown(
                                 f"- {x.get('document_id', 'Unknown')} · {x.get('section', '')} · "

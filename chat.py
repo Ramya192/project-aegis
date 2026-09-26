@@ -117,7 +117,10 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),
         MessagesPlaceholder(variable_name="history"),
-        ("human", "{query}")
+        # The reminder is repeated here, not only in the system prompt: earlier answers in the history
+        # have their SOURCES line stripped, and after a few turns the model started copying that.
+        # history.add_user_message() below saves the bare query, so the reminder is not stored.
+        ("human", "{query}\n\n(End your reply with the SOURCES line.)")
     ])
 
     # Step 9: get answer from LLM
