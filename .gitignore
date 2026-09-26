@@ -19,6 +19,7 @@ eval/results/*
 !eval/results/hard_*
 !eval/results/heldout_*
 !eval/results/ablation_*
+!eval/results/ragas_20260926_114126.*
 !eval/results/ragas_20260925_182155.*
 !eval/results/ragas_20260925_171119.*
 !eval/results/ragas_20260925_105722.*

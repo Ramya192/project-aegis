@@ -95,7 +95,8 @@ Streamlit Community Cloud  (single free service: UI + retrieval pipeline in one 
 - **Vector DB:** Qdrant Cloud (free tier)
 - **Reranker:** Cohere Rerank API (zero local RAM — no torch in the deployed image)
 - **Cost guards:** 10 queries per visit (clearing the conversation does not reset it; the sidebar says so) and 200 queries per day across all visitors
-- **Source cards:** each source shows a cleaned preview and, when the chunk is longer, an expander with the full text
+- **Source cards:** the model ends each answer with a `SOURCES:` line naming the passages it relied on; those are shown as cards with a cleaned preview and, when the chunk is longer, an expander with the full text. The other passages it received are listed under "(not cited)". If the answer is "could not find it" and nothing was cited, no card is shown and the closest passages are listed as "none relevant".
+- **Answers:** `temperature=0` so the same question gives the same answer (it was 1.0 before, which reversed a rule once and half-refused a question once)
 
 ---
 
@@ -107,7 +108,7 @@ Streamlit Community Cloud  (single free service: UI + retrieval pipeline in one 
 | **B** — Background | 8 corporate policy documents, 286 indexed chunks, BFSI compliance use case requiring zero hallucination | Corpus & context |
 | **C** — Core approach | An 8-stage retrieval pipeline — MQE + HyDE → RRF fusion → date filter → Reranker (Cohere on deployment / CrossEncoder locally) → token budget → LLM | Solution design |
 | **D** — Details | Each technique justified by a specific failure mode it solves — not added for complexity | Implementation |
-| **E** — Evaluation | RAGAS RAG Triad (27 samples, 0 errors): Context Precision 0.968, Context Recall 1.000, Faithfulness 0.991, Answer Relevancy 0.907, Answer Correctness 0.799 | Results |
+| **E** — Evaluation | RAGAS RAG Triad (27 samples, 0 errors): Context Precision 0.966, Context Recall 1.000, Faithfulness 1.000, Answer Relevancy 0.877, Answer Correctness 0.776 | Results |
 | **F** — Future work | Semantic faithfulness scoring, SSE streaming, query complexity routing, persistent chat history | Limitations |
 
 ---
@@ -185,20 +186,20 @@ Aegis is evaluated using the **RAG Triad** — the industry-standard methodology
 
 | Metric | Score | Threshold | Status |
 |---|---|---|---|
-| **Context Precision** | **0.968** | ≥ 0.80 | ✅ Exceeds threshold |
+| **Context Precision** | **0.966** | ≥ 0.80 | ✅ Exceeds threshold |
 | **Context Recall** | **1.000** | ≥ 0.85 | ✅ Exceeds threshold |
-| **Noise Sensitivity** (lower is better) | **0.365** | — | 🟡 Some irrelevant context still reaches the LLM |
-| **Faithfulness** | **0.991** | ≥ 0.85 | ✅ Exceeds threshold |
-| **Answer Relevancy** | **0.907** | ≥ 0.85 | ✅ Exceeds threshold |
-| **Answer Correctness** | **0.799** | ≥ 0.70 | ✅ Exceeds threshold |
+| **Noise Sensitivity** (lower is better) | **0.440** | — | 🟡 Some irrelevant context still reaches the LLM |
+| **Faithfulness** | **1.000** | ≥ 0.85 | ✅ Exceeds threshold |
+| **Answer Relevancy** | **0.877** | ≥ 0.85 | ✅ Exceeds threshold |
+| **Answer Correctness** | **0.776** | ≥ 0.70 | ✅ Exceeds threshold |
 
-> Run: `20260925_182155` · 27 samples · 0 pipeline errors · model: `gpt-4o-mini` · reranker: Cohere `rerank-english-v3.0`
-> 3 of the 162 metric values (2 Noise Sensitivity, 1 Context Precision) were not returned by the judge and are left out, so those two metrics average 25 and 26 questions.
-> Full results, including per-question scores: `eval/results/ragas_20260925_182155.json`
+> Run: `20260926_114126` · 27 samples · 0 pipeline errors · model: `gpt-4o-mini` at temperature 0 · reranker: Cohere `rerank-english-v3.0`
+> 1 of the 162 metric values (1 Faithfulness) was not returned by the judge and is left out, so Faithfulness averages 26 questions.
+> Full results, including per-question scores: `eval/results/ragas_20260926_114126.json`
 
 These scores come from a 27-question regression benchmark over this corpus, not a general accuracy claim. The questions are single-fact lookups written from the same 8 documents, which is why Context Recall is 1.000 (no question scored below 1.0). That shows this set is easy, so the harder set below is the better guide to the system's weaknesses.
 
-**Run-to-run variation.** The four most recent runs on these 27 questions (`20260925_100212`, `_105722`, `_171119`, `_182155`) gave Context Precision 0.967–0.992, Faithfulness 0.969–0.991, Answer Relevancy 0.881–0.917, Answer Correctness 0.773–0.820 and Noise Sensitivity 0.365–0.432, with Context Recall 1.000 in all four. The pipeline changed between them, and RAGAS judge scores also move from run to run, so differences of a few hundredths are noise. The latest run followed the retrieval change described below; its lower Context Precision is the expected cost of sending more chunks to the LLM.
+**Run-to-run variation.** The five most recent runs on these 27 questions (`20260925_100212`, `_105722`, `_171119`, `_182155`, `20260926_114126`) gave Context Precision 0.966–0.992, Faithfulness 0.969–1.000, Answer Relevancy 0.877–0.917, Answer Correctness 0.773–0.820 and Noise Sensitivity 0.365–0.440, with Context Recall 1.000 in all five. The pipeline changed between them, and RAGAS judge scores also move from run to run, so differences of a few hundredths are noise. The last two runs followed the retrieval change described below (its lower Context Precision is the expected cost of sending more chunks to the LLM); the latest also follows the change to temperature 0, the `SOURCES:` citation line and the answer-prompt rules on dates and ineligibility, and its Noise Sensitivity (0.440) is the highest of the five.
 
 **Earlier run (`20260925_091755`).** That run gave RAGAS only a 300-character preview of each retrieved chunk, while the LLM answered from the full chunk, so its faithfulness and recall (0.818 and 0.889) were understated. Later runs pass RAGAS the full chunks the LLM saw.
 
@@ -206,26 +207,26 @@ These scores come from a 27-question regression benchmark over this corpus, not 
 
 `eval/ground_truth_hard.json` holds 12 questions written to be harder than the main set: 5 need facts from two documents, 4 are worded differently from the documents, and 3 have no answer in the corpus. Run it with `python -m eval.run_hard_eval`. The first run of this set exposed three weaknesses, which were then addressed (see below). Before and after, on the 9 answerable questions:
 
-| Metric | Before (`hard_20260925_170434`) | After (`hard_20260925_181240`) |
-|---|---|---|
-| Context Precision | 0.920 | 0.866 |
-| Context Recall | 0.833 | 0.926 |
-| Faithfulness | 0.852 | 0.950 |
-| Answer Relevancy | 0.616 | 0.742 |
-| Answer Correctness | 0.637 | 0.733 |
-| Noise Sensitivity (lower is better) | 0.143 | 0.185 |
+| Metric | Before (`hard_20260925_170434`) | After (`hard_20260925_181240`) | Latest (`hard_20260926_114416`) |
+|---|---|---|---|
+| Context Precision | 0.920 | 0.866 | 0.861 |
+| Context Recall | 0.833 | 0.926 | 0.907 |
+| Faithfulness | 0.852 | 0.950 | 0.913 |
+| Answer Relevancy | 0.616 | 0.742 | 0.767 |
+| Answer Correctness | 0.637 | 0.733 | 0.728 |
+| Noise Sensitivity (lower is better) | 0.143 | 0.185 | 0.273 |
 
-*Before* means one category filter, 5 chunks sent to the LLM and a 0.01 relevance cutoff. *After* means up to two categories, 8 chunks and no cutoff. The 3 unanswerable questions have no reference answer for RAGAS to compare against, so each is scored pass/fail on whether the assistant says the information is not in the documents instead of inventing a figure: 3 / 3 passed in both runs. That says nothing about over-refusing, which the paraphrase questions test.
+*Before* means one category filter, 5 chunks sent to the LLM and a 0.01 relevance cutoff. *After* means up to two categories, 8 chunks and no cutoff. *Latest* is the same retrieval as *After* plus temperature 0, the `SOURCES:` citation line and the answer-prompt rules (state dates as written, say "not eligible" when a condition fails, cover every part of the question). The 3 unanswerable questions have no reference answer for RAGAS to compare against, so each is scored pass/fail on whether the assistant says the information is not in the documents instead of inventing a figure: 3 / 3 passed in all three runs. That says nothing about over-refusing, which the paraphrase questions test.
 
-Reading the answers: before, 5 of 9 were fully correct, 3 missed a detail and 1 was wrong; after, 7 are fully correct and 2 miss one detail (the 7-day PTO notice; the deduction of owed tuition from the PTO payout), and none is wrong. Nine questions is a small sample, so treat this as a diagnostic, not a benchmark score.
+Reading the answers: before, 5 of 9 were fully correct, 3 missed a detail and 1 was wrong; after and in the latest run, 7 are fully correct and 2 miss one detail (the 7-day PTO notice; the deduction of owed tuition from the PTO payout), and none is wrong. Between *After* and *Latest*, Faithfulness fell from 0.950 to 0.913 and Noise Sensitivity rose from 0.185 to 0.273 while the answers read the same; with 9 questions I have not tested whether that is judge noise or a real effect. Nine questions is a small sample, so treat this as a diagnostic, not a benchmark score.
 
 **What the first run showed, and what was done:**
 
 - **Cross-category questions (Chicago hotel rate).** The category was detected once and applied as a hard filter to every search, so an L&D-stipend question classified as HR could never retrieve the Travel policy. The classifier can now return up to two categories and the filter accepts either (`policy_category IN (X, Y)`).
 - **Questions spanning two topics (PIP and tuition).** Only 5 chunks reached the LLM and the tuition-eligibility chunk ranked 6th, so the assistant reasoned from partial context and wrongly said tuition had no restriction. It now receives 8 chunks.
-- **Relevance cutoffs.** Cohere scores a chunk that answers only part of a question, or answers indirectly, very low: 0.041 for the table row "6 to 9 Years" asked as "seven years", and 0.005 for the tuition chunk in the PIP question. A cutoff of 0.1 dropped the first (a false "I could not find it") and a cutoff of 0.01 dropped the second, which also cancelled the benefit of sending 8 chunks. The reranker now has no cutoff. Passages scoring below 0.05 are still shown in the UI, collapsed into one list rather than as full cards, and the model still receives them.
+- **Relevance cutoffs.** Cohere scores a chunk that answers only part of a question, or answers indirectly, very low: 0.041 for the table row "6 to 9 Years" asked as "seven years", and 0.005 for the tuition chunk in the PIP question. A cutoff of 0.1 dropped the first (a false "I could not find it") and a cutoff of 0.01 dropped the second, which also cancelled the benefit of sending 8 chunks. The reranker now has no cutoff. The UI shows the passages the model cited as source cards and lists the rest, which the model still receives, under "(not cited)", so a passage with a low Cohere score is no longer hidden.
 
-**Held-out check.** To avoid grading the fix on the questions that motivated it, four new questions (`eval/ground_truth_heldout.json`: three that need two policy areas and one two-topic question within HR) were written before any change and run on the old pipeline for a retrieval baseline. After the change: Context Recall 0.875, Faithfulness 0.938, Answer Correctness 0.848 and Context Precision 0.379 (4 questions, so indicative only). Three answers were fully correct; on the fourth (return of a laptop when leaving the company) the assistant found the PTO rule but said it could not find the hardware-return rule, which matches an intermittent classifier miss seen for this question in the retrieval ablation below, where one run picked "Other" as its second category instead of IT and the hardware-return chunk was left out. The low Context Precision is the price of sending 8 chunks when a question needs facts from two places: only a few of the 8 are relevant.
+**Held-out check.** To avoid grading the fix on the questions that motivated it, four new questions (`eval/ground_truth_heldout.json`: three that need two policy areas and one two-topic question within HR) were written before any change and run on the old pipeline for a retrieval baseline. Right after the change: Context Recall 0.875, Faithfulness 0.938, Answer Correctness 0.848 and Context Precision 0.379. In the latest run (`heldout_20260926_114615`): Context Recall 1.000, Faithfulness 0.950, Answer Correctness 0.824 and Context Precision 0.462 (4 questions, so indicative only). Right after the change three answers were fully correct; on the fourth (return of a laptop when leaving the company) the assistant found the PTO rule but said it could not find the hardware-return rule, which matches an intermittent classifier miss seen for this question in the retrieval ablation below, where one run picked "Other" as its second category instead of IT and the hardware-return chunk was left out. In the latest run all four answers are fully correct, including the laptop question. One passing run does not show the classifier miss is gone, because it is intermittent. The low Context Precision is the price of sending 8 chunks when a question needs facts from two places: only a few of the 8 are relevant.
 
 **Retrieval ablation.** Answer scores are noisy, so retrieval was also measured directly: for each of the 13 answerable questions in both sets, the chunk holding each required fact ("needle") is looked for among the chunks sent to the LLM (22 needed facts, 2 repeats each, `python -m eval.run_retrieval_ablation`; results in `eval/results/ablation_*.json`).
 
@@ -357,11 +358,11 @@ project-aegis/
 
 **Structured metadata tagging** — Every chunk is tagged with `document_id`, `policy_category`, `effective_date`, `policy_owner`, and header hierarchy before embedding. This enables precise filtering.
 
-**Multi-stage retrieval** — The pipeline runs up to 5 searches (the original query, 3 LLM-generated variants, and 1 HyDE hypothetical answer), fuses results using Reciprocal Rank Fusion, filters by date to keep only the latest policy version, then reranks the top 25 chunks using a cross-encoder down to the top 8 before answering. The classifier can choose up to two categories, so a question spanning two policy areas searches both. There is deliberately no minimum relevance cutoff on the reranker: cutoffs of 0.1 and 0.01 both dropped chunks the answer needed. Passages scoring below 0.05 appear collapsed in the UI (the model still receives them). The corpus contains 8 policy documents across 286 indexed chunks.
+**Multi-stage retrieval** — The pipeline runs up to 5 searches (the original query, 3 LLM-generated variants, and 1 HyDE hypothetical answer), fuses results using Reciprocal Rank Fusion, filters by date to keep only the latest policy version, then reranks the top 25 chunks using a cross-encoder down to the top 8 before answering. The classifier can choose up to two categories, so a question spanning two policy areas searches both. There is deliberately no minimum relevance cutoff on the reranker: cutoffs of 0.1 and 0.01 both dropped chunks the answer needed. The UI shows the passages the model cited as source cards and the rest under "(not cited)". The corpus contains 8 policy documents across 286 indexed chunks.
 
 **Token budget enforcement** — Before every LLM call, tiktoken counts the total tokens across the reranked chunks (8 by default). If the total exceeds 3,000 tokens, the lowest-ranked chunks are dropped to prevent context overflow. Token usage is displayed live in the UI sidebar per query.
 
-**Hallucination prevention** — The LLM is instructed to answer using only the retrieved context. Category pre-filtering keeps cross-domain chunks out of the candidate set (e.g., a Travel query does not surface HR chunks); if the detected category has no chunks in the corpus, retrieval falls back to an unfiltered search rather than returning nothing. If the answer is not in the corpus, the system says so rather than making one up.
+**Hallucination prevention** — The LLM is instructed to answer using only the retrieved context. Category pre-filtering keeps cross-domain chunks out of the candidate set (e.g., a Travel query does not surface HR chunks); if the detected category has no chunks in the corpus, retrieval falls back to an unfiltered search rather than returning nothing. If the answer is not in the corpus, the system says so rather than making one up, and the UI then shows no source card. The prompt also tells the model to quote policy dates as written (for example "as of November 15th"), to say plainly "not eligible" when the user's situation fails a required condition, and to mention local or state law caveats when the context contains them.
 
 **Defensive LLM parsing** — Both `detect_category()` and `generate_multi_queries()` include multi-level fallback parsing. If the LLM returns unexpected output (preamble text, wrong casing, numbered lists), the parsers extract valid values or fall back gracefully rather than silently failing.
 
@@ -459,7 +460,7 @@ The current architecture waits for the full LLM response before displaying anyth
 Streamlit Community Cloud puts idle apps to sleep; the first visit after a long idle period shows a "wake up" screen and the first query re-imports the pipeline. Qdrant Cloud free clusters are also suspended after ~1 week of inactivity, so visit the app (or the Qdrant dashboard) periodically.
 
 **7. Category classifier vs. corpus tags**
-The category classifier can return categories (e.g. Legal, Compliance) that no chunk is tagged with, because the corpus only contains Travel, HR and IT. In that case retrieval falls back to an unfiltered search. Future improvement: derive the classifier's allowed categories from the tags actually present in the index.
+The category classifier can return categories (e.g. Legal, Compliance) that no chunk is tagged with, because the corpus only contains Travel, HR and IT. In that case retrieval falls back to an unfiltered search. The category badge in the UI now shows only the detected categories that returned passages, so a classifier answer such as "Finance" (no document is tagged with it) is no longer displayed. Future improvement: derive the classifier's allowed categories from the tags actually present in the index.
 
 **8. At most two categories per question**
 The classifier now returns up to two categories, which fixed the questions that need two policy areas (for example an L&D stipend plus a travel hotel limit). A question spanning three areas still cannot retrieve them all, and the choice of a second category is not deterministic: on one retrieval-ablation run the classifier picked "Other" instead of IT as the second category for the laptop-return question and the rule was missed. Future improvement: use the category as a boost rather than a filter, or search filtered and unfiltered and merge.
@@ -481,7 +482,7 @@ Building Project Aegis taught me that retrieval quality — not LLM quality — 
 
 Applying real-world RAG failure patterns (context overflow, fragile LLM output parsing, 
 missing evaluation baselines) and fixing them systematically resulted in a pipeline that 
-achieves Faithfulness of 0.991 and Context Precision of 0.968 on a RAGAS evaluation 
+achieves Faithfulness of 1.000 and Context Precision of 0.966 on a RAGAS evaluation 
 across 27 ground truth Q&A pairs — with zero pipeline errors across all samples.
 
 ---

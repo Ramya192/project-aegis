@@ -1,0 +1,229 @@
+{
+  "timestamp": "20260926_114416",
+  "model": "gpt-4o-mini",
+  "samples_evaluated": 9,
+  "overall_scores": {
+    "context_precision": 0.8606,
+    "context_recall": 0.9074,
+    "noise_sensitivity(mode=relevant)": 0.2728,
+    "faithfulness": 0.9127,
+    "answer_relevancy": 0.7666,
+    "answer_correctness": 0.7276
+  },
+  "category_breakdown": {
+    "Cross-document": {
+      "context_precision": 0.9335,
+      "context_recall": 0.8333,
+      "faithfulness": 0.9429,
+      "answer_relevancy": 0.827,
+      "answer_correctness": 0.7158
+    },
+    "Paraphrase": {
+      "context_precision": 0.7695,
+      "context_recall": 1.0,
+      "faithfulness": 0.875,
+      "answer_relevancy": 0.691,
+      "answer_correctness": 0.7423
+    }
+  },
+  "per_question_results": [
+    {
+      "user_input": "I'm currently on a Performance Improvement Plan. Can I still get tuition assistance and this year's annual bonus?",
+      "retrieved_contexts": [
+        "## 9. Impact of Disciplinary Action (PIPs)\nPerformance and compensation are directly linked to the Global Code of Conduct (cross-reference HR-POL-5050-V4).\n* Any employee actively on a Performance Improvement Plan (PIP) or under a Final Written Warning as of November 15th is automatically ineligible for a Year-End merit increase, an annual bonus payout, or a promotion, regardless of their financial or operational metrics.",
+        "## 6. Academic Performance Requirements\nReimbursement under the Tuition Assistance Program is strictly contingent upon the employee's academic performance. The organization operates on a sliding scale for reimbursement based on the final grade achieved in each specific course.",
+        "## 10. Separation and Compensation Forfeiture\n* **Bonuses:** To receive the Annual Bonus payout (typically distributed in March), the employee must be actively employed and in good standing on the date of payout. If an employee resigns on February 28th, they forfeit their entire bonus for the previous performance year.\n* **Equity:** Unvested RSUs are immediately canceled and returned to the corporate equity pool at 5:00 PM local time on the employee's final date of employment.",
+        "## 5. Variable Compensation: The Annual Bonus Program\nThe Annual Bonus Program is designed to reward collective corporate success and individual impact.",
+        "### 5.3 Proration\nIf an eligible employee was hired between January 1st and September 30th of the performance year, their bonus payout will be prorated based on the exact number of days employed during that calendar year.",
+        "### 5.1 Eligibility\n* The employee must have completed a minimum of twelve (12) months of continuous, full-time service prior to the start date of the first academic term.\n* The employee must be in \"Good Standing\" (not on a Performance Improvement Plan or under disciplinary review).\n* The degree program must be broadly related to the employee's current role or a probable future role within the organization.",
+        "## 8. Repayment and Retention (The \"Clawback\" Clause)\nThe Tuition Assistance Program is an investment in the organization's future workforce. Consequently, employees who utilize this benefit are subject to a retention agreement.  \nIf an employee's employment is terminated (either voluntarily by resignation, or involuntarily for cause) after receiving tuition reimbursement, the employee must repay the organization according to the following schedule:",
+        "# Corporate Policy: Global Learning, Development, and Tuition Assistance\n**Document ID:** LND-POL-7010-V3\n**Effective Date:** May 1, 2026\n**Last Revised:** March 10, 2026\n**Policy Owner:** Chief Learning Officer (CLO) & Global HR\n**Applies To:** All full-time employees. Part-time employees and contractors are subject only to Section 2 (Mandatory Compliance).  \n---"
+      ],
+      "response": "You are not eligible for tuition assistance because you are currently on a Performance Improvement Plan, as you must be in \"Good Standing\" (not on a Performance Improvement Plan or under disciplinary review) to qualify for the Tuition Assistance Program.\n\nAdditionally, you are also ineligible for this year's annual bonus, as being on a Performance Improvement Plan or under a Final Written Warning as of November 15th automatically disqualifies you from receiving a Year-End merit increase, an annual bonus payout, or a promotion.",
+      "reference": "No to both. Tuition assistance requires the employee to be in Good Standing, meaning not on a Performance Improvement Plan or under disciplinary review. An employee on a PIP or under a Final Written Warning as of November 15th is also ineligible for the year-end merit increase, the annual bonus payout and promotion.",
+      "context_precision": 0.9093537414836079,
+      "context_recall": 0.6666666666666666,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 0.7142857142857143,
+      "answer_relevancy": 0.6927705875598201,
+      "answer_correctness": 0.8482374376126266,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "I want to attend university classes during work hours. How is that time treated and what do I need to do to be away?",
+      "retrieved_contexts": [
+        "* Employees studying during standard business hours must utilize standard PTO or negotiate a flexible working arrangement as outlined in the *HR Leave and Absence Policy (HR-POL-4001-V6)*. Time spent attending classes or completing coursework is not considered compensable working time.",
+        "## 1. Purpose and Philosophy\nThe organization believes that employees do their best work when they have ample time to rest, recharge, and attend to personal, medical, and family matters. This comprehensive Leave and Absence Policy establishes the rules and administrative procedures governing paid and unpaid time away from work.",
+        "## 10. Unpaid Leave of Absence (ULOA)\nIn circumstances where an employee has exhausted all applicable PTO, Sick Leave, and Statutory Leave (such as FMLA), they may request an Unpaid Leave of Absence (ULOA) for severe personal or medical reasons.\n* ULOA requests must be submitted in writing and require approval from the Department VP and the Chief HR Officer.\n* ULOA cannot exceed 90 cumulative days in a rolling 12-month period.",
+        "# Human Resources Policy: Global Leave, Paid Time Off, and Absences\n**Document ID:** HR-POL-4001-V6\n**Effective Date:** January 1, 2026\n**Last Revised:** November 30, 2025\n**Policy Owner:** Global Human Resources & Employee Success\n**Applies To:** All regular full-time and part-time employees globally. Temporary employees and independent contractors are explicitly excluded from this policy unless mandated by local statutory law.  \n---",
+        "### 6.1 Primary Caregiver Leave\nThe designated Primary Caregiver (the parent taking primary responsibility for the child's care during standard business hours) is eligible for up to sixteen (16) weeks of 100% paid leave.",
+        "# Corporate Policy: Global Learning, Development, and Tuition Assistance\n**Document ID:** LND-POL-7010-V3\n**Effective Date:** May 1, 2026\n**Last Revised:** March 10, 2026\n**Policy Owner:** Chief Learning Officer (CLO) & Global HR\n**Applies To:** All full-time employees. Part-time employees and contractors are subject only to Section 2 (Mandatory Compliance).  \n---",
+        "* A doctor's note or medical certification is only required if the employee utilizes more than three (3) consecutive days of sick leave. Failure to provide a requested medical certificate within 5 business days of returning to work will result in the absence being coded as Unpaid Leave.",
+        "### 2.2 Part-Time Employees\nRegular part-time employees (defined as working between 20 and 29 hours per week) accrue PTO on a strict pro-rata basis based on their standard scheduled hours. Employees working fewer than 20 hours per week do not accrue PTO."
+      ],
+      "response": "If you want to attend university classes during standard business hours, you must utilize standard Paid Time Off (PTO) or negotiate a flexible working arrangement as outlined in the HR Leave and Absence Policy (HR-POL-4001-V6). Time spent attending classes or completing coursework is not considered compensable working time.",
+      "reference": "Class and coursework time is not compensable working time, so the employee must use standard PTO or negotiate a flexible working arrangement. A PTO request of 1 to 4 days needs at least 7 days' advance notice through Workday.",
+      "context_precision": 0.8083333333171667,
+      "context_recall": 0.5,
+      "noise_sensitivity(mode=relevant)": 0.6666666666666666,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.761664221730478,
+      "answer_correctness": 0.6193889476035775,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "If I resign 8 months after my tuition reimbursement was paid out, what happens to that money and to my unused PTO?",
+      "retrieved_contexts": [
+        "## 8. Repayment and Retention (The \"Clawback\" Clause)\nThe Tuition Assistance Program is an investment in the organization's future workforce. Consequently, employees who utilize this benefit are subject to a retention agreement.  \nIf an employee's employment is terminated (either voluntarily by resignation, or involuntarily for cause) after receiving tuition reimbursement, the employee must repay the organization according to the following schedule:",
+        "### 11.1 PTO Payout\n* **Standard Policy:** Accrued, unused PTO is paid out to the employee in their final paycheck at their standard hourly rate.\n* **Negative Balances:** If an employee terminates employment with a negative PTO balance (having borrowed against future accruals), the monetary equivalent of the negative balance will be deducted from their final paycheck, where legally permissible.",
+        "* **0 to 12 Months:** If the departure occurs within 12 months of the *payout date* of the reimbursement, the employee must repay **100%** of the reimbursed funds.\n* **12 to 24 Months:** If the departure occurs between 12 and 24 months of the payout date, the employee must repay **50%** of the reimbursed funds.\n* **After 24 Months:** If the departure occurs more than 24 months after the payout date, the debt is fully forgiven, and **0%** repayment is required.",
+        "### 3.1 The \"Use It or Lose It\" Standard Policy\nAt the end of the calendar year (December 31st), employees may carry over a maximum of forty (40) hours (5 days) of unused PTO into the following calendar year. Any accrued PTO exceeding the 40-hour rollover limit on December 31st will be immediately forfeited and removed from the employee's balance without financial compensation.",
+        "*Deduction Authorization:* By participating in the TAP, the employee explicitly authorizes the organization to deduct any owed tuition repayments from their final paycheck, severance payout, or accrued PTO payout (subject to local state labor laws).",
+        "### 3.2 Statutory Exceptions (California, Colorado, Montana, Nebraska)\nThe \"Use It or Lose It\" policy described in Section 3.1 is strictly prohibited in certain US jurisdictions. For employees legally residing in California, Colorado, Montana, and Nebraska, PTO does not expire at the end of the calendar year. Instead, these employees are subject to the \"Maximum Accrual Cap\" listed in the table in Section 2.1.",
+        "### 8.2 Benefit Continuation\nDuring the Sabbatical, employees continue to receive their standard base salary, and all health, dental, and retirement benefits remain active. However, employees **do not** accrue standard PTO during the four-week sabbatical period. Equipment stipends (refer to Remote Work Policy) are also suspended during this period.",
+        "### 11.2 Non-Payable Leave\nUnder no circumstances, regardless of jurisdiction, will the organization pay out unused Sick Leave, Floating Holidays, Sabbatical time, or Bereavement Leave upon termination."
+      ],
+      "response": "If you resign 8 months after your tuition reimbursement was paid out, you must repay 100% of the reimbursed funds, as your departure occurs within 12 months of the payout date of the reimbursement.\n\nRegarding your unused PTO, any accrued, unused PTO will be paid out to you in your final paycheck at your standard hourly rate. However, if you have a negative PTO balance from borrowing against future accruals, the monetary equivalent of the negative balance will be deducted from your final paycheck, where legally permissible.",
+      "reference": "Leaving within 12 months of the payout date means repaying 100% of the reimbursed tuition. The organization may deduct the amount owed from the final paycheck, severance or accrued PTO payout, subject to local state labor laws. Accrued unused PTO is normally paid out in the final paycheck at the standard hourly rate.",
+      "context_precision": 0.94999999997625,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.4,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9181866266278377,
+      "answer_correctness": 0.480333350183684,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "I'm an L3 individual contributor going to a conference in Chicago and want to use my L&D stipend. What is my stipend limit, does the trip cost come out of it, and what is the maximum hotel rate per night?",
+      "retrieved_contexts": [
+        "### 3.2 Conference Travel Allowances\nIf an employee utilizes their L&D stipend to purchase a ticket to an industry conference, the associated travel costs (flights, hotel, per diems) are **not** deducted from the L&D stipend. However, all conference travel must strictly adhere to the booking protocols and budgetary limits outlined in the *Corporate Travel Policy (TRV-POL-1001-V4)*.",
+        "### 3.1 Annual Stipend Tiers\nStipend amounts are refreshed on January 1st and do not roll over into the following calendar year. The limits are determined by job level:  \n| Job Level | Annual L&D Stipend Limit (USD) | Approval Required |\n| :--- | :--- | :--- |\n| Individual Contributors (L1 - L4) | $1,500 | Direct Manager |\n| Management (M1 - M2) | $3,000 | Department Director |\n| Directors and Above (D1+) | $5,000 | Department VP |",
+        "### 7.1 Nightly Rate Thresholds\nLodging costs must fall within the maximum nightly rate limits defined by the destination's City Tier. These thresholds exclude local occupancy taxes and resort fees.  \n| Destination Tier | Example Locations | Maximum Nightly Rate (Excluding Taxes) |\n| :--- | :--- | :--- |\n| **Tier 1 (Premium)** | New York, San Francisco, Boston, Washington D.C., Los Angeles | $375.00 USD |\n| **Tier 2 (Major)** | Chicago, Seattle, Austin, Denver, Miami, Atlanta | $285.00 USD |\n| **Tier 3 (Standard)** | All other domestic locations not listed above | $195.00 USD |",
+        "### 6.1 US State Department Lodging Index\nInternational hotel maximums are benchmarked against the US State Department\u2019s Foreign Per Diem Rates for lodging. Employees may book accommodations up to 120% of the published State Department rate for their specific international city.",
+        "### 5.2 Financial Limits\nThe organization will reimburse up to a maximum of **$5,250 USD per calendar year** for approved tuition, lab fees, and required textbooks.\n* The $5,250 limit aligns with the IRS Section 127 maximum for tax-free educational assistance.\n* Late registration fees, graduation fees, parking passes, and optional study materials are strictly non-reimbursable.",
+        "## 3. The Professional Development Stipend (Certifications & Conferences)\nThe organization provides an annual discretionary stipend for employees to attend industry conferences, seminars, and obtain professional certifications (e.g., PMP, AWS Certified Solutions Architect, CFA).",
+        "### 7.3 International Per Diems (M&IE)\nInternational Meals and Incidental Expenses (M&IE) per diems are not flat rates. They are dynamically assigned based on the destination city, utilizing the World Health Organization (WHO) or US State Department international per diem tables.\n* Receipts are not required for meals purchased under the international per diem threshold.\n* The per diem covers all gratuities, currency exchange fees, and minor local transit (e.g., a short bus ride).",
+        "If an employee's travel is funded by a third party (e.g., a client reimbursing the company for travel costs), the stricter of the two policies (the company's policy or the client's policy) shall apply. Any local, state, or national laws that contradict this policy will supersede the guidelines outlined within this document. Contractors and vendors are subject to this policy unless explicitly exempted in their Master Services Agreement (MSA) or Statement of Work (SOW)."
+      ],
+      "response": "As an L3 individual contributor, your annual L&D stipend limit is $1,500. The costs associated with your trip (flights, hotel, per diems) are not deducted from this stipend. \n\nFor your conference in Chicago, the maximum hotel rate per night falls under Tier 2, which is $285.00 USD (excluding taxes).",
+      "reference": "The annual L&D stipend for individual contributors (L1-L4) is $1,500 USD, approved by the direct manager. Conference travel costs (flights, hotel, per diems) are not deducted from the stipend, but the travel must follow the Corporate Travel Policy. Chicago is a Tier 2 city, so the maximum hotel rate is $285 USD per night excluding taxes.",
+      "context_precision": 0.9999999999666667,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8818505164846245,
+      "answer_correctness": 0.6736806748954971,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "If I resign on February 28th, what happens to my bonus for last year and to my unused PTO, sick leave and floating holidays?",
+      "retrieved_contexts": [
+        "## 10. Separation and Compensation Forfeiture\n* **Bonuses:** To receive the Annual Bonus payout (typically distributed in March), the employee must be actively employed and in good standing on the date of payout. If an employee resigns on February 28th, they forfeit their entire bonus for the previous performance year.\n* **Equity:** Unvested RSUs are immediately canceled and returned to the corporate equity pool at 5:00 PM local time on the employee's final date of employment.",
+        "### 11.2 Non-Payable Leave\nUnder no circumstances, regardless of jurisdiction, will the organization pay out unused Sick Leave, Floating Holidays, Sabbatical time, or Bereavement Leave upon termination.",
+        "### 11.1 PTO Payout\n* **Standard Policy:** Accrued, unused PTO is paid out to the employee in their final paycheck at their standard hourly rate.\n* **Negative Balances:** If an employee terminates employment with a negative PTO balance (having borrowed against future accruals), the monetary equivalent of the negative balance will be deducted from their final paycheck, where legally permissible.",
+        "### 4.2 Floating Holidays\nIn addition to designated holidays, all full-time employees receive two (2) Paid Floating Holidays (16 hours) on January 1st of each year.\n* Floating holidays do not accrue; they are granted as a lump sum.\n* New hires starting after July 1st receive only one (1) Floating Holiday for that calendar year.\n* Floating holidays absolutely cannot be carried over into the next year and are never paid out upon termination, regardless of jurisdiction.",
+        "### 3.1 The \"Use It or Lose It\" Standard Policy\nAt the end of the calendar year (December 31st), employees may carry over a maximum of forty (40) hours (5 days) of unused PTO into the following calendar year. Any accrued PTO exceeding the 40-hour rollover limit on December 31st will be immediately forfeited and removed from the employee's balance without financial compensation.",
+        "### 5.3 Proration\nIf an eligible employee was hired between January 1st and September 30th of the performance year, their bonus payout will be prorated based on the exact number of days employed during that calendar year.",
+        "# Human Resources Policy: Performance Management, Compensation, and Career Advancement\n**Document ID:** HR-POL-6002-V5\n**Effective Date:** April 1, 2026\n**Last Revised:** February 28, 2026\n**Policy Owner:** Global Total Rewards & Talent Management\n**Applies To:** All full-time and regular part-time employees. Temporary contractors, interns, and external consultants are explicitly excluded from the annual compensation review cycle and equity programs.  \n---",
+        "### 3.2 Statutory Exceptions (California, Colorado, Montana, Nebraska)\nThe \"Use It or Lose It\" policy described in Section 3.1 is strictly prohibited in certain US jurisdictions. For employees legally residing in California, Colorado, Montana, and Nebraska, PTO does not expire at the end of the calendar year. Instead, these employees are subject to the \"Maximum Accrual Cap\" listed in the table in Section 2.1."
+      ],
+      "response": "If you resign on February 28th, you will forfeit your entire bonus for the previous performance year, as you must be actively employed and in good standing on the date of payout, which typically occurs in March. \n\nRegarding your unused PTO, it will be paid out to you in your final paycheck at your standard hourly rate. However, if you have a negative PTO balance (having borrowed against future accruals), the monetary equivalent of the negative balance will be deducted from your final paycheck, where legally permissible.\n\nUnder no circumstances will you receive a payout for unused Sick Leave or Floating Holidays upon termination. Floating Holidays cannot be carried over into the next year and are never paid out upon termination, regardless of jurisdiction.",
+      "reference": "The employee forfeits the entire annual bonus for the previous performance year, because the bonus is paid in March and the employee must still be employed and in good standing on the payout date. Unused accrued PTO is paid out in the final paycheck at the standard hourly rate. Unused sick leave and floating holidays are never paid out.",
+      "context_precision": 0.99999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.2222222222222222,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.880374646056158,
+      "answer_correctness": 0.9573494512252666,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "What's the most I can spend per night on a hotel when I'm travelling to Denver for work?",
+      "retrieved_contexts": [
+        "### 7.1 Nightly Rate Thresholds\nLodging costs must fall within the maximum nightly rate limits defined by the destination's City Tier. These thresholds exclude local occupancy taxes and resort fees.  \n| Destination Tier | Example Locations | Maximum Nightly Rate (Excluding Taxes) |\n| :--- | :--- | :--- |\n| **Tier 1 (Premium)** | New York, San Francisco, Boston, Washington D.C., Los Angeles | $375.00 USD |\n| **Tier 2 (Major)** | Chicago, Seattle, Austin, Denver, Miami, Atlanta | $285.00 USD |\n| **Tier 3 (Standard)** | All other domestic locations not listed above | $195.00 USD |",
+        "### 6.1 US State Department Lodging Index\nInternational hotel maximums are benchmarked against the US State Department\u2019s Foreign Per Diem Rates for lodging. Employees may book accommodations up to 120% of the published State Department rate for their specific international city.",
+        "### 7.1 Outstation Driver Batta (Allowances)\nIf business travel requires an employee\u2019s professional driver to travel outstation (beyond the city limits) and necessitates an overnight stay, the organization will reimburse a \"Driver Batta\" (daily allowance) to cover the driver's food and basic lodging.\n* **Standard Driver Allowance:** Reimbursable up to $30.00 USD (or local equivalent) per overnight stay.",
+        "### 7.2 Alternative Accommodations\nThe use of short-term rental services (e.g., Airbnb, Vrbo) is permitted only if the total nightly cost (including cleaning and service fees) falls strictly below the City Tier threshold, and the stay exceeds five (5) consecutive nights. Due to duty-of-care and safety tracking limitations, alternative accommodations require secondary approval from the Department Director.",
+        "* **The Traveler:** The individual conducting business travel is responsible for understanding and complying with this policy, exercising good judgment regarding company funds, securing all necessary approvals prior to booking, submitting expense reports accurately and within the stipulated 30-day timeframe, and maintaining possession of itemized receipts for any transaction exceeding $25.00 USD.",
+        "### 8.1 Employee Meal Per Diems\nTravelers are allotted a daily per diem for meals and incidentals (M&IE). Receipts are not required to be submitted for expenses that fall under the per diem allowance, as the allowance is a fixed daily rate.\n* **Standard Per Diem:** $85.00 USD per full day of travel.\n* **Travel Days (First and Last Day):** Prorated to 75% of the standard per diem ($63.75 USD).",
+        "If an employee's travel is funded by a third party (e.g., a client reimbursing the company for travel costs), the stricter of the two policies (the company's policy or the client's policy) shall apply. Any local, state, or national laws that contradict this policy will supersede the guidelines outlined within this document. Contractors and vendors are subject to this policy unless explicitly exempted in their Master Services Agreement (MSA) or Statement of Work (SOW).",
+        "### 7.3 International Per Diems (M&IE)\nInternational Meals and Incidental Expenses (M&IE) per diems are not flat rates. They are dynamically assigned based on the destination city, utilizing the World Health Organization (WHO) or US State Department international per diem tables.\n* Receipts are not required for meals purchased under the international per diem threshold.\n* The per diem covers all gratuities, currency exchange fees, and minor local transit (e.g., a short bus ride)."
+      ],
+      "response": "When traveling to Denver for work, the maximum nightly rate you can spend on lodging is $285.00 USD, excluding local occupancy taxes and resort fees, as Denver is classified as a Tier 2 (Major) city.",
+      "reference": "$285 USD per night excluding taxes, because Denver is a Tier 2 (Major) destination.",
+      "context_precision": 0.7916666666402777,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.6666666666666666,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.833984699099235,
+      "answer_correctness": 0.9507817679476473,
+      "category": "Paraphrase"
+    },
+    {
+      "user_input": "My work laptop was stolen on the train. How long do I have to tell IT?",
+      "retrieved_contexts": [
+        "### 7.1 Reporting Service Level Agreements (SLAs)\n* **Lost or Stolen Hardware:** Must be reported within **12 hours** of discovery to initiate remote wipe protocols.\n* **Suspected Phishing Click:** If an employee clicks a suspicious link or enters credentials into a fake portal, they must report it within **1 hour**.",
+        "* **Misdirected Email (Data Breach):** If an employee accidentally sends an email containing Tier 3 or Tier 4 data to an unauthorized external recipient, they must report it within **4 hours**.",
+        "## 7. Incident Response and Breach Reporting SLAs\nTime is the most critical factor in mitigating a cyber incident. Employees must report suspected incidents immediately to the IT Security Operations Center (SOC).",
+        "* **Hardware Return:** The employee must return all corporate hardware within three (3) business days of their final date. Failure to return hardware will result in the cost of the equipment being deducted from the final paycheck, and the devices will be remotely bricked and reported as stolen to local law enforcement.",
+        "* **Rotation:** Passwords must be changed every 90 days. The system will prevent the reuse of the last 10 passwords.",
+        "### 7.2 The \"Amnesty\" Clause\nTo encourage rapid reporting, the organization enforces a Security Amnesty Clause. An employee will not face disciplinary action for accidentally clicking a phishing link or making an honest mistake that causes a security incident, **provided** they report the incident immediately in accordance with the SLAs. Attempting to hide a mistake will result in immediate termination.",
+        "* **No Expectation of Privacy:** The organization actively monitors all traffic on the corporate network and corporate VPN. The company reserves the right to inspect local drives on company-issued hardware at any time without prior notice.",
+        "* **Data Subject Access Requests (DSAR):** If an employee receives a request from a customer to delete their data (under GDPR/CCPA), the employee must forward the request to privacy@company.com within 24 hours. Individual employees must never attempt to manually delete records from databases to fulfill a DSAR."
+      ],
+      "response": "You must report the stolen laptop within **12 hours** of discovery to initiate remote wipe protocols.",
+      "reference": "It must be reported within 12 hours of discovery so that remote wipe protocols can be started.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.6376895063615463,
+      "answer_correctness": 0.5747792592763836,
+      "category": "Paraphrase"
+    },
+    {
+      "user_input": "How many vacation days do I earn once I've been with the company seven years?",
+      "retrieved_contexts": [
+        "### 8.1 Eligibility and Duration\nUpon completing seven (7) years of continuous, full-time service, employees are eligible for a fully paid four-week (20 business days) Sabbatical.\n* The Sabbatical must be taken consecutively; it cannot be split into smaller increments.\n* The Sabbatical must be used within 24 months of the employee reaching their 7-year anniversary, or the benefit is permanently forfeited.",
+        "| Years of Continuous Service | Annual PTO Granted | Bi-Weekly Accrual Rate | Maximum Accrual Cap |\n| :--- | :--- | :--- | :--- |\n| Tier 3: 6 to 9 Years | 25 Days (200 Hours) | 7.69 Hours | 300 Hours |",
+        "## 7. Bereavement Leave Restrictions\nIn the event of a death, employees are granted paid time away to grieve and attend to funeral arrangements. Bereavement leave is categorized by the employee's relationship to the deceased.  \n* **Tier 1 (Immediate Family):** Up to five (5) paid days off. Immediate family includes a spouse, domestic partner, child, stepchild, parent, stepparent, or sibling.",
+        "* *Example:* A Tier 1 employee in California can accrue up to 180 hours. Once their balance reaches 180 hours, they stop accruing PTO until they take time off to reduce their balance below the cap.",
+        "| Years of Continuous Service | Annual PTO Granted | Bi-Weekly Accrual Rate | Maximum Accrual Cap |\n| :--- | :--- | :--- | :--- |\n| Tier 4: 10+ Years | 30 Days (240 Hours) | 9.23 Hours | 360 Hours |",
+        "## 12. Request and Approval Workflows\n* **Standard PTO:** Requests for 1 to 4 days of PTO require minimum 7 days' advance notice via the Workday HRIS system.\n* **Extended PTO:** Requests for 5 or more consecutive days of PTO require minimum 21 days' advance notice and documented approval from the direct manager.",
+        "| Years of Continuous Service | Annual PTO Granted | Bi-Weekly Accrual Rate | Maximum Accrual Cap |\n| :--- | :--- | :--- | :--- |\n| Tier 2: 3 to 5 Years | 20 Days (160 Hours) | 6.15 Hours | 240 Hours |",
+        "### 2.1 Accrual Rates for Full-Time Employees\nPTO accrues per pay period (bi-weekly, 26 pay periods per calendar year). The accrual rate increases on the first day of the month following the employee's designated work anniversary."
+      ],
+      "response": "Once you have been with the company for seven years, you earn 25 days (200 hours) of annual PTO.",
+      "reference": "25 days (200 hours) of PTO per year, which is Tier 3 for 6 to 9 years of continuous service.",
+      "context_precision": 0.49999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.8047103928029543,
+      "answer_correctness": 0.6847662050572201,
+      "category": "Paraphrase"
+    },
+    {
+      "user_input": "A client paid for my dinner on a business trip. How does that change my daily food allowance?",
+      "retrieved_contexts": [
+        "* **Provided Meals:** If a meal is provided during the travel (e.g., a catered lunch at a conference, or a dinner paid for by a client), the traveler must deduct the corresponding amount from their daily per diem claim: Breakfast (-$20), Lunch (-$25), Dinner (-$40).\n* **Alcohol:** Alcoholic beverages consumed during standard employee travel (not involving clients) are strictly non-reimbursable and cannot be purchased using corporate credit cards.",
+        "### 7.1 Outstation Driver Batta (Allowances)\nIf business travel requires an employee\u2019s professional driver to travel outstation (beyond the city limits) and necessitates an overnight stay, the organization will reimburse a \"Driver Batta\" (daily allowance) to cover the driver's food and basic lodging.\n* **Standard Driver Allowance:** Reimbursable up to $30.00 USD (or local equivalent) per overnight stay.",
+        "### 8.1 Employee Meal Per Diems\nTravelers are allotted a daily per diem for meals and incidentals (M&IE). Receipts are not required to be submitted for expenses that fall under the per diem allowance, as the allowance is a fixed daily rate.\n* **Standard Per Diem:** $85.00 USD per full day of travel.\n* **Travel Days (First and Last Day):** Prorated to 75% of the standard per diem ($63.75 USD).",
+        "## 8. Meals, Incidentals, and Client Entertainment\nThe organization utilizes a Per Diem allowance system for standard employee meals during travel, and an actual-cost reimbursement model for client entertainment.",
+        "If an employee's travel is funded by a third party (e.g., a client reimbursing the company for travel costs), the stricter of the two policies (the company's policy or the client's policy) shall apply. Any local, state, or national laws that contradict this policy will supersede the guidelines outlined within this document. Contractors and vendors are subject to this policy unless explicitly exempted in their Master Services Agreement (MSA) or Statement of Work (SOW).",
+        "### 7.3 International Per Diems (M&IE)\nInternational Meals and Incidental Expenses (M&IE) per diems are not flat rates. They are dynamically assigned based on the destination city, utilizing the World Health Organization (WHO) or US State Department international per diem tables.\n* Receipts are not required for meals purchased under the international per diem threshold.\n* The per diem covers all gratuities, currency exchange fees, and minor local transit (e.g., a short bus ride).",
+        "### 8.2 Client Entertainment\nClient entertainment expenses are distinct from employee per diems and require itemized receipts, regardless of the amount.\n* **Definition:** A business meal or entertainment event involving at least one external client, prospect, or vendor, where active business discussions take place.\n* **Thresholds:** Client meals should not exceed $150.00 USD per attendee (including tax and tip).",
+        "* This allowance must be expensed under the \"Ground Transit - Ancillary\" code, completely separate from fuel or mileage claims."
+      ],
+      "response": "If a meal is provided during travel, such as a dinner paid for by a client, you must deduct the corresponding amount from your daily per diem claim. For dinner, the deduction is $40. Therefore, your daily food allowance will be reduced by $40 for that day.",
+      "reference": "The traveler must deduct $40 (the dinner amount) from that day's per diem claim.",
+      "context_precision": 0.7861904761747525,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.4877805181360933,
+      "answer_correctness": 0.7588805585942066,
+      "category": "Paraphrase"
+    }
+  ]
+}

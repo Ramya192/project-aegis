@@ -1,0 +1,27 @@
+{
+  "unanswerable_passed": 0,
+  "unanswerable_total": 0,
+  "unanswerable": [],
+  "answerable": [
+    {
+      "question": "I'm a manager (M2) attending a conference in Boston and paying with my L&D stipend. What is my stipend, who approves it, and what is the maximum hotel rate per night?",
+      "ground_truth": "The annual L&D stipend for management (M1-M2) is $3,000 USD, approved by the Department Director. Boston is a Tier 1 (Premium) destination, so the maximum hotel rate is $375 USD per night excluding taxes.",
+      "answer": "As a manager (M2), your annual L&D stipend limit is **$3,000 USD**, and it requires approval from your **Department Director**. \n\nThe maximum hotel rate per night for Boston, which falls under **Tier 1 (Premium)**, is **$375.00 USD** (excluding taxes and resort fees)."
+    },
+    {
+      "question": "When I leave the company, how long do I have to return my laptop, and what happens to my unused PTO?",
+      "ground_truth": "Corporate hardware must be returned within three (3) business days of the final date. Accrued, unused PTO is paid out in the final paycheck at the standard hourly rate.",
+      "answer": "You must return all corporate hardware, including your laptop, within three (3) business days of your final date. If you fail to return the hardware, the cost of the equipment will be deducted from your final paycheck, and the devices will be remotely bricked and reported as stolen to local law enforcement.\n\nRegarding your unused PTO, any accrued PTO will be paid out to you in your final paycheck at your standard hourly rate. However, if you have a negative PTO balance, the monetary equivalent of the negative balance will be deducted from your final paycheck, where legally permissible."
+    },
+    {
+      "question": "If I get a Rating 2 in my year-end review, what bonus multiplier applies to me, and am I still eligible for an equity refresher grant?",
+      "ground_truth": "A Rating 2 carries a 0.5x individual bonus multiplier. Only employees with a Rating 3, 4 or 5 are eligible for the annual equity refresher grant, so a Rating 2 is not eligible.",
+      "answer": "If you receive a Rating 2 in your year-end review, the bonus multiplier that applies to you is 0.5x. Additionally, you are not eligible for an annual equity refresher grant, as only employees with a Rating 3, 4, or 5 are eligible for such grants."
+    },
+    {
+      "question": "How much advance notice do I need for a 3-day PTO request, and what approval and lead time apply to a business trip estimated at $2,000?",
+      "ground_truth": "A PTO request of 1 to 4 days requires at least 7 days' advance notice through Workday. A trip estimated at $1,000-$2,999 needs Department Director approval and a minimum lead time of 14 days.",
+      "answer": "For a 3-day PTO request, you require a minimum of 7 days' advance notice via the Workday HRIS system.\n\nFor a business trip estimated at $2,000, you need primary approval from your Department Director and no secondary approval is required, with a minimum lead time of 14 days."
+    }
+  ]
+}
