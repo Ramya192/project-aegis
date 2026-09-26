@@ -1,0 +1,170 @@
+{
+  "timestamp": "20260925_165814",
+  "model": "gpt-4o-mini",
+  "samples_evaluated": 9,
+  "overall_scores": {
+    "context_precision": 0.8889,
+    "context_recall": 0.6852,
+    "noise_sensitivity(mode=relevant)": 0.1111,
+    "faithfulness": 0.787,
+    "answer_relevancy": 0.5041,
+    "answer_correctness": 0.6238
+  },
+  "category_breakdown": {
+    "Cross-document": {
+      "context_precision": 1.0,
+      "context_recall": 0.6333,
+      "faithfulness": 0.8833,
+      "answer_relevancy": 0.4966,
+      "answer_correctness": 0.5745
+    },
+    "Paraphrase": {
+      "context_precision": 0.75,
+      "context_recall": 0.75,
+      "faithfulness": 0.6667,
+      "answer_relevancy": 0.5136,
+      "answer_correctness": 0.6855
+    }
+  },
+  "per_question_results": [
+    {
+      "user_input": "I'm currently on a Performance Improvement Plan. Can I still get tuition assistance and this year's annual bonus?",
+      "retrieved_contexts": [
+        "## 9. Impact of Disciplinary Action (PIPs)\nPerformance and compensation are directly linked to the Global Code of Conduct (cross-reference HR-POL-5050-V4).\n* Any employee actively on a Performance Improvement Plan (PIP) or under a Final Written Warning as of November 15th is automatically ineligible for a Year-End merit increase, an annual bonus payout, or a promotion, regardless of their financial or operational metrics."
+      ],
+      "response": "Based on the policy documents, any employee actively on a Performance Improvement Plan (PIP) is automatically ineligible for an annual bonus payout. Therefore, you would not be able to receive this year's annual bonus. The policy does not specify whether tuition assistance is affected by being on a PIP, so I could not find that information in the policy documents.",
+      "reference": "No to both. Tuition assistance requires the employee to be in Good Standing, meaning not on a Performance Improvement Plan or under disciplinary review. An employee on a PIP or under a Final Written Warning as of November 15th is also ineligible for the year-end merit increase, the annual bonus payout and promotion.",
+      "context_precision": 0.9999999999,
+      "context_recall": 0.6666666666666666,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.45534358970677596,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "I want to attend university classes during work hours. How is that time treated and what do I need to do to be away?",
+      "retrieved_contexts": [
+        "* Employees studying during standard business hours must utilize standard PTO or negotiate a flexible working arrangement as outlined in the *HR Leave and Absence Policy (HR-POL-4001-V6)*. Time spent attending classes or completing coursework is not considered compensable working time."
+      ],
+      "response": "Employees attending university classes during standard business hours must utilize standard PTO (Paid Time Off) or negotiate a flexible working arrangement as outlined in the HR Leave and Absence Policy (HR-POL-4001-V6). Additionally, please note that the time spent attending classes or completing coursework is not considered compensable working time.",
+      "reference": "Class and coursework time is not compensable working time, so the employee must use standard PTO or negotiate a flexible working arrangement. A PTO request of 1 to 4 days needs at least 7 days' advance notice through Workday.",
+      "context_precision": 0.9999999999,
+      "context_recall": 0.5,
+      "noise_sensitivity(mode=relevant)": 0.3333333333333333,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7230982791601311,
+      "answer_correctness": 0.6206711704161838,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "If I resign 8 months after my tuition reimbursement was paid out, what happens to that money and to my unused PTO?",
+      "retrieved_contexts": [
+        "## 8. Repayment and Retention (The \"Clawback\" Clause)\nThe Tuition Assistance Program is an investment in the organization's future workforce. Consequently, employees who utilize this benefit are subject to a retention agreement.  \nIf an employee's employment is terminated (either voluntarily by resignation, or involuntarily for cause) after receiving tuition reimbursement, the employee must repay the organization according to the following schedule:",
+        "### 11.1 PTO Payout\n* **Standard Policy:** Accrued, unused PTO is paid out to the employee in their final paycheck at their standard hourly rate.\n* **Negative Balances:** If an employee terminates employment with a negative PTO balance (having borrowed against future accruals), the monetary equivalent of the negative balance will be deducted from their final paycheck, where legally permissible.",
+        "* **0 to 12 Months:** If the departure occurs within 12 months of the *payout date* of the reimbursement, the employee must repay **100%** of the reimbursed funds.\n* **12 to 24 Months:** If the departure occurs between 12 and 24 months of the payout date, the employee must repay **50%** of the reimbursed funds.\n* **After 24 Months:** If the departure occurs more than 24 months after the payout date, the debt is fully forgiven, and **0%** repayment is required."
+      ],
+      "response": "If you resign 8 months after your tuition reimbursement was paid out, you must repay 100% of the reimbursed funds according to the repayment schedule. \n\nRegarding your unused PTO, it will be paid out to you in your final paycheck at your standard hourly rate, as per the standard policy. If you have a negative PTO balance at the time of termination, the monetary equivalent of the negative balance will be deducted from your final paycheck, where legally permissible.",
+      "reference": "Leaving within 12 months of the payout date means repaying 100% of the reimbursed tuition. The organization may deduct the amount owed from the final paycheck, severance or accrued PTO payout, subject to local state labor laws. Accrued unused PTO is normally paid out in the final paycheck at the standard hourly rate.",
+      "context_precision": 0.9999999999666667,
+      "context_recall": 0.6666666666666666,
+      "noise_sensitivity(mode=relevant)": 0.3333333333333333,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8848585533382577,
+      "answer_correctness": 0.5322988446626258,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "I'm an L3 individual contributor going to a conference in Chicago and want to use my L&D stipend. What is my stipend limit, does the trip cost come out of it, and what is the maximum hotel rate per night?",
+      "retrieved_contexts": [
+        "### 3.2 Conference Travel Allowances\nIf an employee utilizes their L&D stipend to purchase a ticket to an industry conference, the associated travel costs (flights, hotel, per diems) are **not** deducted from the L&D stipend. However, all conference travel must strictly adhere to the booking protocols and budgetary limits outlined in the *Corporate Travel Policy (TRV-POL-1001-V4)*.",
+        "### 3.1 Annual Stipend Tiers\nStipend amounts are refreshed on January 1st and do not roll over into the following calendar year. The limits are determined by job level:  \n| Job Level | Annual L&D Stipend Limit (USD) | Approval Required |\n| :--- | :--- | :--- |\n| Individual Contributors (L1 - L4) | $1,500 | Direct Manager |\n| Management (M1 - M2) | $3,000 | Department Director |\n| Directors and Above (D1+) | $5,000 | Department VP |"
+      ],
+      "response": "As an L3 individual contributor, your annual L&D stipend limit is $1,500, and the trip cost does not come out of it. However, I could not find the maximum hotel rate per night in the policy documents.",
+      "reference": "The annual L&D stipend for individual contributors (L1-L4) is $1,500 USD, approved by the direct manager. Conference travel costs (flights, hotel, per diems) are not deducted from the stipend, but the travel must follow the Corporate Travel Policy. Chicago is a Tier 2 city, so the maximum hotel rate is $285 USD per night excluding taxes.",
+      "context_precision": 0.99999999995,
+      "context_recall": 0.6666666666666666,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 0.6666666666666666,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.5338023923639358,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "If I resign on February 28th, what happens to my bonus for last year and to my unused PTO, sick leave and floating holidays?",
+      "retrieved_contexts": [
+        "## 10. Separation and Compensation Forfeiture\n* **Bonuses:** To receive the Annual Bonus payout (typically distributed in March), the employee must be actively employed and in good standing on the date of payout. If an employee resigns on February 28th, they forfeit their entire bonus for the previous performance year.\n* **Equity:** Unvested RSUs are immediately canceled and returned to the corporate equity pool at 5:00 PM local time on the employee's final date of employment.",
+        "### 11.2 Non-Payable Leave\nUnder no circumstances, regardless of jurisdiction, will the organization pay out unused Sick Leave, Floating Holidays, Sabbatical time, or Bereavement Leave upon termination."
+      ],
+      "response": "If you resign on February 28th, you will forfeit your entire bonus for the previous performance year. Additionally, the organization will not pay out any unused Sick Leave, Floating Holidays, or PTO upon termination.",
+      "reference": "The employee forfeits the entire annual bonus for the previous performance year, because the bonus is paid in March and the employee must still be employed and in good standing on the payout date. Unused accrued PTO is paid out in the final paycheck at the standard hourly rate. Unused sick leave and floating holidays are never paid out.",
+      "context_precision": 0.99999999995,
+      "context_recall": 0.6666666666666666,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 0.75,
+      "answer_relevancy": 0.8750226185342344,
+      "answer_correctness": 0.7303127947142884,
+      "category": "Cross-document"
+    },
+    {
+      "user_input": "What's the most I can spend per night on a hotel when I'm travelling to Denver for work?",
+      "retrieved_contexts": [
+        "### 7.1 Nightly Rate Thresholds\nLodging costs must fall within the maximum nightly rate limits defined by the destination's City Tier. These thresholds exclude local occupancy taxes and resort fees.  \n| Destination Tier | Example Locations | Maximum Nightly Rate (Excluding Taxes) |\n| :--- | :--- | :--- |\n| **Tier 1 (Premium)** | New York, San Francisco, Boston, Washington D.C., Los Angeles | $375.00 USD |\n| **Tier 2 (Major)** | Chicago, Seattle, Austin, Denver, Miami, Atlanta | $285.00 USD |\n| **Tier 3 (Standard)** | All other domestic locations not listed above | $195.00 USD |"
+      ],
+      "response": "When travelling to Denver for work, which falls under Tier 2 (Major) destinations, the maximum nightly rate you can spend on a hotel is $285.00 USD, excluding taxes.",
+      "reference": "$285 USD per night excluding taxes, because Denver is a Tier 2 (Major) destination.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.3333333333333333,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7572564336079955,
+      "answer_correctness": 0.9596141760274364,
+      "category": "Paraphrase"
+    },
+    {
+      "user_input": "My work laptop was stolen on the train. How long do I have to tell IT?",
+      "retrieved_contexts": [
+        "### 7.1 Reporting Service Level Agreements (SLAs)\n* **Lost or Stolen Hardware:** Must be reported within **12 hours** of discovery to initiate remote wipe protocols.\n* **Suspected Phishing Click:** If an employee clicks a suspicious link or enters credentials into a fake portal, they must report it within **1 hour**."
+      ],
+      "response": "You must report the lost or stolen laptop within **12 hours** of discovery to initiate remote wipe protocols.",
+      "reference": "It must be reported within 12 hours of discovery so that remote wipe protocols can be started.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.6363963704671846,
+      "answer_correctness": 0.9475967042261768,
+      "category": "Paraphrase"
+    },
+    {
+      "user_input": "How many vacation days do I earn once I've been with the company seven years?",
+      "retrieved_contexts": [
+        "### 8.1 Eligibility and Duration\nUpon completing seven (7) years of continuous, full-time service, employees are eligible for a fully paid four-week (20 business days) Sabbatical.\n* The Sabbatical must be taken consecutively; it cannot be split into smaller increments.\n* The Sabbatical must be used within 24 months of the employee reaching their 7-year anniversary, or the benefit is permanently forfeited."
+      ],
+      "response": "I could not find that information in the policy documents.",
+      "reference": "25 days (200 hours) of PTO per year, which is Tier 3 for 6 to 9 years of continuous service.",
+      "context_precision": 0.0,
+      "context_recall": 0.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.03872594386981202,
+      "category": "Paraphrase"
+    },
+    {
+      "user_input": "A client paid for my dinner on a business trip. How does that change my daily food allowance?",
+      "retrieved_contexts": [
+        "* **Provided Meals:** If a meal is provided during the travel (e.g., a catered lunch at a conference, or a dinner paid for by a client), the traveler must deduct the corresponding amount from their daily per diem claim: Breakfast (-$20), Lunch (-$25), Dinner (-$40).\n* **Alcohol:** Alcoholic beverages consumed during standard employee travel (not involving clients) are strictly non-reimbursable and cannot be purchased using corporate credit cards."
+      ],
+      "response": "Since a client paid for your dinner, you must deduct the corresponding amount from your daily per diem claim. The amount to deduct for dinner is $40.",
+      "reference": "The traveler must deduct $40 (the dinner amount) from that day's per diem claim.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 0.6666666666666666,
+      "answer_relevancy": 0.6606287754486577,
+      "answer_correctness": 0.7962391275492482,
+      "category": "Paraphrase"
+    }
+  ]
+}

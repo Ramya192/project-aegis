@@ -1,0 +1,27 @@
+Project Aegis — RAGAS Evaluation
+Run: 20260925_181004
+Samples: 4
+
+OVERALL SCORES
+  context_precision              0.3785
+  context_recall                 0.8750
+  noise_sensitivity(mode=relevant) 0.1250
+  faithfulness                   0.9375
+  answer_relevancy               0.6000
+  answer_correctness             0.8484
+
+CATEGORY BREAKDOWN
+
+[Held-out cross-category]
+  context_precision              0.3333  (n=3)
+  context_recall                 0.8333  (n=3)
+  faithfulness                   0.9167  (n=3)
+  answer_relevancy               0.5556  (n=3)
+  answer_correctness             0.8111  (n=3)
+
+[Held-out two-topic]
+  context_precision              0.5139  (n=1)
+  context_recall                 1.0000  (n=1)
+  faithfulness                   1.0000  (n=1)
+  answer_relevancy               0.7334  (n=1)
+  answer_correctness             0.9606  (n=1)

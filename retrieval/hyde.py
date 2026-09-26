@@ -21,7 +21,7 @@ def generate_hypothetical_answer(query: str, llm) -> str:
 
 
 def hyde_search(query: str, qdrant: QdrantClient, openai_client: OpenAI, llm,
-                top_k: int = 5, category: str | None = None) -> list:
+                top_k: int = 5, category: list[str] | str | None = None) -> list:
     """Embed an LLM-written hypothetical answer and search with it instead of the query."""
     hypothetical_answer = generate_hypothetical_answer(query, llm)
     query_vector = get_embedding(hypothetical_answer, openai_client)

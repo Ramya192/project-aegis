@@ -4,7 +4,7 @@ import re
 from collections import defaultdict
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import Filter, FieldCondition, MatchValue
+from qdrant_client.models import Filter, FieldCondition, MatchAny, MatchValue
 from ingestion.embedder import COLLECTION_NAME
 
 logger = logging.getLogger(__name__)
@@ -20,17 +20,17 @@ _PREAMBLE_PHRASES = [
 
 
 def vector_search(query_vector: list, qdrant: QdrantClient, top_k: int = 5,
-                  category: str | None = None) -> list:
-    """Dense search in Qdrant, optionally restricted to one policy_category.
+                  category: list[str] | str | None = None) -> list:
+    """Dense search in Qdrant, optionally restricted to one or more policy categories.
 
     The detected category may not exist in the corpus (e.g. the LLM says "Legal"
     but every chunk is tagged HR), so an empty filtered search is retried unfiltered.
     """
     query_filter = None
-    if category is not None:
-        query_filter = Filter(
-            must=[FieldCondition(key="policy_category", match=MatchValue(value=category))]
-        )
+    if category:
+        categories = [category] if isinstance(category, str) else list(category)
+        match = MatchValue(value=categories[0]) if len(categories) == 1 else MatchAny(any=categories)
+        query_filter = Filter(must=[FieldCondition(key="policy_category", match=match)])
 
     results = qdrant.query_points(
         collection_name=COLLECTION_NAME,

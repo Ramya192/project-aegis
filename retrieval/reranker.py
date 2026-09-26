@@ -13,10 +13,6 @@ logger = logging.getLogger(__name__)
 
 COHERE_MODEL = "rerank-english-v3.0"
 
-# Cohere relevance scores are absolute (0-1), so chunks scoring below this are dropped
-# instead of being padded into the context up to top_k. The best chunk is always kept.
-# (The local CrossEncoder's scores are min-max scaled per query, so no cutoff applies there.)
-MIN_COHERE_RELEVANCE = 0.1
 CROSSENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 _rerank_model = None
@@ -46,7 +42,13 @@ def get_reranker():
 
 
 def _cohere_rerank(query: str, chunks: list, top_k: int) -> list:
-    """Rerank with the Cohere API. relevance_score is already in [0, 1]."""
+    """Rerank with the Cohere API. relevance_score is already in [0, 1].
+
+    Deliberately no minimum-score cutoff: Cohere scores a chunk that answers only part of a
+    question, or answers indirectly, very low (0.04 for a table row "6 to 9 Years" asked as
+    "seven years"; 0.005 for the second topic of a two-topic question). Cutoffs of 0.1 and 0.01
+    both dropped such chunks, so the assistant refused or answered half the question.
+    """
     response = get_cohere_client().rerank(
         model=COHERE_MODEL,
         query=query,
@@ -54,12 +56,8 @@ def _cohere_rerank(query: str, chunks: list, top_k: int) -> list:
         top_n=top_k,
     )
 
-    # Results come back best-first; keep the top one even if it scores below the cutoff.
-    results = [r for r in response.results if r.relevance_score >= MIN_COHERE_RELEVANCE]
-    results = results or response.results[:1]
-
     reranked = []
-    for result in results:
+    for result in response.results:
         chunk = chunks[result.index]
         chunk["rerank_score"] = round(float(result.relevance_score), 4)
         reranked.append(chunk)

@@ -1,4 +1,5 @@
 # chat.py
+import os
 from collections import OrderedDict
 
 from dotenv import load_dotenv
@@ -19,6 +20,10 @@ from utils.token_budget import enforce_token_budget
 # deployment can't grow without limit: the least recently used session is evicted.
 MAX_SESSIONS = 200
 MAX_HISTORY_MESSAGES = 10  # last 5 question/answer turns sent to the LLM
+# Reranked chunks sent to the LLM. A question that spans two topics can rank its second topic's chunk
+# just below 5, so keep a few more (the 3,000-token budget below still applies). The AEGIS_CONTEXT_CHUNKS
+# environment variable exists for ablations.
+CONTEXT_CHUNKS = int(os.getenv("AEGIS_CONTEXT_CHUNKS", "8"))
 session_store: OrderedDict[str, InMemoryChatMessageHistory] = OrderedDict()
 
 SYSTEM_PROMPT = """You are a corporate policy assistant.
@@ -78,8 +83,8 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
     # Step 5: post filter by date
     filtered_chunks = post_filter_by_date(fused_chunks)
 
-    # Step 6: rerank → top 5
-    final_chunks = rerank(query, filtered_chunks, top_k=5)
+    # Step 6: rerank → top CONTEXT_CHUNKS
+    final_chunks = rerank(query, filtered_chunks, top_k=CONTEXT_CHUNKS)
 
     # Step 7: enforce token budget
     final_chunks, token_info = enforce_token_budget(final_chunks, budget=3000)
@@ -120,7 +125,7 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
     return {
         "answer": response.content,
         "sources": sources,
-        "category_detected": category,
+        "category_detected": " + ".join(category) if category else None,
         "token_info": token_info,
     }
 

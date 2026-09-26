@@ -233,8 +233,8 @@ def run_ragas_evaluation(dataset_dict: dict) -> dict:
     return results
 
 
-def format_and_save_results(ragas_results, dataset_dict: dict, samples: list[dict]):
-    """Pretty-print results and save JSON + TXT to eval/results/."""
+def format_and_save_results(ragas_results, dataset_dict: dict, samples: list[dict], prefix: str = "ragas"):
+    """Pretty-print results and save JSON + TXT to eval/results/ as <prefix>_<timestamp>.*"""
     os.makedirs(RESULTS_DIR, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -245,9 +245,11 @@ def format_and_save_results(ragas_results, dataset_dict: dict, samples: list[dic
     category_scores = defaultdict(lambda: defaultdict(list))
     df = ragas_results.to_pandas()
 
-    if "question" in df.columns:
+    # RAGAS >= 0.2 names the question column "user_input"; older versions use "question"
+    qcol = next((c for c in ("user_input", "question") if c in df.columns), None)
+    if qcol:
         q_to_cat = {s["question"]: s["category"] for s in samples}
-        df["category"] = df["question"].map(q_to_cat).fillna("Unknown")
+        df["category"] = df[qcol].map(q_to_cat).fillna("Unknown")
 
         for metric in [
             "context_precision",
@@ -317,7 +319,7 @@ def format_and_save_results(ragas_results, dataset_dict: dict, samples: list[dic
     print(f"\n{separator}\n")
 
     # ── Save JSON ──────────────────────────────────────────────────────────
-    json_path = f"{RESULTS_DIR}/ragas_{timestamp}.json"
+    json_path = f"{RESULTS_DIR}/{prefix}_{timestamp}.json"
     output = {
         "timestamp": timestamp,
         "model": MODEL,
@@ -330,9 +332,7 @@ def format_and_save_results(ragas_results, dataset_dict: dict, samples: list[dic
             }
             for cat, metrics in category_scores.items()
         },
-        "per_question_results": (
-            df.to_dict(orient="records") if "question" in df.columns else []
-        ),
+        "per_question_results": df.to_dict(orient="records") if qcol else [],
     }
 
     with open(json_path, "w", encoding="utf-8") as f:
@@ -340,7 +340,7 @@ def format_and_save_results(ragas_results, dataset_dict: dict, samples: list[dic
     logger.info("JSON results saved: %s", json_path)
 
     # ── Save human-readable TXT ────────────────────────────────────────────
-    txt_path = f"{RESULTS_DIR}/ragas_{timestamp}.txt"
+    txt_path = f"{RESULTS_DIR}/{prefix}_{timestamp}.txt"
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write(f"Project Aegis — RAGAS Evaluation\n")
         f.write(f"Run: {timestamp}\n")

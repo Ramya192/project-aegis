@@ -1,0 +1,74 @@
+{
+  "unanswerable_passed": 3,
+  "unanswerable_total": 3,
+  "unanswerable": [
+    {
+      "id": "U1",
+      "question": "What is the company's 401(k) matching percentage?",
+      "answer": "I could not find it in the policy documents.",
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "U2",
+      "question": "How much is the remote work equipment stipend?",
+      "answer": "I could not find it in the policy documents.",
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "U3",
+      "question": "How much does the company contribute towards employee health insurance premiums?",
+      "answer": "I could not find it in the policy documents.",
+      "passed": true,
+      "error": null
+    }
+  ],
+  "answerable": [
+    {
+      "question": "I'm currently on a Performance Improvement Plan. Can I still get tuition assistance and this year's annual bonus?",
+      "ground_truth": "No to both. Tuition assistance requires the employee to be in Good Standing, meaning not on a Performance Improvement Plan or under disciplinary review. An employee on a PIP or under a Final Written Warning as of November 15th is also ineligible for the year-end merit increase, the annual bonus payout and promotion.",
+      "answer": "You would not be eligible for tuition assistance as you are not in \"Good Standing,\" being on a Performance Improvement Plan. Additionally, you would be ineligible for this year's annual bonus, as employees on a Performance Improvement Plan are automatically ineligible for bonuses."
+    },
+    {
+      "question": "I want to attend university classes during work hours. How is that time treated and what do I need to do to be away?",
+      "ground_truth": "Class and coursework time is not compensable working time, so the employee must use standard PTO or negotiate a flexible working arrangement. A PTO request of 1 to 4 days needs at least 7 days' advance notice through Workday.",
+      "answer": "If you want to attend university classes during standard business hours, the time spent attending classes or completing coursework is not considered compensable working time. You must utilize standard Paid Time Off (PTO) or negotiate a flexible working arrangement as outlined in the *HR Leave and Absence Policy (HR-POL-4001-V6)* to be away from work for this purpose."
+    },
+    {
+      "question": "If I resign 8 months after my tuition reimbursement was paid out, what happens to that money and to my unused PTO?",
+      "ground_truth": "Leaving within 12 months of the payout date means repaying 100% of the reimbursed tuition. The organization may deduct the amount owed from the final paycheck, severance or accrued PTO payout, subject to local state labor laws. Accrued unused PTO is normally paid out in the final paycheck at the standard hourly rate.",
+      "answer": "If you resign 8 months after your tuition reimbursement was paid out, you must repay 100% of the reimbursed funds to the organization. \n\nFor your unused PTO, any accrued, unused PTO will be paid out to you in your final paycheck at your standard hourly rate. If you have a negative PTO balance, the monetary equivalent of the negative balance will be deducted from your final paycheck, where legally permissible."
+    },
+    {
+      "question": "I'm an L3 individual contributor going to a conference in Chicago and want to use my L&D stipend. What is my stipend limit, does the trip cost come out of it, and what is the maximum hotel rate per night?",
+      "ground_truth": "The annual L&D stipend for individual contributors (L1-L4) is $1,500 USD, approved by the direct manager. Conference travel costs (flights, hotel, per diems) are not deducted from the stipend, but the travel must follow the Corporate Travel Policy. Chicago is a Tier 2 city, so the maximum hotel rate is $285 USD per night excluding taxes.",
+      "answer": "As an L3 individual contributor, your L&D stipend limit is **$1,500 USD**. The travel costs associated with the conference (flights, hotel, per diems) are **not** deducted from your L&D stipend. For your trip to Chicago, the maximum hotel rate per night is **$285.00 USD**, excluding taxes."
+    },
+    {
+      "question": "If I resign on February 28th, what happens to my bonus for last year and to my unused PTO, sick leave and floating holidays?",
+      "ground_truth": "The employee forfeits the entire annual bonus for the previous performance year, because the bonus is paid in March and the employee must still be employed and in good standing on the payout date. Unused accrued PTO is paid out in the final paycheck at the standard hourly rate. Unused sick leave and floating holidays are never paid out.",
+      "answer": "If you resign on February 28th, you will forfeit your entire bonus for the previous performance year. \n\nRegarding your unused PTO, it will be paid out to you in your final paycheck at your standard hourly rate, as long as you have accrued unused PTO. However, if you have a negative PTO balance, the monetary equivalent of that negative balance will be deducted from your final paycheck.\n\nFor unused sick leave and floating holidays, you will not receive any payout upon termination. Floating holidays cannot be carried over into the next year and are also not paid out upon termination."
+    },
+    {
+      "question": "What's the most I can spend per night on a hotel when I'm travelling to Denver for work?",
+      "ground_truth": "$285 USD per night excluding taxes, because Denver is a Tier 2 (Major) destination.",
+      "answer": "The maximum nightly rate for lodging in Denver, which is classified as a Tier 2 (Major) destination, is $285.00 USD, excluding taxes and fees."
+    },
+    {
+      "question": "My work laptop was stolen on the train. How long do I have to tell IT?",
+      "ground_truth": "It must be reported within 12 hours of discovery so that remote wipe protocols can be started.",
+      "answer": "You must report the lost or stolen hardware within **12 hours** of discovery to initiate remote wipe protocols."
+    },
+    {
+      "question": "How many vacation days do I earn once I've been with the company seven years?",
+      "ground_truth": "25 days (200 hours) of PTO per year, which is Tier 3 for 6 to 9 years of continuous service.",
+      "answer": "After seven years of continuous service, you earn 25 days (200 hours) of annual PTO."
+    },
+    {
+      "question": "A client paid for my dinner on a business trip. How does that change my daily food allowance?",
+      "ground_truth": "The traveler must deduct $40 (the dinner amount) from that day's per diem claim.",
+      "answer": "If a meal is provided during the travel, such as a dinner paid for by a client, you must deduct the corresponding amount from your daily per diem claim. For dinner, that amount is -$40."
+    }
+  ]
+}

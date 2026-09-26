@@ -50,6 +50,7 @@ def record_daily_query() -> None:
 
 
 PREVIEW_CHARS = 300
+LOW_RELEVANCE = 0.05  # sources scoring below this are listed compactly instead of as full cards
 
 
 def clean_markdown(text: str) -> str:
@@ -289,6 +290,37 @@ div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p {
     line-height: 1.75;
     border-top: 1px solid #EDF2F7;
     padding-top: 10px;
+}
+
+/* ── Full-text expander + input placeholder ──
+   The page background is forced light, so text colours must be explicit too;
+   otherwise a dark browser theme renders them light-on-light and invisible. */
+div[data-testid="stExpander"] {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(128,128,128,0.25) !important;
+    border-radius: 4px !important;
+    margin-bottom: 0.9rem !important;
+}
+div[data-testid="stExpander"] summary,
+div[data-testid="stExpander"] summary p,
+div[data-testid="stExpander"] summary span,
+div[data-testid="stExpander"] summary svg {
+    color: #0F2044 !important;
+}
+/* font only on the label text: the arrow icon is an icon-font span and must keep its own font */
+div[data-testid="stExpander"] summary p {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.8rem !important;
+}
+div[data-testid="stExpander"] [data-testid="stMarkdownContainer"] p,
+div[data-testid="stExpander"] [data-testid="stMarkdownContainer"] li {
+    color: #2D3748 !important;
+    font-size: 0.92rem !important;
+    line-height: 1.75 !important;
+}
+div[data-testid="stTextInput"] input::placeholder {
+    color: #718096 !important;
+    opacity: 1 !important;
 }
 
 .section-label {
@@ -634,7 +666,7 @@ with main_col:
                 st.write(turn["query"])
 
             if turn.get("category"):
-                cat = turn["category"].lower()
+                cat = turn["category"].split(" + ")[0].lower()  # badge colour follows the first category
                 st.markdown(
                     f'<span class="category-badge {cat}">📂 {turn["category"].upper()}</span>',
                     unsafe_allow_html=True,
@@ -649,7 +681,10 @@ with main_col:
                     '<div class="section-label" style="margin-top:0.75rem;">Sources</div>',
                     unsafe_allow_html=True,
                 )
-                for i, src in enumerate(turn["sources"], 1):
+                all_sources = turn["sources"]
+                cards = [x for x in all_sources if float(x.get("score", 0)) >= LOW_RELEVANCE] or all_sources[:1]
+                low_relevance = [x for x in all_sources if x not in cards]
+                for i, src in enumerate(cards, 1):
                     doc_id = html.escape(str(src.get("document_id", "Unknown")))
                     section = html.escape(src.get("section", ""))
                     score = float(src.get("score", 0))
@@ -678,6 +713,15 @@ with main_col:
                     if was_cut:
                         with st.expander(f"View full text of source {i}"):
                             st.markdown(clean_text.replace("\n", "\n\n").replace("$", "\\$"))
+
+                if low_relevance:
+                    # The model received these too, so list them rather than hide them
+                    with st.expander(f"{len(low_relevance)} more passage(s) the model also received (low relevance)"):
+                        for x in low_relevance:
+                            st.markdown(
+                                f"- {x.get('document_id', 'Unknown')} · {x.get('section', '')} · "
+                                f"{float(x.get('score', 0)):.3f}"
+                            )
 
             st.markdown(
                 "<hr style='border-color:#E2E8F0; margin:1.25rem 0;'>",

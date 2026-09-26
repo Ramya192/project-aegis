@@ -1,0 +1,522 @@
+{
+  "timestamp": "20260925_171119",
+  "model": "gpt-4o-mini",
+  "samples_evaluated": 27,
+  "overall_scores": {
+    "context_precision": 0.992,
+    "context_recall": 1.0,
+    "noise_sensitivity(mode=relevant)": 0.4321,
+    "faithfulness": 0.9722,
+    "answer_relevancy": 0.8813,
+    "answer_correctness": 0.7726
+  },
+  "category_breakdown": {
+    "IT": {
+      "context_precision": 1.0,
+      "context_recall": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7898,
+      "answer_correctness": 0.7869
+    },
+    "HR": {
+      "context_precision": 1.0,
+      "context_recall": 1.0,
+      "faithfulness": 0.9423,
+      "answer_relevancy": 0.9167,
+      "answer_correctness": 0.8025
+    },
+    "Travel": {
+      "context_precision": 0.9803,
+      "context_recall": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8645,
+      "answer_correctness": 0.7334
+    }
+  },
+  "per_question_results": [
+    {
+      "user_input": "What is the minimum password length required by the policy?",
+      "retrieved_contexts": [
+        "## 5. Password Policies and Authentication\n* **Multi-Factor Authentication (MFA):** MFA is mandatory for all access to corporate systems, without exception. Hardware security keys (YubiKeys) are the preferred method. Authenticator apps (Google Authenticator) are acceptable. SMS-based MFA is prohibited due to SIM-swapping vulnerabilities.\n* **Password Complexity:** Passwords must be at least 14 characters in length and cannot contain the user's name or the company name."
+      ],
+      "response": "The minimum password length required by the policy is at least 14 characters.",
+      "reference": "Passwords must be at least 14 characters in length.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9999999999999999,
+      "answer_correctness": 0.7029064525004035,
+      "category": "IT"
+    },
+    {
+      "user_input": "How long do employees have to forward a Data Subject Access Request (DSAR) to privacy@company.com?",
+      "retrieved_contexts": [
+        "* **Data Subject Access Requests (DSAR):** If an employee receives a request from a customer to delete their data (under GDPR/CCPA), the employee must forward the request to privacy@company.com within 24 hours. Individual employees must never attempt to manually delete records from databases to fulfill a DSAR.",
+        "* **Misdirected Email (Data Breach):** If an employee accidentally sends an email containing Tier 3 or Tier 4 data to an unauthorized external recipient, they must report it within **4 hours**.",
+        "### 7.1 Reporting Service Level Agreements (SLAs)\n* **Lost or Stolen Hardware:** Must be reported within **12 hours** of discovery to initiate remote wipe protocols.\n* **Suspected Phishing Click:** If an employee clicks a suspicious link or enters credentials into a fake portal, they must report it within **1 hour**."
+      ],
+      "response": "Employees have to forward a Data Subject Access Request (DSAR) to privacy@company.com within 24 hours.",
+      "reference": "Employees must forward the request within 24 hours.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7789933322809617,
+      "answer_correctness": 0.9244812888036257,
+      "category": "IT"
+    },
+    {
+      "user_input": "What happens if Tier 4 data is transferred via standard email?",
+      "retrieved_contexts": [
+        "* **Storage/Sharing:** Cannot be stored on local machine hard drives or standard cloud storage. Must be housed in secure, isolated database enclaves (e.g., AWS KMS-encrypted buckets). Transferring Tier 4 data via Slack or standard email is a Level 3 Disciplinary Violation.",
+        "* **Misdirected Email (Data Breach):** If an employee accidentally sends an email containing Tier 3 or Tier 4 data to an unauthorized external recipient, they must report it within **4 hours**.",
+        "### Tier 4: Restricted / Highly Sensitive\n* **Definition:** Highly regulated data protected by law (GDPR, CCPA, PCI-DSS). Compromise requires mandatory notification to government regulators.\n* **Examples:** Personally Identifiable Information (PII) of customers, Primary Account Numbers (PAN) or credit card data, employee health records, unencrypted API keys.",
+        "## 2. Data Classification Matrix\nAll data created, processed, or stored by the organization must be classified into one of four tiers. The classification dictates how the data can be shared and where it can be stored."
+      ],
+      "response": "Transferring Tier 4 data via standard email is considered a Level 3 Disciplinary Violation.",
+      "reference": "Transferring Tier 4 data via Slack or standard email is a Level 3 Disciplinary Violation.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.590351300040037,
+      "answer_correctness": 0.7332003854971594,
+      "category": "IT"
+    },
+    {
+      "user_input": "What is the maximum reimbursement amount for tuition under the Tuition Assistance Program per calendar year?",
+      "retrieved_contexts": [
+        "### 5.2 Financial Limits\nThe organization will reimburse up to a maximum of **$5,250 USD per calendar year** for approved tuition, lab fees, and required textbooks.\n* The $5,250 limit aligns with the IRS Section 127 maximum for tax-free educational assistance.\n* Late registration fees, graduation fees, parking passes, and optional study materials are strictly non-reimbursable.",
+        "## 6. Academic Performance Requirements\nReimbursement under the Tuition Assistance Program is strictly contingent upon the employee's academic performance. The organization operates on a sliding scale for reimbursement based on the final grade achieved in each specific course.",
+        "## 8. Repayment and Retention (The \"Clawback\" Clause)\nThe Tuition Assistance Program is an investment in the organization's future workforce. Consequently, employees who utilize this benefit are subject to a retention agreement.  \nIf an employee's employment is terminated (either voluntarily by resignation, or involuntarily for cause) after receiving tuition reimbursement, the employee must repay the organization according to the following schedule:",
+        "### 3.1 Annual Stipend Tiers\nStipend amounts are refreshed on January 1st and do not roll over into the following calendar year. The limits are determined by job level:  \n| Job Level | Annual L&D Stipend Limit (USD) | Approval Required |\n| :--- | :--- | :--- |\n| Individual Contributors (L1 - L4) | $1,500 | Direct Manager |\n| Management (M1 - M2) | $3,000 | Department Director |\n| Directors and Above (D1+) | $5,000 | Department VP |",
+        "## 5. Formal Tuition Assistance Program (Degree Programs)\nThe Tuition Assistance Program (TAP) is designed for full-time employees pursuing formal undergraduate or graduate degrees (B.A., B.S., M.S., MBA) at accredited universities."
+      ],
+      "response": "The maximum reimbursement amount for tuition under the Tuition Assistance Program per calendar year is **$5,250 USD**.",
+      "reference": "$5,250 USD",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9999999999999999,
+      "answer_correctness": 0.859622886942313,
+      "category": "HR"
+    },
+    {
+      "user_input": "How long must an employee have completed continuous full-time service to be eligible for the Tuition Assistance Program?",
+      "retrieved_contexts": [
+        "### 5.1 Eligibility\n* The employee must have completed a minimum of twelve (12) months of continuous, full-time service prior to the start date of the first academic term.\n* The employee must be in \"Good Standing\" (not on a Performance Improvement Plan or under disciplinary review).\n* The degree program must be broadly related to the employee's current role or a probable future role within the organization.",
+        "### 8.1 Eligibility and Duration\nUpon completing seven (7) years of continuous, full-time service, employees are eligible for a fully paid four-week (20 business days) Sabbatical.\n* The Sabbatical must be taken consecutively; it cannot be split into smaller increments.\n* The Sabbatical must be used within 24 months of the employee reaching their 7-year anniversary, or the benefit is permanently forfeited.",
+        "# Corporate Policy: Global Learning, Development, and Tuition Assistance\n**Document ID:** LND-POL-7010-V3\n**Effective Date:** May 1, 2026\n**Last Revised:** March 10, 2026\n**Policy Owner:** Chief Learning Officer (CLO) & Global HR\n**Applies To:** All full-time employees. Part-time employees and contractors are subject only to Section 2 (Mandatory Compliance).  \n---",
+        "| Years of Continuous Service | Annual PTO Granted | Bi-Weekly Accrual Rate | Maximum Accrual Cap |\n| :--- | :--- | :--- | :--- |\n| Tier 3: 6 to 9 Years | 25 Days (200 Hours) | 7.69 Hours | 300 Hours |",
+        "| Years of Continuous Service | Annual PTO Granted | Bi-Weekly Accrual Rate | Maximum Accrual Cap |\n| :--- | :--- | :--- | :--- |\n| Tier 2: 3 to 5 Years | 20 Days (160 Hours) | 6.15 Hours | 240 Hours |"
+      ],
+      "response": "An employee must have completed a minimum of twelve (12) months of continuous, full-time service to be eligible for the Tuition Assistance Program.",
+      "reference": "Twelve (12) months",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 1.0,
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.807746220069794,
+      "answer_correctness": 0.8732425065638733,
+      "category": "HR"
+    },
+    {
+      "user_input": "What happens if an employee fails to complete mandatory training by the deadline?",
+      "retrieved_contexts": [
+        "### 2.2 Annual Refreshers\nAll employees must complete a 60-minute \"Security and Compliance Refresher\" annually by October 31st.\n* **Penalty for Non-Compliance:** Failure to complete mandatory training by the deadline will result in immediate suspension of corporate network access and formal disciplinary action (refer to *HR-POL-5050-V4: Code of Conduct*).",
+        "## 2. Mandatory Compliance and Onboarding Training\nTo maintain legal compliance and secure corporate infrastructure, all personnel (including temporary contractors) must complete mandatory training modules via the internal Learning Management System (LMS), \"LearnHub.\"",
+        "* Employees studying during standard business hours must utilize standard PTO or negotiate a flexible working arrangement as outlined in the *HR Leave and Absence Policy (HR-POL-4001-V6)*. Time spent attending classes or completing coursework is not considered compensable working time.",
+        "### Step 2: Written Warning and PIP\nIf the behavior persists, or for a first-time Level 2 violation, a formal Written Warning is issued in conjunction with HR. The employee may be placed on a Performance Improvement Plan (PIP) lasting 30, 60, or 90 days. Failure to meet the specific milestones outlined in the PIP will result in escalation to Step 3 or 4.",
+        "### Step 3: Final Written Warning / Unpaid Suspension\nThis is the final opportunity for the employee to correct their behavior. Depending on local labor laws, the employee may be subject to a 1-to-3 day unpaid suspension. During a Final Written Warning period (typically 12 months), the employee is ineligible for promotions, internal transfers, or annual performance bonuses."
+      ],
+      "response": "Failure to complete mandatory training by the deadline will result in immediate suspension of corporate network access and formal disciplinary action, as outlined in the HR-POL-5050-V4: Code of Conduct.",
+      "reference": "Immediate suspension of corporate network access and formal disciplinary action.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8987894297000272,
+      "answer_correctness": 0.7767716209155255,
+      "category": "HR"
+    },
+    {
+      "user_input": "What is the reimbursement rate for personal vehicle usage under the Standard Mileage Rate (SMR) program effective January 1, 2026?",
+      "retrieved_contexts": [
+        "### 3.1 The Mileage Rate\nThe organization reimburses personal vehicle usage based on the standardized rates published annually by the national tax authority.\n* **Current Rate (Effective Jan 1, 2026):** $0.69 USD per business mile.\n* **What the Rate Covers:** The SMR is a comprehensive allowance. It is legally designed to cover the cost of petrol/diesel, routine maintenance, oil changes, tire wear, depreciation, and personal auto insurance.",
+        "* **Mileage Reimbursement:** Mileage will be reimbursed at the Standard Mileage Rate defined in the Personal Vehicle, Fuel, and Mileage Reimbursement Policy (TRV-POL-3012-V2), currently $0.69 USD per business mile (effective January 1, 2026). This rate is designed to cover fuel, maintenance, and depreciation; therefore, employees cannot expense gas receipts when driving a personal vehicle.",
+        "## 3. Personal Vehicle Usage: Standard Mileage Rate (SMR) Program\nEmployees utilizing their personal vehicles for occasional business travel (defined as driving fewer than 5,000 business miles annually) are governed by the Standard Mileage Rate (SMR) program.",
+        "## 4. Personal Vehicle Usage: Fixed and Variable Rate (FAVR) Allowance\nEmployees designated as \"High-Mileage Drivers\" (defined as driving more than 5,000 business miles annually, typically field sales and territory managers) must transition from the SMR program to the FAVR Allowance program.",
+        "### 6.2 Personal EVs (Mileage Program)\nEmployees utilizing personal EVs for business travel remain subject to the standard SMR program ($0.69/mile). The government standard rate applies equally to ICE and EV vehicles. Employees cannot expense home-electricity costs or public charging station receipts if they are claiming the standard mileage rate."
+      ],
+      "response": "The reimbursement rate for personal vehicle usage under the Standard Mileage Rate (SMR) program effective January 1, 2026, is $0.69 USD per business mile.",
+      "reference": "$0.69 USD per business mile.",
+      "context_precision": 0.8666666666377778,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9321491531927273,
+      "answer_correctness": 0.913110951358018,
+      "category": "Travel"
+    },
+    {
+      "user_input": "How must employees refuel rental vehicles before returning them to the rental agency?",
+      "retrieved_contexts": [
+        "### 5.1 Refueling Rental Cars\nEmployees must refuel rental vehicles to the required level (usually \"Full\") prior to returning the vehicle to the rental agency.\n* Employees must use the corporate credit card to purchase petrol/diesel at standard gas stations.\n* **Prepaid Fuel Prohibition:** Purchasing the \"Prepaid Fuel Option\" from the rental agency desk is strictly prohibited, as it incurs a premium markup.",
+        "* **Fuel:** Rental cars must be returned with a full tank of gas. Travelers should refuel the vehicle themselves prior to return. Prepaid fuel options offered by the rental agency (where you pay for a full tank upfront) are non-reimbursable.",
+        "### 6.1 EV Rental Vehicles\nWhen renting an EV through an approved corporate vendor:\n* **Public Charging Stations:** Employees may expense the cost of utilizing public fast-charging networks (e.g., Tesla Superchargers, Electrify America) using their corporate credit card.\n* **Return Charge Level:** EVs must be returned to the rental agency with a minimum battery charge of 70% to avoid vendor penalty fees.",
+        "* **Refueling Penalties:** If an employee fails to refuel the car and the rental agency applies a refueling penalty rate (often $9.00+ per gallon), the difference between the local market rate and the penalty rate will be deducted from the employee's reimbursement.",
+        "## 5. Fuel Reimbursement for Rental and Company-Owned Vehicles\nUnlike personal vehicles, where fuel is baked into the mileage rate, employees operating rental cars or company-owned fleet vehicles must expense the actual cost of fuel."
+      ],
+      "response": "Employees must refuel rental vehicles to the required level, usually \"Full,\" prior to returning the vehicle to the rental agency. They must use the corporate credit card to purchase petrol/diesel at standard gas stations and are prohibited from purchasing the \"Prepaid Fuel Option\" from the rental agency desk.",
+      "reference": "Employees must refuel rental vehicles to the required level (usually 'Full') prior to returning the vehicle to the rental agency.",
+      "context_precision": 0.99999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8175289259427224,
+      "answer_correctness": 0.723814703173729,
+      "category": "Travel"
+    },
+    {
+      "user_input": "What happens if an employee fails to refuel a rental car and incurs a refueling penalty?",
+      "retrieved_contexts": [
+        "* **Refueling Penalties:** If an employee fails to refuel the car and the rental agency applies a refueling penalty rate (often $9.00+ per gallon), the difference between the local market rate and the penalty rate will be deducted from the employee's reimbursement.",
+        "### 5.1 Refueling Rental Cars\nEmployees must refuel rental vehicles to the required level (usually \"Full\") prior to returning the vehicle to the rental agency.\n* Employees must use the corporate credit card to purchase petrol/diesel at standard gas stations.\n* **Prepaid Fuel Prohibition:** Purchasing the \"Prepaid Fuel Option\" from the rental agency desk is strictly prohibited, as it incurs a premium markup.",
+        "## 5. Fuel Reimbursement for Rental and Company-Owned Vehicles\nUnlike personal vehicles, where fuel is baked into the mileage rate, employees operating rental cars or company-owned fleet vehicles must expense the actual cost of fuel.",
+        "* **Fuel:** Rental cars must be returned with a full tank of gas. Travelers should refuel the vehicle themselves prior to return. Prepaid fuel options offered by the rental agency (where you pay for a full tank upfront) are non-reimbursable.",
+        "### 6.1 EV Rental Vehicles\nWhen renting an EV through an approved corporate vendor:\n* **Public Charging Stations:** Employees may expense the cost of utilizing public fast-charging networks (e.g., Tesla Superchargers, Electrify America) using their corporate credit card.\n* **Return Charge Level:** EVs must be returned to the rental agency with a minimum battery charge of 70% to avoid vendor penalty fees."
+      ],
+      "response": "If an employee fails to refuel the car and the rental agency applies a refueling penalty rate, the difference between the local market rate and the penalty rate will be deducted from the employee's reimbursement.",
+      "reference": "The difference between the local market rate and the penalty rate will be deducted from the employee's reimbursement.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.6666666666666666,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8727839459871701,
+      "answer_correctness": 0.5472645695302403,
+      "category": "Travel"
+    },
+    {
+      "user_input": "What is the minimum lead time required for international travel to a high-risk destination?",
+      "retrieved_contexts": [
+        "### 3.1 International Approval Matrix\nAll international travel, regardless of the estimated cost, requires dual-level approval.\n| Travel Category | Destination Risk Level | Primary Approval | Secondary Approval | Minimum Lead Time |\n| :--- | :--- | :--- | :--- | :--- |\n| Standard International | Low to Moderate | Department Director | VP of Department | 30 Days |\n| High-Risk Destination | High (Level 3/4) | VP of Department | Chief Risk Officer (CRO) | 45 Days |\n| Executive Travel | Any | C-Suite Sponsor | General Counsel | 21 Days |",
+        "### 9.1 Clean Device Program (High-Risk Destinations)\nEmployees traveling to countries categorized as High Cyber-Risk (e.g., China, Russia, Iran) are strictly prohibited from bringing their standard-issue corporate laptops or personal mobile phones.\n* Employees must request \"Burner\" or \"Clean\" devices from IT Procurement 14 days prior to travel.\n* These devices contain only essential software and data necessary for the trip.",
+        "### 3.2 High-Risk Destinations\nThe organization utilizes the risk tiering system provided by International SOS (ISOS) and the respective government state departments. Travel to regions designated as \"High Risk\" or \"Do Not Travel\" requires a mandatory risk briefing with the Global Security Team prior to ticket issuance.",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $10,000+ | C-Suite Executive | CFO | 30 Days |",
+        "### 6.2 Security Requirements for Lodging\nWhen booking hotels internationally, travelers must ensure the property meets the following minimum security criteria:\n* The hotel must have 24/7 front desk staffing and security personnel.\n* Guest room doors must have internal deadbolts and peepholes.\n* Ground-level rooms are prohibited in moderate-to-high risk destinations."
+      ],
+      "response": "The minimum lead time required for international travel to a high-risk destination is 45 days.",
+      "reference": "45 Days",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "answer_correctness": 0.8564526720973515,
+      "category": "Travel"
+    },
+    {
+      "user_input": "How long must a passport be valid beyond the intended date of return for international travel?",
+      "retrieved_contexts": [
+        "### 2.1 Passports\nEmployees must hold a passport valid for at least six (6) months beyond the intended date of return to their home country.",
+        "### 10.1 The 90-Day Rule\nEmployees may not spend more than ninety (90) cumulative days in a single foreign jurisdiction within a rolling 12-month period without prior authorization from the Global Corporate Tax Department.",
+        "* **Reimbursement:** The organization will reimburse the cost of passport renewals (including expedited processing fees) only if the employee is required to travel internationally within 30 days and their current passport is expired or lacks sufficient blank pages. Initial passport procurement for new hires is considered a personal expense and is non-reimbursable.",
+        "### 3.1 International Approval Matrix\nAll international travel, regardless of the estimated cost, requires dual-level approval.\n| Travel Category | Destination Risk Level | Primary Approval | Secondary Approval | Minimum Lead Time |\n| :--- | :--- | :--- | :--- | :--- |\n| Standard International | Low to Moderate | Department Director | VP of Department | 30 Days |\n| High-Risk Destination | High (Level 3/4) | VP of Department | Chief Risk Officer (CRO) | 45 Days |\n| Executive Travel | Any | C-Suite Sponsor | General Counsel | 21 Days |",
+        "## 3. International Pre-Travel Authorization and Risk Assessment\nInternational travel requires a more stringent approval hierarchy due to increased financial costs and geopolitical risks."
+      ],
+      "response": "Employees must hold a passport valid for at least six (6) months beyond the intended date of return to their home country.",
+      "reference": "At least six (6) months",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.6666666666666666,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.5413539778868616,
+      "answer_correctness": 0.7380282370620977,
+      "category": "Travel"
+    },
+    {
+      "user_input": "What happens if an employee conducts official company business on a 'Tourist Visa' without clearance?",
+      "retrieved_contexts": [
+        "### 2.2 Visas and Work Authorizations\nEmployees are strictly prohibited from conducting official company business on a \"Tourist Visa\" unless explicitly cleared by the Global Mobility Legal Team. Traveling under false pretenses constitutes a Level 1 Policy Violation and grounds for immediate termination.\n* **Procurement:** All business visas, work permits, and invitation letters must be processed through the organization\u2019s designated immigration vendor (Fragomen or equivalent).",
+        "If an employee's travel is funded by a third party (e.g., a client reimbursing the company for travel costs), the stricter of the two policies (the company's policy or the client's policy) shall apply. Any local, state, or national laws that contradict this policy will supersede the guidelines outlined within this document. Contractors and vendors are subject to this policy unless explicitly exempted in their Master Services Agreement (MSA) or Statement of Work (SOW).",
+        "* **The Traveler:** The individual conducting business travel is responsible for understanding and complying with this policy, exercising good judgment regarding company funds, securing all necessary approvals prior to booking, submitting expense reports accurately and within the stipulated 30-day timeframe, and maintaining possession of itemized receipts for any transaction exceeding $25.00 USD.",
+        "# Corporate Travel Policy: International Operations and Global Mobility\n**Document ID:** TRV-POL-2005-V3\n**Effective Date:** February 1, 2026\n**Last Revised:** December 10, 2025\n**Policy Owner:** Global Corporate Travel, Risk Management, and Global Mobility (GCT-RM)\n**Applies To:** All employees, executives, and authorized contractors undertaking cross-border travel for company business.  \n---",
+        "Business travel is defined as travel required by the organization to conduct official business, including but not limited to client meetings, site visits, inter-office collaboration, and authorized training. This document serves as the single source of truth for standard travel. For international travel, conference attendance, or long-term relocations, employees must cross-reference the respective addendums in the Global Policy Directory."
+      ],
+      "response": "If an employee conducts official company business on a \"Tourist Visa\" without explicit clearance from the Global Mobility Legal Team, it constitutes a Level 1 Policy Violation and grounds for immediate termination.",
+      "reference": "It constitutes a Level 1 Policy Violation and grounds for immediate termination.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9194265215984759,
+      "answer_correctness": 0.9025272209237982,
+      "category": "Travel"
+    },
+    {
+      "user_input": "What is the minimum lead time required for trips estimated to cost between $1,000 and $2,999?",
+      "retrieved_contexts": [
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $1,000 - $2,999 | Department Director | None | 14 Days |",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $3,000 - $9,999 | Vice President | Finance Controller | 21 Days |",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $0 - $999 | Direct Line Manager | None | 7 Days |",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $10,000+ | C-Suite Executive | CFO | 30 Days |",
+        "### 3.1 International Approval Matrix\nAll international travel, regardless of the estimated cost, requires dual-level approval.\n| Travel Category | Destination Risk Level | Primary Approval | Secondary Approval | Minimum Lead Time |\n| :--- | :--- | :--- | :--- | :--- |\n| Standard International | Low to Moderate | Department Director | VP of Department | 30 Days |\n| High-Risk Destination | High (Level 3/4) | VP of Department | Chief Risk Officer (CRO) | 45 Days |\n| Executive Travel | Any | C-Suite Sponsor | General Counsel | 21 Days |"
+      ],
+      "response": "The minimum lead time required for trips estimated to cost between $1,000 and $2,999 is 14 days.",
+      "reference": "14 Days",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9999999999999999,
+      "answer_correctness": 0.8287693582944817,
+      "category": "Travel"
+    },
+    {
+      "user_input": "How must all travel be booked according to the policy?",
+      "retrieved_contexts": [
+        "### 4.2 Booking Channels\nAll travel (flights, hotels, and rental cars) MUST be booked through the TripIt Corporate Navigator portal or directly with the organization\u2019s designated Travel Management Company (TMC) via phone. Booking through external, third-party consumer sites (e.g., Expedia, Kayak, Hotels.com) or directly with providers to accumulate personal loyalty points is strictly prohibited and constitutes a Level 1 Policy Violation.",
+        "* **The Traveler:** The individual conducting business travel is responsible for understanding and complying with this policy, exercising good judgment regarding company funds, securing all necessary approvals prior to booking, submitting expense reports accurately and within the stipulated 30-day timeframe, and maintaining possession of itemized receipts for any transaction exceeding $25.00 USD.",
+        "### 10.1 Itinerary Tracking\nAll travel booked through the TripIt Corporate Navigator is automatically synced with the organization's global security dashboard. Employees booking approved alternative accommodations must manually enter their itinerary details into the security dashboard at least 48 hours prior to departure.",
+        "The purpose of this Standard and Client-Facing Operations Travel Policy (herein referred to as the \"Policy\") is to establish clear, consistent, and equitable guidelines for employees who travel for business purposes. The organization is committed to ensuring that employees travel safely, comfortably, and cost-effectively. This policy is designed to balance the organization's fiduciary responsibility to shareholders with the comfort, safety, and productivity of our traveling workforce.",
+        "## 4. Pre-Travel Authorization Protocols\nAll business travel must be pre-approved before any non-refundable purchases are made. The authorization workflow is dictated by the estimated total cost of the trip, not including potential client entertainment."
+      ],
+      "response": "All travel (flights, hotels, and rental cars) must be booked through the TripIt Corporate Navigator portal or directly with the organization\u2019s designated Travel Management Company (TMC) via phone. Booking through external, third-party consumer sites or directly with providers to accumulate personal loyalty points is strictly prohibited.",
+      "reference": "All travel (flights, hotels, and rental cars) MUST be booked through the TripIt Corporate Navigator portal or directly with the organization\u2019s designated Travel Management Company (TMC) via phone.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.6690616712195722,
+      "answer_correctness": 0.7333367144861376,
+      "category": "Travel"
+    },
+    {
+      "user_input": "What happens if an employee's travel is funded by a third party?",
+      "retrieved_contexts": [
+        "If an employee's travel is funded by a third party (e.g., a client reimbursing the company for travel costs), the stricter of the two policies (the company's policy or the client's policy) shall apply. Any local, state, or national laws that contradict this policy will supersede the guidelines outlined within this document. Contractors and vendors are subject to this policy unless explicitly exempted in their Master Services Agreement (MSA) or Statement of Work (SOW).",
+        "* **Flight Cancellations and Credits:** If an employee cancels a flight booked with company funds, the resulting airline credit must be logged in the TMC portal and used for future corporate travel. Under no circumstances may an employee use a corporate-generated airline credit for personal travel.",
+        "Any exception to this policy must be documented and approved in writing (via email or Workday memo) by a Vice President or higher prior to the expense being incurred. After-the-fact exception requests will be categorically denied. If an employee is traveling under emergency conditions (e.g., responding to a critical client outage), verbal approval from a Director may be accepted, provided it is followed by written documentation within 24 hours.",
+        "* **Provided Meals:** If a meal is provided during the travel (e.g., a catered lunch at a conference, or a dinner paid for by a client), the traveler must deduct the corresponding amount from their daily per diem claim: Breakfast (-$20), Lunch (-$25), Dinner (-$40).\n* **Alcohol:** Alcoholic beverages consumed during standard employee travel (not involving clients) are strictly non-reimbursable and cannot be purchased using corporate credit cards."
+      ],
+      "response": "If an employee's travel is funded by a third party (e.g., a client reimbursing the company for travel costs), the stricter of the two policies (the company's policy or the client's policy) shall apply.",
+      "reference": "The stricter of the two policies (the company's policy or the client's policy) shall apply.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9975546958952458,
+      "answer_correctness": 0.6767096052485067,
+      "category": "Travel"
+    },
+    {
+      "user_input": "What is the timeline for a manager to report a Level 2 or Level 3 violation to Human Resources?",
+      "retrieved_contexts": [
+        "### 2.2 Mandatory Reporting for Management\nManagers and Supervisors hold a fiduciary duty to the organization. If a manager observes a Level 2 or Level 3 violation, or if an employee reports such a violation to them, the manager **must** report the incident to Human Resources within 24 hours. Failure by a manager to report a known violation constitutes a Level 2 disciplinary offense in itself.",
+        "## 4. Investigation Protocols and Timelines\nAll reports of Level 2 and Level 3 violations will prompt an official internal investigation led by Employee Relations (ER) or the Legal Department.  \n* **Confidentiality:** Investigations are conducted with the utmost confidentiality. Information is shared strictly on a \"need-to-know\" basis.",
+        "### Step 2: Written Warning and PIP\nIf the behavior persists, or for a first-time Level 2 violation, a formal Written Warning is issued in conjunction with HR. The employee may be placed on a Performance Improvement Plan (PIP) lasting 30, 60, or 90 days. Failure to meet the specific milestones outlined in the PIP will result in escalation to Step 3 or 4.",
+        "* **Misdirected Email (Data Breach):** If an employee accidentally sends an email containing Tier 3 or Tier 4 data to an unauthorized external recipient, they must report it within **4 hours**.",
+        "* **Timelines:** The ER team is mandated to open an investigation within three (3) business days of receiving a report. A formal conclusion and written summary must be delivered to the involved parties within thirty (30) calendar days, barring complex legal delays."
+      ],
+      "response": "A manager must report a Level 2 or Level 3 violation to Human Resources within 24 hours.",
+      "reference": "Managers must report the incident to Human Resources within 24 hours.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7286258445804757,
+      "answer_correctness": 0.9514599099252428,
+      "category": "HR"
+    },
+    {
+      "user_input": "What are the consequences for an employee found to have retaliated against a whistleblower?",
+      "retrieved_contexts": [
+        "* **Consequence:** Any employee, regardless of rank, found to have retaliated against a whistleblower will face immediate Level 3 disciplinary action, up to and including termination.",
+        "## 3. Non-Retaliation and Whistleblower Protection\nThe organization enforces a strict, absolute prohibition against retaliation.\n* **Definition:** Retaliation includes termination, demotion, pay reduction, exclusion from meetings, hostile behavior, or unwarranted negative performance reviews directed at an employee because they reported a suspected violation in good faith or participated in an HR investigation.",
+        "### Step 3: Final Written Warning / Unpaid Suspension\nThis is the final opportunity for the employee to correct their behavior. Depending on local labor laws, the employee may be subject to a 1-to-3 day unpaid suspension. During a Final Written Warning period (typically 12 months), the employee is ineligible for promotions, internal transfers, or annual performance bonuses."
+      ],
+      "response": "Any employee, regardless of rank, found to have retaliated against a whistleblower will face immediate Level 3 disciplinary action, up to and including termination.",
+      "reference": "Any employee found to have retaliated against a whistleblower will face immediate Level 3 disciplinary action, up to and including termination.",
+      "context_precision": 0.99999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8710948274363653,
+      "answer_correctness": 0.9958558397913383,
+      "category": "HR"
+    },
+    {
+      "user_input": "How long does the Employee Relations team have to open an investigation after receiving a report?",
+      "retrieved_contexts": [
+        "* **Timelines:** The ER team is mandated to open an investigation within three (3) business days of receiving a report. A formal conclusion and written summary must be delivered to the involved parties within thirty (30) calendar days, barring complex legal delays.",
+        "## 4. Investigation Protocols and Timelines\nAll reports of Level 2 and Level 3 violations will prompt an official internal investigation led by Employee Relations (ER) or the Legal Department.  \n* **Confidentiality:** Investigations are conducted with the utmost confidentiality. Information is shared strictly on a \"need-to-know\" basis."
+      ],
+      "response": "The Employee Relations team has three (3) business days to open an investigation after receiving a report.",
+      "reference": "The ER team is mandated to open an investigation within three (3) business days of receiving a report.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "answer_correctness": 0.49314786769575214,
+      "category": "HR"
+    },
+    {
+      "user_input": "What is the maximum PTO carryover limit at the end of the calendar year?",
+      "retrieved_contexts": [
+        "### 3.1 The \"Use It or Lose It\" Standard Policy\nAt the end of the calendar year (December 31st), employees may carry over a maximum of forty (40) hours (5 days) of unused PTO into the following calendar year. Any accrued PTO exceeding the 40-hour rollover limit on December 31st will be immediately forfeited and removed from the employee's balance without financial compensation.",
+        "## 3. PTO Carryover, Rollover, and Maximum Caps\nTo encourage employees to take their vacation time, the organization enforces maximum accrual caps and carryover limits.",
+        "### 3.2 Statutory Exceptions (California, Colorado, Montana, Nebraska)\nThe \"Use It or Lose It\" policy described in Section 3.1 is strictly prohibited in certain US jurisdictions. For employees legally residing in California, Colorado, Montana, and Nebraska, PTO does not expire at the end of the calendar year. Instead, these employees are subject to the \"Maximum Accrual Cap\" listed in the table in Section 2.1.",
+        "| Years of Continuous Service | Annual PTO Granted | Bi-Weekly Accrual Rate | Maximum Accrual Cap |\n| :--- | :--- | :--- | :--- |\n| Tier 4: 10+ Years | 30 Days (240 Hours) | 9.23 Hours | 360 Hours |",
+        "| Years of Continuous Service | Annual PTO Granted | Bi-Weekly Accrual Rate | Maximum Accrual Cap |\n| :--- | :--- | :--- | :--- |\n| Tier 1: 0 to 2 Years | 15 Days (120 Hours) | 4.61 Hours | 180 Hours |"
+      ],
+      "response": "The maximum PTO carryover limit at the end of the calendar year is forty (40) hours (5 days).",
+      "reference": "At the end of the calendar year (December 31st), employees may carry over a maximum of forty (40) hours (5 days) of unused PTO into the following calendar year.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 1.0,
+      "answer_correctness": 0.8164812503731627,
+      "category": "HR"
+    },
+    {
+      "user_input": "How many Paid Floating Holidays do full-time employees receive each year?",
+      "retrieved_contexts": [
+        "### 4.2 Floating Holidays\nIn addition to designated holidays, all full-time employees receive two (2) Paid Floating Holidays (16 hours) on January 1st of each year.\n* Floating holidays do not accrue; they are granted as a lump sum.\n* New hires starting after July 1st receive only one (1) Floating Holiday for that calendar year.\n* Floating holidays absolutely cannot be carried over into the next year and are never paid out upon termination, regardless of jurisdiction.",
+        "### 4.1 Designated Holidays\nFor US-based employees, the organization observes ten (10) paid holidays: New Year's Day, Martin Luther King Jr. Day, Presidents' Day, Memorial Day, Juneteenth, Independence Day, Labor Day, Thanksgiving Day, Day after Thanksgiving, and Christmas Day. If a holiday falls on a Saturday, it is observed on the preceding Friday. If it falls on a Sunday, it is observed on the following Monday.",
+        "### 2.1 Accrual Rates for Full-Time Employees\nPTO accrues per pay period (bi-weekly, 26 pay periods per calendar year). The accrual rate increases on the first day of the month following the employee's designated work anniversary.",
+        "## 4. Global Holiday Schedule and Floating Holidays\nThe organization observes standard public holidays based on the employee's primary country of employment.",
+        "### 11.2 Non-Payable Leave\nUnder no circumstances, regardless of jurisdiction, will the organization pay out unused Sick Leave, Floating Holidays, Sabbatical time, or Bereavement Leave upon termination."
+      ],
+      "response": "Full-time employees receive two (2) Paid Floating Holidays (16 hours) each year.",
+      "reference": "All full-time employees receive two (2) Paid Floating Holidays (16 hours) on January 1st of each year.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9999999999999998,
+      "answer_correctness": 0.834651379015206,
+      "category": "HR"
+    },
+    {
+      "user_input": "What happens if an employee does not provide a medical certificate after using more than three consecutive days of sick leave?",
+      "retrieved_contexts": [
+        "* A doctor's note or medical certification is only required if the employee utilizes more than three (3) consecutive days of sick leave. Failure to provide a requested medical certificate within 5 business days of returning to work will result in the absence being coded as Unpaid Leave."
+      ],
+      "response": "If an employee does not provide a requested medical certificate within 5 business days of returning to work after utilizing more than three consecutive days of sick leave, the absence will be coded as Unpaid Leave.",
+      "reference": "Failure to provide a requested medical certificate within 5 business days of returning to work will result in the absence being coded as Unpaid Leave.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8992669649326336,
+      "answer_correctness": 0.9715084796885027,
+      "category": "HR"
+    },
+    {
+      "user_input": "What is the eligibility cutoff date for receiving a formal Year-End rating?",
+      "retrieved_contexts": [
+        "* **Eligibility Cutoff:** To receive a formal Year-End rating and be eligible for the subsequent merit cycle, an employee must have been hired on or before September 30th of the review year. Employees hired on or after October 1st will receive a \"Too New to Evaluate\" (TN) status.",
+        "### 2.2 Year-End Annual Review (H2)\n* **Timeline:** November 15th to January 31st.\n* **Purpose:** The comprehensive evaluation of the employee's impact over the preceding 12 months.\n* **Outcomes:** Formal performance ratings are assigned, and decisions regarding annual merit increases, bonuses, and promotions are finalized.",
+        "### 6.2 Annual Refreshers\nEmployees who achieve a Rating 3, 4, or 5 in the Year-End review are eligible for an annual equity \"refresher\" grant. Refresher grants do not have a one-year cliff; they vest quarterly over four years beginning on the date of the grant.",
+        "## 9. Impact of Disciplinary Action (PIPs)\nPerformance and compensation are directly linked to the Global Code of Conduct (cross-reference HR-POL-5050-V4).\n* Any employee actively on a Performance Improvement Plan (PIP) or under a Final Written Warning as of November 15th is automatically ineligible for a Year-End merit increase, an annual bonus payout, or a promotion, regardless of their financial or operational metrics."
+      ],
+      "response": "The eligibility cutoff date for receiving a formal Year-End rating is September 30th of the review year. Employees hired on or after October 1st will receive a \"Too New to Evaluate\" (TN) status.",
+      "reference": "To receive a formal Year-End rating and be eligible for the subsequent merit cycle, an employee must have been hired on or before September 30th of the review year.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.5,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9999995912255618,
+      "answer_correctness": 0.5828430716142095,
+      "category": "HR"
+    },
+    {
+      "user_input": "How is the Actual Bonus Payout calculated?",
+      "retrieved_contexts": [
+        "### 5.1 Bonus Calculation Formula\nActual Bonus Payout = `(Base Salary) * (Target Bonus Percentage) * (Company Multiplier) * (Individual Multiplier)`",
+        "### 5.3 Proration\nIf an eligible employee was hired between January 1st and September 30th of the performance year, their bonus payout will be prorated based on the exact number of days employed during that calendar year."
+      ],
+      "response": "The Actual Bonus Payout is calculated using the formula:\n`Actual Bonus Payout = (Base Salary) * (Target Bonus Percentage) * (Company Multiplier) * (Individual Multiplier)`.",
+      "reference": "Actual Bonus Payout = `(Base Salary) * (Target Bonus Percentage) * (Company Multiplier) * (Individual Multiplier)`",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.9999995671286369,
+      "answer_correctness": 0.604719834579037,
+      "category": "HR"
+    },
+    {
+      "user_input": "What happens if an employee relocates from a Tier A to a Tier C market?",
+      "retrieved_contexts": [
+        "* *Note on Relocation:* If an employee voluntarily relocates from a Tier A to a Tier C market, their base salary will be adjusted downward to align with the new geographic band within 60 days of relocation.",
+        "### 4.1 Geographic Tiering\nSalaries are adjusted based on the cost of labor in the employee's primary working location.\n* **Tier A (Premium Markets):** San Francisco, New York, London, Zurich. (100% of base band).\n* **Tier B (Major Hubs):** Chicago, Austin, Toronto, Sydney. (85% of Tier A band).\n* **Tier C (Standard Markets):** All other locations and fully remote roles located outside Tier A or Tier B radii. (75% of Tier A band)."
+      ],
+      "response": "If an employee voluntarily relocates from a Tier A to a Tier C market, their base salary will be adjusted downward to align with the new geographic band within 60 days of relocation.",
+      "reference": "If an employee voluntarily relocates from a Tier A to a Tier C market, their base salary will be adjusted downward to align with the new geographic band within 60 days of relocation.",
+      "context_precision": 0.99999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 0.75,
+      "answer_relevancy": 0.8859758019820564,
+      "answer_correctness": 1.0,
+      "category": "HR"
+    },
+    {
+      "user_input": "If I resign 18 months after receiving tuition reimbursement, how much do I need to repay?",
+      "retrieved_contexts": [
+        "## 8. Repayment and Retention (The \"Clawback\" Clause)\nThe Tuition Assistance Program is an investment in the organization's future workforce. Consequently, employees who utilize this benefit are subject to a retention agreement.  \nIf an employee's employment is terminated (either voluntarily by resignation, or involuntarily for cause) after receiving tuition reimbursement, the employee must repay the organization according to the following schedule:",
+        "* **0 to 12 Months:** If the departure occurs within 12 months of the *payout date* of the reimbursement, the employee must repay **100%** of the reimbursed funds.\n* **12 to 24 Months:** If the departure occurs between 12 and 24 months of the payout date, the employee must repay **50%** of the reimbursed funds.\n* **After 24 Months:** If the departure occurs more than 24 months after the payout date, the debt is fully forgiven, and **0%** repayment is required."
+      ],
+      "response": "If you resign 18 months after receiving tuition reimbursement, you must repay **50%** of the reimbursed funds.",
+      "reference": "50% of the reimbursed funds must be repaid if departure occurs between 12 and 24 months of the payout date.",
+      "context_precision": 0.99999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8256807439320898,
+      "answer_correctness": 0.6727444760278294,
+      "category": "HR"
+    },
+    {
+      "user_input": "What is the mileage reimbursement rate for personal vehicles and what does it cover?",
+      "retrieved_contexts": [
+        "* **Mileage Reimbursement:** Mileage will be reimbursed at the Standard Mileage Rate defined in the Personal Vehicle, Fuel, and Mileage Reimbursement Policy (TRV-POL-3012-V2), currently $0.69 USD per business mile (effective January 1, 2026). This rate is designed to cover fuel, maintenance, and depreciation; therefore, employees cannot expense gas receipts when driving a personal vehicle.",
+        "### 3.1 The Mileage Rate\nThe organization reimburses personal vehicle usage based on the standardized rates published annually by the national tax authority.\n* **Current Rate (Effective Jan 1, 2026):** $0.69 USD per business mile.\n* **What the Rate Covers:** The SMR is a comprehensive allowance. It is legally designed to cover the cost of petrol/diesel, routine maintenance, oil changes, tire wear, depreciation, and personal auto insurance.",
+        "This policy explicitly distinguishes between the reimbursement mechanisms for Personal Vehicles (which operate on a Cents-Per-Mile or FAVR basis) and Corporate/Rental Vehicles (which operate on a direct fuel expense basis). Conflating these two reimbursement types constitutes a severe audit violation.",
+        "### 6.2 Personal EVs (Mileage Program)\nEmployees utilizing personal EVs for business travel remain subject to the standard SMR program ($0.69/mile). The government standard rate applies equally to ICE and EV vehicles. Employees cannot expense home-electricity costs or public charging station receipts if they are claiming the standard mileage rate.",
+        "## 1. Purpose and Guiding Principles\nThe Personal Vehicle, Fuel, and Mileage Reimbursement Policy provides a structured, compliant framework for compensating employees who utilize vehicular transport for corporate business. The organization aims to reimburse employees accurately for the business use of vehicles without creating a taxable fringe benefit under applicable national tax codes (e.g., the IRS accountable plan rules in the US, or equivalent local tax authority guidelines)."
+      ],
+      "response": "The mileage reimbursement rate for personal vehicles is $0.69 USD per business mile, effective January 1, 2026. This rate is designed to cover the costs of fuel, maintenance, depreciation, and personal auto insurance.",
+      "reference": "$0.69 USD per business mile. The rate covers petrol/diesel, routine maintenance, oil changes, tire wear, depreciation, and personal auto insurance.",
+      "context_precision": 0.9166666666361111,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.3333333333333333,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8089073852043732,
+      "answer_correctness": 0.5437006732966327,
+      "category": "Travel"
+    },
+    {
+      "user_input": "Can employees traveling to China bring their standard corporate laptops?",
+      "retrieved_contexts": [
+        "### 9.1 Clean Device Program (High-Risk Destinations)\nEmployees traveling to countries categorized as High Cyber-Risk (e.g., China, Russia, Iran) are strictly prohibited from bringing their standard-issue corporate laptops or personal mobile phones.\n* Employees must request \"Burner\" or \"Clean\" devices from IT Procurement 14 days prior to travel.\n* These devices contain only essential software and data necessary for the trip.",
+        "### 9.3 Lost or Damaged Equipment\nIf company-issued technology (laptops, mobile phones) is lost, stolen, or damaged during travel, the employee must file a report with local authorities (if stolen) and notify the IT Security Desk within 12 hours. The cost of replacement will be borne by the organization, but negligence may result in disciplinary review.",
+        "If a border agent or customs official demands access to a company-owned device, employees should politely state that the device belongs to their employer and contains confidential corporate data. However, employees must ultimately comply with lawful orders from border officials to avoid detention. If a device is searched or confiscated, the employee must report the incident to the Chief Information Security Officer (CISO) immediately upon reaching a secure location."
+      ],
+      "response": "No, employees traveling to China are strictly prohibited from bringing their standard-issue corporate laptops. They must request \"Burner\" or \"Clean\" devices from IT Procurement 14 days prior to travel.",
+      "reference": "No. Employees traveling to countries categorized as High Cyber-Risk such as China are strictly prohibited from bringing standard-issue corporate laptops. They must request Clean or Burner devices from IT Procurement 14 days prior to travel.",
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.950677077490707,
+      "answer_correctness": 0.6035409115116921,
+      "category": "Travel"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "timestamp": "20260925_181004",
+  "model": "gpt-4o-mini",
+  "samples_evaluated": 4,
+  "overall_scores": {
+    "context_precision": 0.3785,
+    "context_recall": 0.875,
+    "noise_sensitivity(mode=relevant)": 0.125,
+    "faithfulness": 0.9375,
+    "answer_relevancy": 0.6,
+    "answer_correctness": 0.8484
+  },
+  "category_breakdown": {
+    "Held-out cross-category": {
+      "context_precision": 0.3333,
+      "context_recall": 0.8333,
+      "faithfulness": 0.9167,
+      "answer_relevancy": 0.5556,
+      "answer_correctness": 0.8111
+    },
+    "Held-out two-topic": {
+      "context_precision": 0.5139,
+      "context_recall": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7334,
+      "answer_correctness": 0.9606
+    }
+  },
+  "per_question_results": [
+    {
+      "user_input": "I'm a manager (M2) attending a conference in Boston and paying with my L&D stipend. What is my stipend, who approves it, and what is the maximum hotel rate per night?",
+      "retrieved_contexts": [
+        "### 3.2 Conference Travel Allowances\nIf an employee utilizes their L&D stipend to purchase a ticket to an industry conference, the associated travel costs (flights, hotel, per diems) are **not** deducted from the L&D stipend. However, all conference travel must strictly adhere to the booking protocols and budgetary limits outlined in the *Corporate Travel Policy (TRV-POL-1001-V4)*.",
+        "### 3.1 Annual Stipend Tiers\nStipend amounts are refreshed on January 1st and do not roll over into the following calendar year. The limits are determined by job level:  \n| Job Level | Annual L&D Stipend Limit (USD) | Approval Required |\n| :--- | :--- | :--- |\n| Individual Contributors (L1 - L4) | $1,500 | Direct Manager |\n| Management (M1 - M2) | $3,000 | Department Director |\n| Directors and Above (D1+) | $5,000 | Department VP |",
+        "### 6.1 US State Department Lodging Index\nInternational hotel maximums are benchmarked against the US State Department\u2019s Foreign Per Diem Rates for lodging. Employees may book accommodations up to 120% of the published State Department rate for their specific international city.",
+        "### 7.1 Nightly Rate Thresholds\nLodging costs must fall within the maximum nightly rate limits defined by the destination's City Tier. These thresholds exclude local occupancy taxes and resort fees.  \n| Destination Tier | Example Locations | Maximum Nightly Rate (Excluding Taxes) |\n| :--- | :--- | :--- |\n| **Tier 1 (Premium)** | New York, San Francisco, Boston, Washington D.C., Los Angeles | $375.00 USD |\n| **Tier 2 (Major)** | Chicago, Seattle, Austin, Denver, Miami, Atlanta | $285.00 USD |\n| **Tier 3 (Standard)** | All other domestic locations not listed above | $195.00 USD |",
+        "* **The Approving Manager:** The direct supervisor (or designated delegate) is responsible for verifying the business purpose of the travel, ensuring the travel aligns with departmental budgets, reviewing expense reports for compliance and reasonableness, and identifying and reporting any policy violations to the Finance Department.",
+        "### 5.2 Financial Limits\nThe organization will reimburse up to a maximum of **$5,250 USD per calendar year** for approved tuition, lab fees, and required textbooks.\n* The $5,250 limit aligns with the IRS Section 127 maximum for tax-free educational assistance.\n* Late registration fees, graduation fees, parking passes, and optional study materials are strictly non-reimbursable.",
+        "Any exception to this policy must be documented and approved in writing (via email or Workday memo) by a Vice President or higher prior to the expense being incurred. After-the-fact exception requests will be categorically denied. If an employee is traveling under emergency conditions (e.g., responding to a critical client outage), verbal approval from a Director may be accepted, provided it is followed by written documentation within 24 hours.",
+        "## 1. Learning Philosophy and Scope\nThe organization is committed to fostering a culture of continuous learning. The Global Learning and Development (L&D) policy is designed to support employees in acquiring new skills, maintaining professional certifications, and pursuing higher education that directly aligns with the organization\u2019s strategic objectives.  \nAll financial assistance provided under this policy is subject to annual budget approvals and is not a guaranteed contractual benefit."
+      ],
+      "response": "As a manager (M2), your annual L&D stipend limit is $3,000, and it requires approval from your Department Director. The maximum hotel rate per night in Boston, which is a Tier 1 (Premium) location, is $375.00 USD (excluding taxes).",
+      "reference": "The annual L&D stipend for management (M1-M2) is $3,000 USD, approved by the Department Director. Boston is a Tier 1 (Premium) destination, so the maximum hotel rate is $375 USD per night excluding taxes.",
+      "context_precision": 0.49999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8500699165272615,
+      "answer_correctness": 0.9768158616697361,
+      "category": "Held-out cross-category"
+    },
+    {
+      "user_input": "When I leave the company, how long do I have to return my laptop, and what happens to my unused PTO?",
+      "retrieved_contexts": [
+        "### 3.1 The \"Use It or Lose It\" Standard Policy\nAt the end of the calendar year (December 31st), employees may carry over a maximum of forty (40) hours (5 days) of unused PTO into the following calendar year. Any accrued PTO exceeding the 40-hour rollover limit on December 31st will be immediately forfeited and removed from the employee's balance without financial compensation.",
+        "### 11.1 PTO Payout\n* **Standard Policy:** Accrued, unused PTO is paid out to the employee in their final paycheck at their standard hourly rate.\n* **Negative Balances:** If an employee terminates employment with a negative PTO balance (having borrowed against future accruals), the monetary equivalent of the negative balance will be deducted from their final paycheck, where legally permissible.",
+        "### 3.2 Statutory Exceptions (California, Colorado, Montana, Nebraska)\nThe \"Use It or Lose It\" policy described in Section 3.1 is strictly prohibited in certain US jurisdictions. For employees legally residing in California, Colorado, Montana, and Nebraska, PTO does not expire at the end of the calendar year. Instead, these employees are subject to the \"Maximum Accrual Cap\" listed in the table in Section 2.1.",
+        "## 12. Request and Approval Workflows\n* **Standard PTO:** Requests for 1 to 4 days of PTO require minimum 7 days' advance notice via the Workday HRIS system.\n* **Extended PTO:** Requests for 5 or more consecutive days of PTO require minimum 21 days' advance notice and documented approval from the direct manager.",
+        "* **0 to 12 Months:** If the departure occurs within 12 months of the *payout date* of the reimbursement, the employee must repay **100%** of the reimbursed funds.\n* **12 to 24 Months:** If the departure occurs between 12 and 24 months of the payout date, the employee must repay **50%** of the reimbursed funds.\n* **After 24 Months:** If the departure occurs more than 24 months after the payout date, the debt is fully forgiven, and **0%** repayment is required.",
+        "## 10. Unpaid Leave of Absence (ULOA)\nIn circumstances where an employee has exhausted all applicable PTO, Sick Leave, and Statutory Leave (such as FMLA), they may request an Unpaid Leave of Absence (ULOA) for severe personal or medical reasons.\n* ULOA requests must be submitted in writing and require approval from the Department VP and the Chief HR Officer.\n* ULOA cannot exceed 90 cumulative days in a rolling 12-month period.",
+        "### 8.2 Benefit Continuation\nDuring the Sabbatical, employees continue to receive their standard base salary, and all health, dental, and retirement benefits remain active. However, employees **do not** accrue standard PTO during the four-week sabbatical period. Equipment stipends (refer to Remote Work Policy) are also suspended during this period.",
+        "*Deduction Authorization:* By participating in the TAP, the employee explicitly authorizes the organization to deduct any owed tuition repayments from their final paycheck, severance payout, or accrued PTO payout (subject to local state labor laws)."
+      ],
+      "response": "I could not find information regarding the return of your laptop in the policy documents. However, regarding unused PTO, it is paid out to the employee in their final paycheck at their standard hourly rate, as per the PTO payout policy.",
+      "reference": "Corporate hardware must be returned within three (3) business days of the final date. Accrued, unused PTO is paid out in the final paycheck at the standard hourly rate.",
+      "context_precision": 0.0,
+      "context_recall": 0.5,
+      "noise_sensitivity(mode=relevant)": 0.25,
+      "faithfulness": 0.75,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.5893243159325474,
+      "category": "Held-out cross-category"
+    },
+    {
+      "user_input": "If I get a Rating 2 in my year-end review, what bonus multiplier applies to me, and am I still eligible for an equity refresher grant?",
+      "retrieved_contexts": [
+        "### 6.2 Annual Refreshers\nEmployees who achieve a Rating 3, 4, or 5 in the Year-End review are eligible for an annual equity \"refresher\" grant. Refresher grants do not have a one-year cliff; they vest quarterly over four years beginning on the date of the grant.",
+        "* Rating 5 = 1.3x multiplier\n* Rating 4 = 1.1x multiplier\n* Rating 3 = 1.0x multiplier\n* Rating 2 = 0.5x multiplier\n* Rating 1 = 0.0x multiplier (Ineligible for bonus)",
+        "### 5.2 Formula Variables\n1. **Target Bonus Percentage:** Dictated by job level (e.g., Individual Contributors: 10%, Managers: 15%, Directors: 25%, VPs: 40%).\n2. **Company Multiplier:** Set by the Board of Directors based on the achievement of corporate EBITDA targets. Can range from 0.0 (missed targets) to 1.5 (maximum overachievement).\n3. **Individual Multiplier:** Strictly tied to the Year-End Performance Rating:\n* Rating 5 = 1.3x multiplier\n* Rating 4 = 1.1x multiplier",
+        "### 2.2 Year-End Annual Review (H2)\n* **Timeline:** November 15th to January 31st.\n* **Purpose:** The comprehensive evaluation of the employee's impact over the preceding 12 months.\n* **Outcomes:** Formal performance ratings are assigned, and decisions regarding annual merit increases, bonuses, and promotions are finalized.",
+        "### 4.2 The Annual Merit Matrix\nBase salary increases are dictated by the \"Merit Matrix,\" which combines the employee's Year-End Performance Rating with their current Position in Range (PIR) within their salary band.\n* An employee with a Rating 4 who is in the *lower* third of their salary band will receive a higher percentage increase (e.g., 6%) than an employee with a Rating 4 who is in the *upper* third of their band (e.g., 3%).",
+        "* **Eligibility Cutoff:** To receive a formal Year-End rating and be eligible for the subsequent merit cycle, an employee must have been hired on or before September 30th of the review year. Employees hired on or after October 1st will receive a \"Too New to Evaluate\" (TN) status.",
+        "## 6. Equity and Long-Term Incentives (RSUs)\nRestricted Stock Units (RSUs) are granted to align employee interests with long-term shareholder value.",
+        "* **Rating 4 (Exceeds Expectations):** Frequently exceeds goals and demonstrates high impact beyond core responsibilities. (Target Distribution: 25%).\n* **Rating 3 (Successfully Meets Expectations):** Consistently delivers on all core goals and role requirements. This is the baseline of strong performance. (Target Distribution: 50%).\n* **Rating 2 (Inconsistent):** Meets some goals but falls short on others. Requires targeted development. (Target Distribution: 10%)."
+      ],
+      "response": "If you receive a Rating 2 in your year-end review, the bonus multiplier that applies to you is 0.5x. Additionally, you are not eligible for an equity refresher grant, as refresher grants are only available for employees who achieve a Rating of 3, 4, or 5.",
+      "reference": "A Rating 2 carries a 0.5x individual bonus multiplier. Only employees with a Rating 3, 4 or 5 are eligible for the annual equity refresher grant, so a Rating 2 is not eligible.",
+      "context_precision": 0.5138888888717592,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.0,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.7334400361426381,
+      "answer_correctness": 0.9605529342521208,
+      "category": "Held-out two-topic"
+    },
+    {
+      "user_input": "How much advance notice do I need for a 3-day PTO request, and what approval and lead time apply to a business trip estimated at $2,000?",
+      "retrieved_contexts": [
+        "## 12. Request and Approval Workflows\n* **Standard PTO:** Requests for 1 to 4 days of PTO require minimum 7 days' advance notice via the Workday HRIS system.\n* **Extended PTO:** Requests for 5 or more consecutive days of PTO require minimum 21 days' advance notice and documented approval from the direct manager.",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $1,000 - $2,999 | Department Director | None | 14 Days |",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $3,000 - $9,999 | Vice President | Finance Controller | 21 Days |",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $10,000+ | C-Suite Executive | CFO | 30 Days |",
+        "| Estimated Trip Cost | Primary Approval Required | Secondary Approval Required | Minimum Lead Time |\n| :--- | :--- | :--- | :--- |\n| $0 - $999 | Direct Line Manager | None | 7 Days |",
+        "### 3.1 International Approval Matrix\nAll international travel, regardless of the estimated cost, requires dual-level approval.\n| Travel Category | Destination Risk Level | Primary Approval | Secondary Approval | Minimum Lead Time |\n| :--- | :--- | :--- | :--- | :--- |\n| Standard International | Low to Moderate | Department Director | VP of Department | 30 Days |\n| High-Risk Destination | High (Level 3/4) | VP of Department | Chief Risk Officer (CRO) | 45 Days |\n| Executive Travel | Any | C-Suite Sponsor | General Counsel | 21 Days |",
+        "Any exception to this policy must be documented and approved in writing (via email or Workday memo) by a Vice President or higher prior to the expense being incurred. After-the-fact exception requests will be categorically denied. If an employee is traveling under emergency conditions (e.g., responding to a critical client outage), verbal approval from a Director may be accepted, provided it is followed by written documentation within 24 hours.",
+        "## 4. Pre-Travel Authorization Protocols\nAll business travel must be pre-approved before any non-refundable purchases are made. The authorization workflow is dictated by the estimated total cost of the trip, not including potential client entertainment."
+      ],
+      "response": "For a 3-day PTO request, you need a minimum of 7 days' advance notice via the Workday HRIS system.\n\nFor a business trip estimated at $2,000, you require primary approval from the Department Director, no secondary approval is needed, and the minimum lead time is 14 days.",
+      "reference": "A PTO request of 1 to 4 days requires at least 7 days' advance notice through Workday. A trip estimated at $1,000-$2,999 needs Department Director approval and a minimum lead time of 14 days.",
+      "context_precision": 0.49999999995,
+      "context_recall": 1.0,
+      "noise_sensitivity(mode=relevant)": 0.25,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8166765984140844,
+      "answer_correctness": 0.8670613906644378,
+      "category": "Held-out cross-category"
+    }
+  ]
+}

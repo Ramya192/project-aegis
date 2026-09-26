@@ -1,5 +1,7 @@
 # retrieval/filters.py
 import logging
+import os
+import re
 from collections import defaultdict
 from openai import OpenAI
 from qdrant_client import QdrantClient
@@ -10,11 +12,52 @@ logger = logging.getLogger(__name__)
 
 VALID_CATEGORIES = ["Travel", "HR", "Finance", "IT", "Legal", "Compliance", "Other"]
 
+# A question can span two policy areas (e.g. an L&D stipend question that also needs the travel
+# hotel limit), so the classifier may return up to this many categories. 1 restores the old
+# single-category behaviour (the AEGIS_MAX_CATEGORIES environment variable exists for ablations).
+MAX_CATEGORIES = int(os.getenv("AEGIS_MAX_CATEGORIES", "2"))
 
-def detect_category(query: str, llm) -> str | None:
+_CANONICAL = {c.lower(): c for c in VALID_CATEGORIES}
+
+
+def _parse_categories(raw: str) -> list[str]:
+    """Extract valid category names, in order of appearance and without repeats."""
+    # 1. Happy path: a comma/plus/"and"-separated list where every item is a valid category
+    tokens = [t.strip(" \t\n\"'.`*") for t in re.split(r"[,/&+]|\band\b", raw, flags=re.I)]
+    tokens = [t for t in tokens if t]
+    if tokens and all(t.lower() in _CANONICAL for t in tokens):
+        return list(dict.fromkeys(_CANONICAL[t.lower()] for t in tokens))
+
+    # 2. Category names appear inside a sentence (e.g. "The category is Travel").
+    #    Word boundaries stop "it" or "hr" matching inside other words; "IT" must be upper-case
+    #    so the pronoun "it" is not read as the IT category.
+    found = []
+    for m in re.finditer(r"\b(" + "|".join(map(re.escape, VALID_CATEGORIES)) + r")\b", raw, flags=re.I):
+        word = m.group(1)
+        if word.lower() == "it" and word != "IT":
+            continue
+        cat = _CANONICAL[word.lower()]
+        if cat not in found:
+            found.append(cat)
+    return found
+
+
+def detect_category(query: str, llm) -> list[str] | None:
+    """Classify the query into 1..MAX_CATEGORIES policy categories, or None (no filter)."""
+    if MAX_CATEGORIES > 1:
+        how_many = (
+            "Classify the query below into ONE of these categories, or into TWO if answering it clearly\n"
+            "    needs information from two different categories (for example a learning stipend question that also\n"
+            "    asks about hotel rates needs HR and Travel):"
+        )
+        answer_format = "Return ONLY the category name(s), separated by a comma (at most two). No explanation."
+    else:
+        how_many = "Classify the query below into ONE of these categories:"
+        answer_format = "Return ONLY the category name or None. No explanation."
+
     prompt = f"""
     You are a corporate policy classifier.
-    Classify the query below into ONE of these categories:
+    {how_many}
     - Travel: questions about flights, hotels, taxis, transport, per diems, travel expenses, mileage reimbursement, expense reports, trip approvals, rental cars
     - HR: questions about leave, salary, performance, conduct, training, learning stipends, tuition assistance, professional development budgets, PTO, parental leave
     - Finance: questions about corporate budgets, invoices, accounting, financial statements (NOT travel expenses or employee reimbursements)
@@ -24,7 +67,7 @@ def detect_category(query: str, llm) -> str | None:
     - Other: anything else
 
     If unsure, return None.
-    Return ONLY the category name or None. No explanation.
+    {answer_format}
 
     Query: {query}
     """
@@ -32,31 +75,13 @@ def detect_category(query: str, llm) -> str | None:
     raw = llm.invoke(prompt).content.strip()
 
     # ── DEFENSIVE PARSING ────────────────────────────────────────────────────
-    # The LLM might return "Travel policy", "travel", "The category is Travel",
-    # or add quotes/punctuation. We try to extract a valid category from the
-    # response rather than requiring an exact match.
+    # The LLM might return "Travel policy", "travel", "HR, Travel", "The category is Travel",
+    # or add quotes/punctuation, so extract valid category names instead of requiring an exact match.
+    categories = _parse_categories(raw)[:MAX_CATEGORIES]
+    if categories:
+        return categories
 
-    # 1. Exact match first (happy path)
-    if raw in VALID_CATEGORIES:
-        return raw
-
-    # 2. Case-insensitive match
-    raw_lower = raw.lower()
-    for cat in VALID_CATEGORIES:
-        if cat.lower() == raw_lower:
-            logger.debug("detect_category: case-insensitive match '%s' → '%s'", raw, cat)
-            return cat
-
-    # 3. Category name appears anywhere in the response (e.g. "The category is Travel")
-    for cat in VALID_CATEGORIES:
-        if cat.lower() in raw_lower:
-            logger.warning(
-                "detect_category: fuzzy match — LLM returned '%s', extracted '%s'",
-                raw, cat
-            )
-            return cat
-
-    # 4. Nothing matched — fall back to None (no pre-filter applied)
+    # Nothing matched — fall back to None (no pre-filter applied)
     logger.warning(
         "detect_category: could not parse '%s' — falling back to None (no category filter)",
         raw
@@ -65,8 +90,8 @@ def detect_category(query: str, llm) -> str | None:
 
 
 def pre_filter_search(query: str, qdrant: QdrantClient, openai_client: OpenAI,
-                      category: str | None, top_k: int = 5) -> list:
-    """Embed the query and search Qdrant, restricted to the detected category if any."""
+                      category: list[str] | str | None, top_k: int = 5) -> list:
+    """Embed the query and search Qdrant, restricted to the detected categories if any."""
     query_vector = get_embedding(query, openai_client)
     return vector_search(query_vector, qdrant, top_k=top_k, category=category)
 

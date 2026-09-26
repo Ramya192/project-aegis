@@ -1,0 +1,357 @@
+{
+ "label": "cats2_k8",
+ "rows": [
+  {
+   "id": "X1",
+   "type": "Cross-document",
+   "needles": [
+    "Good Standing",
+    "automatically ineligible"
+   ],
+   "runs": [
+    {
+     "hits": [
+      false,
+      true
+     ],
+     "n_ctx": 5,
+     "category": "HR + Finance",
+     "answer": "Based on the policy documents, being on a Performance Improvement Plan (PIP) means you are automatically ineligible for this year's annual bonus. However, the documents do not specify any restrictions regarding tuition assistance while on a PIP. Therefore, I could not find specific information regarding your eligibility for tuition assistance."
+    },
+    {
+     "hits": [
+      false,
+      true
+     ],
+     "n_ctx": 5,
+     "category": "HR + Finance",
+     "answer": "You will not be eligible for this year's annual bonus if you are actively on a Performance Improvement Plan (PIP). However, I could not find any information regarding your eligibility for tuition assistance while on a PIP in the policy documents."
+    }
+   ]
+  },
+  {
+   "id": "X2",
+   "type": "Cross-document",
+   "needles": [
+    "not considered compensable",
+    "1 to 4 days of PTO"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      false
+     ],
+     "n_ctx": 2,
+     "category": "HR",
+     "answer": "If you want to attend university classes during work hours, the time spent in those classes or completing coursework is not considered compensable working time. You must either utilize standard PTO (Paid Time Off) or negotiate a flexible working arrangement according to the *HR Leave and Absence Policy (HR-POL-4001-V6)*."
+    },
+    {
+     "hits": [
+      true,
+      false
+     ],
+     "n_ctx": 2,
+     "category": "HR",
+     "answer": "If you want to attend university classes during work hours, the time spent in class will not be considered compensable working time. You must either utilize standard PTO (Paid Time Off) or negotiate a flexible working arrangement as outlined in the HR Leave and Absence Policy (HR-POL-4001-V6)."
+    }
+   ]
+  },
+  {
+   "id": "X3",
+   "type": "Cross-document",
+   "needles": [
+    "0 to 12 Months",
+    "paid out to the employee in their final paycheck"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 5,
+     "category": "HR + Finance",
+     "answer": "If you resign 8 months after your tuition reimbursement was paid out, you will need to repay 100% of the reimbursed funds according to the repayment schedule. \n\nRegarding your unused PTO, any accrued, unused PTO will be paid out to you in your final paycheck at your standard hourly rate. If you have borrowed against future PTO accruals and have a negative balance, the equivalent of the negative balance will be deducted from your final paycheck, where legally permissible."
+    },
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 5,
+     "category": "HR + Compliance",
+     "answer": "If you resign 8 months after your tuition reimbursement was paid out, you will be required to repay **100%** of the reimbursed funds as your departure occurs within 12 months of the payout date.\n\nRegarding your unused PTO, it will be paid out to you in your final paycheck at your standard hourly rate, as long as you do not have a negative PTO balance. If you do have a negative PTO balance, the monetary equivalent of the negative balance will be deducted from your final paycheck, where legally permissible."
+    }
+   ]
+  },
+  {
+   "id": "X4",
+   "type": "Cross-document",
+   "needles": [
+    "Individual Contributors (L1 - L4)",
+    "Tier 2 (Major)"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 3,
+     "category": "HR + Travel",
+     "answer": "As an L3 individual contributor, your annual L&D stipend limit is $1,500. The trip costs (flights, hotel, per diems) will **not** come out of your L&D stipend. For your trip to Chicago, which is a Tier 2 destination, the maximum hotel rate per night is $285.00 USD, excluding taxes."
+    },
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 3,
+     "category": "HR + Travel",
+     "answer": "As an L3 individual contributor, your annual L&D stipend limit is $1,500. The trip costs, such as flights, hotel, and per diems, are **not** deducted from your L&D stipend when attending the conference. \n\nFor your trip to Chicago, which is a Tier 2 destination, the maximum hotel rate per night is $285.00 USD (excluding taxes)."
+    }
+   ]
+  },
+  {
+   "id": "X5",
+   "type": "Cross-document",
+   "needles": [
+    "forfeit their entire bonus",
+    "paid out to the employee in their final paycheck"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 4,
+     "category": "HR + Other",
+     "answer": "If you resign on February 28th, you will forfeit your entire bonus for the previous performance year, as you must be actively employed and in good standing on the date of payout to receive it. \n\nRegarding your unused PTO, it will be paid out to you in your final paycheck at your standard hourly rate. However, you will not receive any payout for unused Sick Leave, Floating Holidays, or any other types of leave (such as Sabbatical or Bereavement Leave) upon termination. Additionally, Floating Holidays cannot be carried over into the next year and are not paid out upon termination."
+    },
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 4,
+     "category": "HR + Compliance",
+     "answer": "If you resign on February 28th, you will forfeit your entire bonus for the previous performance year, as you must be actively employed and in good standing on the date of payout to receive it.\n\nRegarding your unused PTO, it will be paid out to you in your final paycheck at your standard hourly rate. However, you will not receive any payout for unused Sick Leave or Floating Holidays, as they are not payable upon termination. Floating Holidays cannot be carried over or paid out either."
+    }
+   ]
+  },
+  {
+   "id": "P1",
+   "type": "Paraphrase",
+   "needles": [
+    "Tier 2 (Major)"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 3,
+     "category": "Travel",
+     "answer": "When traveling to Denver for work, which is a Tier 2 destination, the maximum nightly rate you can spend on a hotel is $285.00 USD, excluding taxes and resort fees."
+    },
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 3,
+     "category": "Travel",
+     "answer": "When traveling to Denver for work, which is classified as a Tier 2 (Major) destination, the maximum nightly rate you can spend on a hotel is $285.00 USD, excluding taxes and resort fees."
+    }
+   ]
+  },
+  {
+   "id": "P2",
+   "type": "Paraphrase",
+   "needles": [
+    "within **12 hours**"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 1,
+     "category": "IT",
+     "answer": "You must report the stolen laptop within **12 hours** of discovery to initiate remote wipe protocols."
+    },
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 1,
+     "category": "IT",
+     "answer": "You must report the stolen laptop to IT within **12 hours** of discovery."
+    }
+   ]
+  },
+  {
+   "id": "P3",
+   "type": "Paraphrase",
+   "needles": [
+    "Tier 3: 6 to 9 Years"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 7,
+     "category": "HR",
+     "answer": "Once you've been with the company for seven years, you earn 25 days (200 hours) of annual PTO."
+    },
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 7,
+     "category": "HR",
+     "answer": "Once you've been with the company for seven years, you earn 25 days (200 hours) of Annual PTO."
+    }
+   ]
+  },
+  {
+   "id": "P4",
+   "type": "Paraphrase",
+   "needles": [
+    "Dinner (-$40)"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 3,
+     "category": "Travel + HR",
+     "answer": "If a meal is provided during the travel, you must deduct the corresponding amount from your daily per diem claim. Since your dinner was paid for by a client, you need to deduct $40 from your daily per diem."
+    },
+    {
+     "hits": [
+      true
+     ],
+     "n_ctx": 3,
+     "category": "Travel + HR",
+     "answer": "Since a meal is provided during the travel (in this case, dinner paid for by a client), you must deduct the corresponding amount from your daily per diem claim. For dinner, you would deduct $40 from your per diem allowance."
+    }
+   ]
+  },
+  {
+   "id": "H1",
+   "type": "Held-out cross-category",
+   "needles": [
+    "Management (M1 - M2)",
+    "Tier 1 (Premium)"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      false
+     ],
+     "n_ctx": 3,
+     "category": "HR + Travel",
+     "answer": "As a manager (M2), your annual L&D stipend limit is $3,000, and it requires approval from your Department Director. For the maximum hotel rate per night in Boston, I could not find that specific information in the policy documents provided. You may want to refer to the US State Department\u2019s Foreign Per Diem Rates for lodging for the applicable rates."
+    },
+    {
+     "hits": [
+      true,
+      false
+     ],
+     "n_ctx": 3,
+     "category": "HR + Travel",
+     "answer": "As a manager (M2), your annual L&D stipend limit is $3,000, and approval is required from your Department Director. For hotel accommodations, you can book up to 120% of the published US State Department rate for lodging in Boston. However, you will need to check the current State Department rate for that specific city to determine the maximum allowable rate."
+    }
+   ]
+  },
+  {
+   "id": "H2",
+   "type": "Held-out cross-category",
+   "needles": [
+    "return all corporate hardware",
+    "paid out to the employee in their final paycheck"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 4,
+     "category": "HR + IT",
+     "answer": "You must return your laptop within three (3) business days of your final date. As for your unused PTO, it will be paid out to you in your final paycheck at your standard hourly rate, provided you have accrued unused PTO. If you have a negative PTO balance, the monetary equivalent of that negative balance will be deducted from your final paycheck."
+    },
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 4,
+     "category": "HR + IT",
+     "answer": "You must return your laptop within three (3) business days of your final date. Regarding your unused PTO, any accrued unused PTO will be paid out to you in your final paycheck at your standard hourly rate. If you have a negative PTO balance, the monetary equivalent of that negative balance will be deducted from your final paycheck, where legally permissible."
+    }
+   ]
+  },
+  {
+   "id": "H3",
+   "type": "Held-out two-topic",
+   "needles": [
+    "Rating 2 = 0.5x",
+    "Rating 3, 4, or 5"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 3,
+     "category": "HR",
+     "answer": "If you receive a Rating 2 in your year-end review, the bonus multiplier that applies to you is 0.5x. Additionally, you will not be eligible for an equity refresher grant, as only employees with a Rating of 3, 4, or 5 are eligible for such grants."
+    },
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 3,
+     "category": "HR",
+     "answer": "If you receive a Rating 2 in your year-end review, the bonus multiplier that applies to you is 0.5x. Additionally, you would not be eligible for an equity refresher grant, as only employees with a Rating of 3, 4, or 5 are eligible for those grants."
+    }
+   ]
+  },
+  {
+   "id": "H4",
+   "type": "Held-out cross-category",
+   "needles": [
+    "1 to 4 days of PTO",
+    "$1,000 - $2,999"
+   ],
+   "runs": [
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 6,
+     "category": "HR + Travel",
+     "answer": "For a 3-day PTO request, you need to provide a minimum of 7 days' advance notice.\n\nFor a business trip estimated at $2,000, you need primary approval from the Department Director and no secondary approval is required, with a minimum lead time of 14 days."
+    },
+    {
+     "hits": [
+      true,
+      true
+     ],
+     "n_ctx": 6,
+     "category": "HR + Travel",
+     "answer": "For a 3-day PTO request, you need a minimum of 7 days' advance notice via the Workday HRIS system.\n\nFor a business trip estimated at $2,000, you will require primary approval from the Department Director, no secondary approval is needed, and the minimum lead time is 14 days."
+    }
+   ]
+  }
+ ]
+}
