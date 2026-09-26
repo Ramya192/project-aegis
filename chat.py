@@ -1,5 +1,6 @@
 # chat.py
 import os
+import re
 from collections import OrderedDict
 
 from dotenv import load_dotenv
@@ -30,9 +31,17 @@ SYSTEM_PROMPT = """You are a corporate policy assistant.
 Answer questions using ONLY the context below.
 If the context does not contain the answer, say that you could not find it in the policy documents.
 Be clear and helpful.
+When the answer depends on a date, deadline or condition stated in the policy (for example "as of November 15th"), state it.
+
+After your answer, add a final line in exactly this form, listing the [Source n] numbers your answer actually relies on:
+SOURCES: 1, 3
+Write "SOURCES: none" if the context did not contain the answer.
 
 Context:
 {context}"""
+
+# Matches the trailing "SOURCES: 1, 3" line the model is asked to append
+SOURCES_LINE = re.compile(r"\n*\s*SOURCES:\s*([^\n]*)\s*$", re.IGNORECASE)
 
 
 def get_session_history(session_id: str) -> InMemoryChatMessageHistory:
@@ -56,6 +65,19 @@ def build_context(chunks: list) -> str:
         category = chunk["metadata"].get("policy_category", "")
         parts.append(f"[Source {i} - {source} ({category})]:\n{chunk['text']}")
     return "\n\n".join(parts)
+
+
+def split_answer(raw: str, num_sources: int) -> tuple[str, set[int]]:
+    """Separate the answer text from its trailing "SOURCES: ..." line.
+
+    Returns the cleaned answer and the 0-based indexes of the sources the model cited.
+    A missing or unparseable line yields an empty set, and the UI then falls back to score order.
+    """
+    match = SOURCES_LINE.search(raw)
+    if not match:
+        return raw.strip(), set()
+    used = {int(n) - 1 for n in re.findall(r"\d+", match.group(1)) if 1 <= int(n) <= num_sources}
+    return raw[:match.start()].strip(), used
 
 
 def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI, llm) -> dict:
@@ -105,25 +127,31 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
         "query": query
     })
 
-    # Step 10: save to history
-    history.add_user_message(query)
-    history.add_ai_message(response.content)
+    answer, used = split_answer(str(response.content), len(final_chunks))
 
-    # Step 11: build sources list (rerank_score is already in [0, 1] for both rerankers)
+    # Step 10: save to history (without the SOURCES line)
+    history.add_user_message(query)
+    history.add_ai_message(answer)
+
+    # Step 11: build sources list (rerank_score is already in [0, 1] for both rerankers).
+    # "used" marks the passages the model cited; the score is only a retrieval-rank signal
+    # (Cohere scores table rows and multi-topic answers low even when the answer depends on them).
     sources = [
         {
             "document_id": chunk["metadata"].get("document_id", "Unknown"),
             "score": round(float(chunk.get("rerank_score", 0)), 4),
             "text": chunk["text"],
-            "section": chunk["metadata"].get("h2_header", ""),
+            # the preamble chunk (Document ID, effective date) sits under the h1 only
+            "section": chunk["metadata"].get("h2_header") or "Document header",
             "policy_category": chunk["metadata"].get("policy_category", ""),
             "effective_date": chunk["metadata"].get("effective_date", ""),
+            "used": i in used,
         }
-        for chunk in final_chunks
+        for i, chunk in enumerate(final_chunks)
     ]
 
     return {
-        "answer": response.content,
+        "answer": answer,
         "sources": sources,
         "category_detected": " + ".join(category) if category else None,
         "token_info": token_info,

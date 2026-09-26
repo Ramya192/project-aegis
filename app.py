@@ -682,7 +682,11 @@ with main_col:
                     unsafe_allow_html=True,
                 )
                 all_sources = turn["sources"]
-                cards = [x for x in all_sources if float(x.get("score", 0)) >= LOW_RELEVANCE] or all_sources[:1]
+                # Cards = the passages the model cited. If it cited none (or the line was missing),
+                # fall back to score order.
+                cards = [x for x in all_sources if x.get("used")] or [
+                    x for x in all_sources if float(x.get("score", 0)) >= LOW_RELEVANCE
+                ] or all_sources[:1]
                 low_relevance = [x for x in all_sources if x not in cards]
                 for i, src in enumerate(cards, 1):
                     doc_id = html.escape(str(src.get("document_id", "Unknown")))
@@ -716,7 +720,7 @@ with main_col:
 
                 if low_relevance:
                     # The model received these too, so list them rather than hide them
-                    with st.expander(f"{len(low_relevance)} more passage(s) the model also received (low relevance)"):
+                    with st.expander(f"{len(low_relevance)} more passage(s) the model also received (not cited)"):
                         for x in low_relevance:
                             st.markdown(
                                 f"- {x.get('document_id', 'Unknown')} · {x.get('section', '')} · "
