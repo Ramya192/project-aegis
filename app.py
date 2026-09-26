@@ -684,9 +684,18 @@ with main_col:
                 all_sources = turn["sources"]
                 # Cards = the passages the model cited. If it cited none (or the line was missing),
                 # fall back to score order.
-                cards = [x for x in all_sources if x.get("used")] or [
-                    x for x in all_sources if float(x.get("score", 0)) >= LOW_RELEVANCE
-                ] or all_sources[:1]
+                # A "could not find it" answer with no citation has no supporting source, so show no card:
+                # the closest passages are listed below as unrelated matches rather than as evidence.
+                not_found = (
+                    not any(x.get("used") for x in all_sources)
+                    and "could not find it in the policy documents" in turn["answer"].lower()
+                )
+                if not_found:
+                    cards = []
+                else:
+                    cards = [x for x in all_sources if x.get("used")] or [
+                        x for x in all_sources if float(x.get("score", 0)) >= LOW_RELEVANCE
+                    ] or all_sources[:1]
                 low_relevance = [x for x in all_sources if x not in cards]
                 # A cited passage can have a tiny retrieval score (Cohere rates table rows and
                 # partial matches low), so a score bar on it would read as distrust of the source.
@@ -726,7 +735,12 @@ with main_col:
                     # The model received these too, so list them rather than hide them
                     # "(not cited)" only makes sense when the model cited something
                     suffix = " (not cited)" if cited_mode else ""
-                    with st.expander(f"{len(low_relevance)} more passage(s) the model also received{suffix}"):
+                    expander_label = (
+                        f"{len(low_relevance)} closest passage(s) searched (none relevant)"
+                        if not_found
+                        else f"{len(low_relevance)} more passage(s) the model also received{suffix}"
+                    )
+                    with st.expander(expander_label):
                         for x in low_relevance:
                             st.markdown(
                                 f"- {x.get('document_id', 'Unknown')} · {x.get('section', '')} · "

@@ -31,7 +31,10 @@ SYSTEM_PROMPT = """You are a corporate policy assistant.
 Answer questions using ONLY the context below.
 If the context does not contain the answer, say that you could not find it in the policy documents.
 Be clear and helpful.
-When the answer depends on a date, deadline or condition stated in the policy (for example "as of November 15th"), state it.
+When the answer depends on a date, deadline or condition stated in the policy (for example "as of November 15th"), state it exactly as written in the policy; never replace it with "as of now" or "currently".
+When the user describes their own situation, check it against every condition the policy lists. If they fail a required condition, say plainly that they are not eligible while that is the case; do not say they "may still be eligible", and do not add timing or conditions the policy does not state.
+If the context says a rule is governed by local or state law, or that local law supersedes it, mention that caveat next to the rule.
+When a question has several parts, answer every part. Also include a related rule, exception or consequence that the context states for the same topic, such as whether one cost is or is not deducted from a budget, or what happens if a deadline is missed.
 
 After your answer, add a final line in exactly this form, listing the [Source n] numbers your answer actually relies on:
 SOURCES: 1, 3
@@ -153,10 +156,16 @@ def ask(query: str, session_id: str, qdrant: QdrantClient, openai_client: OpenAI
         for i, chunk in enumerate(final_chunks)
     ]
 
+    # The classifier can name a category no document is tagged with (e.g. "Finance" for a bonus or
+    # tuition question, where every policy is tagged HR), which the badge would show as if it were searched.
+    # Show only the detected categories that actually supplied passages.
+    searched = [c for c in (category or []) if any(s["policy_category"] == c for s in sources)]
+    badge_categories = searched or category
+
     return {
         "answer": answer,
         "sources": sources,
-        "category_detected": " + ".join(category) if category else None,
+        "category_detected": " + ".join(badge_categories) if badge_categories else None,
         "token_info": token_info,
     }
 
