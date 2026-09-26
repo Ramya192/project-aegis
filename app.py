@@ -688,6 +688,9 @@ with main_col:
                     x for x in all_sources if float(x.get("score", 0)) >= LOW_RELEVANCE
                 ] or all_sources[:1]
                 low_relevance = [x for x in all_sources if x not in cards]
+                # A cited passage can have a tiny retrieval score (Cohere rates table rows and
+                # partial matches low), so a score bar on it would read as distrust of the source.
+                cited_mode = any(x.get("used") for x in all_sources)
                 for i, src in enumerate(cards, 1):
                     doc_id = html.escape(str(src.get("document_id", "Unknown")))
                     section = html.escape(src.get("section", ""))
@@ -696,6 +699,10 @@ with main_col:
                     preview, was_cut = make_preview(clean_text)
                     preview = html.escape(preview) + ("…" if was_cut else "")
                     bar_pct = int(score * 100)
+                    score_label = "retrieval score " if cited_mode else ""
+                    score_bar = "" if cited_mode else (
+                        f'<div class="score-bar-wrap"><div class="score-bar-fill" style="width:{bar_pct}%;"></div></div>'
+                    )
 
                     st.markdown(
                         f"""
@@ -703,12 +710,9 @@ with main_col:
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span class="doc-id">{i}. {doc_id}</span>
                             <span style="font-family:'DM Mono',monospace; font-size:0.72rem;
-                                         color:#C9A84C;">{score:.3f}</span>
+                                         color:#C9A84C;">{score_label}{score:.3f}</span>
                         </div>
-                        <div class="section-name">{section}</div>
-                        <div class="score-bar-wrap">
-                            <div class="score-bar-fill" style="width:{bar_pct}%;"></div>
-                        </div>
+                        <div class="section-name">{section}</div>{score_bar}
                         <div class="preview">{preview}</div>
                     </div>
                     """,
